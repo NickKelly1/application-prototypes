@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "graphql-yoga": "^1.18.0",
     "reselect": "^4.0.0",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.2"
@@ -19,7 +20,9 @@
     "ts-node-dev": "^1.0.0-pre.40"
   },
   "scripts": {
-    "dev": "ts-node-dev --notify false --prefer-ts --debug --transpileOnly --respawn src/app.ts",
+    "start": "ts-node src/app.ts",
+    "dev:inspect": "ts-node-dev --inspect --notify false --prefer-ts --debug --transpileOnly --respawn src/app.ts",
+    "dev:inspect-break": "ts-node-dev --inspect-brk --notify false --prefer-ts --debug --transpileOnly --respawn src/app.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   }

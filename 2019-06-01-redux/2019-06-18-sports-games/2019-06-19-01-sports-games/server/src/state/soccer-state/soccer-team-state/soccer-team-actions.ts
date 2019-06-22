@@ -1,24 +1,29 @@
-import { SoccerTeamState } from './soccer-team-types';
-import { ThunkAction } from '../../../../@types/store';
-import { SoccerActionTypes, SoccerState } from '../soccer-types';
+import { SoccerTeamState } from './soccer-team.types';
+import { SoccerActionTypes, SoccerState } from '../soccer.types';
+import { ThunkAction } from '../../../lib/store/store.types';
 
 export enum SOCCER_TEAM_ACTION_NAMES {
   CHANGE_NAME = 'CHANGE_NAME',
   INCREMENT_SCORE = 'INCREMENT_SCORE',
 }
 
+export enum SOCCER_TEAM_NUMBERS {
+  ONE = 0,
+  TWO = 1,
+}
+
 export type SoccerTeamActionTypes =
   | {
       type: SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME;
       payload: {
-        teamId: SoccerTeamState['id'];
+        teamNumber: SOCCER_TEAM_NUMBERS;
         newName: SoccerTeamState['name'];
       };
     }
   | {
       type: SOCCER_TEAM_ACTION_NAMES.INCREMENT_SCORE;
       payload: {
-        teamId: SoccerTeamState['id'];
+        teamNumber: SOCCER_TEAM_NUMBERS;
         incrementBy: number;
       };
     };
@@ -31,16 +36,16 @@ export type SoccerTeamActionTypes =
  * @description
  * Increment a teams score by an amount
  *
- * @param teamId
+ * @param teamNumber
  * @param incrementBy
  */
 const incrementScore = (
-  teamId: SoccerTeamState['id'],
+  teamNumber: SOCCER_TEAM_NUMBERS,
   incrementBy: SoccerTeamState['score'],
 ): ThunkAction<SoccerState, SoccerActionTypes> => dispatch => {
   dispatch({
     type: SOCCER_TEAM_ACTION_NAMES.INCREMENT_SCORE,
-    payload: { teamId, incrementBy },
+    payload: { teamNumber, incrementBy },
   });
 };
 
@@ -48,16 +53,16 @@ const incrementScore = (
  * @description
  * Increment a teams score by an amount
  *
- * @param teamId
+ * @param teamNumber
  * @param incrementBy
  */
 const changeName = (
-  teamId: SoccerTeamState['id'],
+  teamNumber: SOCCER_TEAM_NUMBERS,
   newName: SoccerTeamState['name'],
 ): ThunkAction<SoccerState, SoccerActionTypes> => dispatch => {
   dispatch({
     type: SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME,
-    payload: { teamId, newName },
+    payload: { teamNumber, newName },
   });
 };
 

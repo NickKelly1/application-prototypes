@@ -1,4 +1,8 @@
 {
+  "cSpell.words": [
+    "Hackernews",
+    "datamodel"
+  ],
   // https://dev.to/robertcoopercode/using-eslint-and-prettier-in-a-typescript-project-53jb
   "eslint.enable": true,
   "eslint.autoFixOnSave": true,
@@ -17,8 +21,4 @@
     "editor.formatOnSave": false,
   },
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "cSpell.words": [
-    "Cavill",
-    "camelcase"
-  ],
 }
