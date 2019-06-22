@@ -19,7 +19,7 @@
     "ts-node-dev": "^1.0.0-pre.40"
   },
   "scripts": {
-    "dev": "ts-node-dev --notify false --prefer-ts --debug --transpileOnly --respawn src/app.ts",
+    "dev": "ts-node-dev --inspect-brk --notify false --prefer-ts --debug --transpileOnly --respawn src/app.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   }
