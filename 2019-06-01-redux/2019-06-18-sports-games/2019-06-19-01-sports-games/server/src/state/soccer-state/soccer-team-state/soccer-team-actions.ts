@@ -1,5 +1,5 @@
-import { SoccerTeamState } from './soccer-team.types';
-import { SoccerActionTypes, SoccerState } from '../soccer.types';
+import { SoccerTeam, SoccerTeamsState } from './soccer-team.types';
+import { SoccerGameActionTypes } from '../soccer-game.types';
 import { ThunkAction } from '../../../lib/store/store.types';
 
 export enum SOCCER_TEAM_ACTION_NAMES {
@@ -8,8 +8,8 @@ export enum SOCCER_TEAM_ACTION_NAMES {
 }
 
 export enum SOCCER_TEAM_NUMBERS {
-  ONE = 0,
-  TWO = 1,
+  ONE = 'TEAM_ONE',
+  TWO = 'TEAM_TWO',
 }
 
 export type SoccerTeamActionTypes =
@@ -17,7 +17,7 @@ export type SoccerTeamActionTypes =
       type: SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME;
       payload: {
         teamNumber: SOCCER_TEAM_NUMBERS;
-        newName: SoccerTeamState['name'];
+        newName: SoccerTeam['name'];
       };
     }
   | {
@@ -41,8 +41,8 @@ export type SoccerTeamActionTypes =
  */
 const incrementScore = (
   teamNumber: SOCCER_TEAM_NUMBERS,
-  incrementBy: SoccerTeamState['score'],
-): ThunkAction<SoccerState, SoccerActionTypes> => dispatch => {
+  incrementBy: SoccerTeam['score'],
+): ThunkAction<SoccerTeamsState, SoccerGameActionTypes> => dispatch => {
   dispatch({
     type: SOCCER_TEAM_ACTION_NAMES.INCREMENT_SCORE,
     payload: { teamNumber, incrementBy },
@@ -58,8 +58,8 @@ const incrementScore = (
  */
 const changeName = (
   teamNumber: SOCCER_TEAM_NUMBERS,
-  newName: SoccerTeamState['name'],
-): ThunkAction<SoccerState, SoccerActionTypes> => dispatch => {
+  newName: SoccerTeam['name'],
+): ThunkAction<SoccerTeamsState, SoccerGameActionTypes> => dispatch => {
   dispatch({
     type: SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME,
     payload: { teamNumber, newName },

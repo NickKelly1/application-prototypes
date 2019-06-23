@@ -1,7 +1,7 @@
 import { ClockMode } from './clock.types';
 import { $TS_FIX_ME } from '../../../@types/ts-fix-me';
 
-export class Clock<K extends string, ModeMap extends Record<K, ClockMode>> {
+export class Clock<ModeMap extends Record<string, ClockMode>> {
   public modes: ModeMap;
   public lastTimeSwitched: number;
 
@@ -40,6 +40,12 @@ export class Clock<K extends string, ModeMap extends Record<K, ClockMode>> {
   public get currentMode() {
     return this._currentMode;
   }
+
+  /**
+   * @description
+   * Is the clock in a given mode?
+   */
+  public isInMode = (thisMode: keyof ModeMap) => this._currentMode === thisMode;
 
   /**
    * @description
