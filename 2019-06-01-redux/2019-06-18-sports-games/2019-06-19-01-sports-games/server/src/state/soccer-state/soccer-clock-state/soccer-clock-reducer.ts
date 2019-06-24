@@ -19,10 +19,9 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
       return {
         ...state,
         current: {
-          currentPeriod: state.new.currentPeriod,
-          mode: state.new.
-        }
-      }
+          lastTimeSwitched: action.payload.now,
+        },
+      };
     // reinitialize game
     // if game is active -> do nothing
 
