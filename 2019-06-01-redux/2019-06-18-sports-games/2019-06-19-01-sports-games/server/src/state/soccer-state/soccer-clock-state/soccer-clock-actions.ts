@@ -1,6 +1,6 @@
 import { ThunkAction } from '../../../lib/store/store.types';
 import { SoccerGameActionTypes } from '../soccer-game.types';
-import { SoccerClockState, SOCCER_CLOCK_ACTION_NAMES, SOCCER_CLOCK_PERIODS } from './soccer-clock.types';
+import { SoccerClockState, SOCCER_CLOCK_ACTION_NAMES, SOCCER_CLOCK_PERIOD } from './soccer-clock.types';
 
 export type SoccerClockActionTypes =
   | {
@@ -25,7 +25,7 @@ export type SoccerClockActionTypes =
     }
   | {
       type: SOCCER_CLOCK_ACTION_NAMES.SET_PERIOD;
-      payload: { now: number; newPeriod: SOCCER_CLOCK_PERIODS };
+      payload: { now: number; newPeriod: SOCCER_CLOCK_PERIOD };
     }
   | {
       type: SOCCER_CLOCK_ACTION_NAMES.END_GAME;
@@ -53,7 +53,7 @@ const resumeGame = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameA
 };
 
 const setPeriod = (
-  newPeriod: SOCCER_CLOCK_PERIODS,
+  newPeriod: SOCCER_CLOCK_PERIOD,
   now = Date.now(),
 ): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
   dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.SET_PERIOD, payload: { now, newPeriod } });

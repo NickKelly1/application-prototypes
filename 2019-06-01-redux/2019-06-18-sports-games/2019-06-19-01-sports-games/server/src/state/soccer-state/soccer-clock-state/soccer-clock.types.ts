@@ -8,93 +8,56 @@ export enum SOCCER_CLOCK_ACTION_NAMES {
   END_GAME = 'END_GAME',
 }
 
-export enum SOCCER_CLOCK_STATUS {
-  ACTIVE = 'ACTIVE',
-  HALTED = 'HALTED',
-  INACTIVE = 'INACTIVE',
+const z: SOCCER_CLOCK_ACTION_NAMES = SOCCER_CLOCK_ACTION_NAMES.NEW_GAME;
+
+// export enum SOCCER_CLOCK_STATUSES {
+//   ACTIVE = 'ACTIVE',
+//   HALTED = 'HALTED',
+//   INACTIVE = 'INACTIVE',
+// }
+
+export enum SOCCER_CLOCK_PERIOD {
+  NOT_STARTED = 'notStarted',
+  FIRST_HALF = 'firstHalf',
+  MID_BREAK = 'midBreak',
+  SECOND_HALF = 'secondHalf',
+  PENALTIES = 'penalties',
+  GAME_OVER = 'gameOver',
 }
 
-export enum SOCCER_CLOCK_PERIODS {
-  NOT_STARTED = 'NOT_STARTED',
-  FIRST_HALF = 'FIRST_HALF',
-  MID_BREAK = 'MID_BREAK',
-  SECOND_HALF = 'SECOND_HALF',
-  PENALTIES = 'PENALTIES',
-  GAME_OVER = 'GAME_OVER',
+export enum SOCCER_CLOCK_PERIOD_MODE {
+  HALTED = 'halted',
+  PAUSED = 'paused',
+  RUNNING = 'running',
 }
 
-const SOCCER_CLOCK_PERIOD_MODES = {
-  [SOCCER_CLOCK_PERIODS.NOT_STARTED]: null,
-  [SOCCER_CLOCK_PERIODS.FIRST_HALF]: {
-    TIME_RUNNING: 'timeRunning' as const,
-    TIME_PAUSED: 'timePaused' as const,
-    TIME_HALTED: 'timeHalted' as const,
-  },
-  [SOCCER_CLOCK_PERIODS.MID_BREAK]: {
-    TIME_RUNNING: 'timeRunning' as const,
-    TIME_HALTED: 'timeHalted' as const,
-  },
-  [SOCCER_CLOCK_PERIODS.SECOND_HALF]: {
-    TIME_RUNNING: 'timeRunning' as const,
-    TIME_PAUSED: 'timePaused' as const,
-    TIME_HALTED: 'timeHalted' as const,
-  },
-  [SOCCER_CLOCK_PERIODS.PENALTIES]: {
-    TIME_RUNNING: 'timeRunning' as const,
-    TIME_HALTED: 'timeHalted' as const,
-  },
-  [SOCCER_CLOCK_PERIODS.GAME_OVER]: null,
-};
-
-type SOCCER_CLOCK_PERIOD_MODES = typeof SOCCER_CLOCK_PERIOD_MODES;
-
-interface SoccerClockHalfTimer {
-  modes: { [index: SOCCER_CLOCK_PERIOD_MODES['FIRST_HALF']]: number };
-  //   [SOCCER_CLOCK_PERIOD_MODES['FIRST_HALF']['TIME_RUNNING']]: number;
-  //   [SOCCER_CLOCK_PERIOD_MODES['FIRST_HALF']['TIME_PAUSED']]: number;
-  //   [SOCCER_CLOCK_PERIOD_MODES['FIRST_HALF']['TIME_HALTED']]: number;
-  // };
-  memory: {
-    currentMode: keyof SoccerClockHalfTimer['modes'];
-    lastTimeSwitched: null | number;
-  };
-}
-
-interface SoccerClockMidBreakTimer {
+interface SoccerClockPeriod {
+  currentMode: SOCCER_CLOCK_PERIOD_MODE;
+  lastTimeSwitched: null | number;
   modes: {
-    timeRunning: number;
-    timeHalted: number;
-  };
-  memory: {
-    currentMode: keyof SoccerClockMidBreakTimer['modes'];
-    lastTimeSwitched: null | number;
+    [SOCCER_CLOCK_PERIOD_MODE.HALTED]: number;
+    [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: number;
+    [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: number;
   };
 }
 
-interface SoccerClockPenaltiesTimer {
-  modes: {
-    timeRunning: number;
-    timeHalted: number;
-  };
-  memory: {
-    currentMode: keyof SoccerClockPenaltiesTimer['modes'];
-    lastTimeSwitched: null | number;
-  };
+type SoccerClockPeriods = Record<SOCCER_CLOCK_PERIOD, SoccerClockPeriod>;
+
+interface SoccerClockPeriods2 {
+  [SOCCER_CLOCK_PERIOD.NOT_STARTED]: SoccerClockPeriod;
+  [SOCCER_CLOCK_PERIOD.FIRST_HALF]: SoccerClockPeriod;
+  [SOCCER_CLOCK_PERIOD.MID_BREAK]: SoccerClockPeriod;
+  [SOCCER_CLOCK_PERIOD.SECOND_HALF]: SoccerClockPeriod;
+  [SOCCER_CLOCK_PERIOD.PENALTIES]: SoccerClockPeriod;
+  [SOCCER_CLOCK_PERIOD.GAME_OVER]: SoccerClockPeriod;
 }
 
-interface SingleSoccerClockState {
-  period: SOCCER_CLOCK_PERIODS;
-  mode: SOCCER_CLOCK_STATUS;
-  lastTimeHalted: null | number;
-  periods: {
-    [SOCCER_CLOCK_PERIODS.FIRST_HALF]: SoccerClockHalfTimer;
-    [SOCCER_CLOCK_PERIODS.MID_BREAK]: SoccerClockMidBreakTimer;
-    [SOCCER_CLOCK_PERIODS.SECOND_HALF]: SoccerClockHalfTimer;
-    [SOCCER_CLOCK_PERIODS.PENALTIES]: SoccerClockMidBreakTimer;
-  };
+export interface SingleSoccerClockState {
+  currentPeriod: SOCCER_CLOCK_PERIOD;
+  periods: SoccerClockPeriods;
 }
 
 export interface SoccerClockState {
-  new: SingleSoccerClockState;
   current: SingleSoccerClockState;
+  new: SingleSoccerClockState;
 }
