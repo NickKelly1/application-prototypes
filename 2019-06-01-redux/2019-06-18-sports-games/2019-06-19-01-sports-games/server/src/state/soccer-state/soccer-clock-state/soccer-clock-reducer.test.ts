@@ -1,7 +1,7 @@
 import {
   SingleSoccerClockState,
   SOCCER_CLOCK_PERIOD,
-  SOCCER_CLOCK_PERIOD_MODE,
+  SOCCER_CLOCK_TIMER,
   SoccerClockState,
 } from './soccer-clock-types';
 import { createStore } from '../../../lib/store/store';
@@ -9,41 +9,31 @@ import { soccerClockReducer } from './soccer-clock-reducer';
 import { soccerClockActions, SOCCER_CLOCK_ACTION_NAMES } from './soccer-clock-actions';
 import { SoccerGameActionTypes } from '../soccer-game.types';
 
-const setup = ({ period, mode }: { period?: SOCCER_CLOCK_PERIOD; mode?: null | SOCCER_CLOCK_PERIOD_MODE }) => {
+const setup = ({ period, mode }: { period?: SOCCER_CLOCK_PERIOD; mode?: null | SOCCER_CLOCK_TIMER }) => {
   const initialState: SingleSoccerClockState = {
     currentPeriod: period !== undefined ? period : SOCCER_CLOCK_PERIOD.NOT_STARTED,
-    currentMode: mode !== undefined ? mode : null,
+    currentTimer: mode !== undefined ? mode : null,
     lastTimeSwitched: null,
-    periods: {
+    timers: {
       firstHalf: {
-        [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: 0,
+        [SOCCER_CLOCK_TIMER.HALTED]: 0,
+        [SOCCER_CLOCK_TIMER.PAUSED]: 0,
+        [SOCCER_CLOCK_TIMER.RUNNING]: 0,
       },
       midBreak: {
-        [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: 0,
+        [SOCCER_CLOCK_TIMER.HALTED]: 0,
+        [SOCCER_CLOCK_TIMER.PAUSED]: 0,
+        [SOCCER_CLOCK_TIMER.RUNNING]: 0,
       },
       secondHalf: {
-        [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: 0,
-      },
-      notStarted: {
-        [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: 0,
+        [SOCCER_CLOCK_TIMER.HALTED]: 0,
+        [SOCCER_CLOCK_TIMER.PAUSED]: 0,
+        [SOCCER_CLOCK_TIMER.RUNNING]: 0,
       },
       penalties: {
-        [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: 0,
-      },
-      gameOver: {
-        [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
-        [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: 0,
+        [SOCCER_CLOCK_TIMER.HALTED]: 0,
+        [SOCCER_CLOCK_TIMER.PAUSED]: 0,
+        [SOCCER_CLOCK_TIMER.RUNNING]: 0,
       },
     },
   };
@@ -71,7 +61,7 @@ describe('Soccer Clock State', () => {
       const { store } = setup({ period: validPeriod });
       store.dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME, payload: { now } });
       expect(store.getState().currentPeriod).toEqual(SOCCER_CLOCK_PERIOD.FIRST_HALF);
-      expect(store.getState().currentMode).toEqual(SOCCER_CLOCK_PERIOD_MODE.RUNNING);
+      expect(store.getState().currentTimer).toEqual(SOCCER_CLOCK_TIMER.RUNNING);
       expect(store.getState().lastTimeSwitched).toEqual(now);
     });
 
@@ -94,7 +84,7 @@ describe('Soccer Clock State', () => {
     validPeriods.forEach(validPeriod => {
       allPeriods.forEach((nextPeriod) => {
         const { store } = setup({ period: validPeriod });
-        store.dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_MODE, payload: { now, nextMode: }});
+        store.dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER, payload: { now, nextMode: }});
 
       })
       expect();

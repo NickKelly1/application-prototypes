@@ -7,25 +7,30 @@ export enum SOCCER_CLOCK_PERIOD {
   GAME_OVER = 'gameOver',
 }
 
-export enum SOCCER_CLOCK_PERIOD_MODE {
+export enum SOCCER_CLOCK_TIMER {
   HALTED = 'halted',
   PAUSED = 'paused',
   RUNNING = 'running',
 }
 
-interface SoccerClockPeriod {
-  [SOCCER_CLOCK_PERIOD_MODE.HALTED]: number;
-  [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: number;
-  [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: number;
+interface SoccerClockPeriodTimer {
+  [SOCCER_CLOCK_TIMER.HALTED]: number;
+  [SOCCER_CLOCK_TIMER.PAUSED]: number;
+  [SOCCER_CLOCK_TIMER.RUNNING]: number;
 }
 
-export type SoccerClockPeriods = Record<SOCCER_CLOCK_PERIOD, SoccerClockPeriod>;
+export interface SoccerClockPeriodTimers {
+  [SOCCER_CLOCK_PERIOD.FIRST_HALF]: SoccerClockPeriodTimer;
+  [SOCCER_CLOCK_PERIOD.MID_BREAK]: SoccerClockPeriodTimer;
+  [SOCCER_CLOCK_PERIOD.SECOND_HALF]: SoccerClockPeriodTimer;
+  [SOCCER_CLOCK_PERIOD.PENALTIES]: SoccerClockPeriodTimer;
+}
 
 export interface SingleSoccerClockState {
   currentPeriod: SOCCER_CLOCK_PERIOD;
-  currentMode: null | SOCCER_CLOCK_PERIOD_MODE;
+  currentTimer: null | SOCCER_CLOCK_TIMER;
   lastTimeSwitched: null | number;
-  periods: SoccerClockPeriods;
+  timers: SoccerClockPeriodTimers;
 }
 
 export type SoccerClockState = SingleSoccerClockState;
