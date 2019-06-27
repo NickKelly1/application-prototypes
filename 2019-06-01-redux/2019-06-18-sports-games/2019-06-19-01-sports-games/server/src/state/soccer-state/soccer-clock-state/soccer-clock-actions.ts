@@ -1,6 +1,14 @@
 import { ThunkAction } from '../../../lib/store/store.types';
 import { SoccerGameActionTypes } from '../soccer-game.types';
-import { SoccerClockState, SOCCER_CLOCK_ACTION_NAMES, SOCCER_CLOCK_PERIOD } from './soccer-clock.types';
+import { SoccerClockState, SOCCER_CLOCK_PERIOD, SOCCER_CLOCK_PERIOD_MODE } from './soccer-clock.types';
+
+export enum SOCCER_CLOCK_ACTION_NAMES {
+  NEW_GAME = 'NEW_GAME',
+  BEGIN_GAME = 'BEGIN_GAME',
+  SWITCH_MODE = 'SWITCH_MODE',
+  SWITCH_PERIOD_AND_MODE = 'SWITCH_PERIOD_AND_MODE',
+  END_GAME = 'END_GAME',
+}
 
 export type SoccerClockActionTypes =
   | {
@@ -12,20 +20,12 @@ export type SoccerClockActionTypes =
       payload: { now: number };
     }
   | {
-      type: SOCCER_CLOCK_ACTION_NAMES.HALT_GAME;
-      payload: { now: number };
+      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_MODE;
+      payload: { now: number; nextMode: SOCCER_CLOCK_PERIOD_MODE };
     }
   | {
-      type: SOCCER_CLOCK_ACTION_NAMES.PAUSE_GAME;
-      payload: { now: number };
-    }
-  | {
-      type: SOCCER_CLOCK_ACTION_NAMES.RESUME_GAME;
-      payload: { now: number };
-    }
-  | {
-      type: SOCCER_CLOCK_ACTION_NAMES.SET_PERIOD;
-      payload: { now: number; newPeriod: SOCCER_CLOCK_PERIOD };
+      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD_AND_MODE;
+      payload: { now: number; newPeriod: SOCCER_CLOCK_PERIOD; newMode: SOCCER_CLOCK_PERIOD_MODE };
     }
   | {
       type: SOCCER_CLOCK_ACTION_NAMES.END_GAME;
@@ -41,22 +41,32 @@ const beginGame = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameAc
 };
 
 const haltGame = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
-  dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.HALT_GAME, payload: { now } });
+  dispatch({
+    type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_MODE,
+    payload: { now, nextMode: SOCCER_CLOCK_PERIOD_MODE.HALTED },
+  });
 };
 
 const pauseGame = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
-  dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.PAUSE_GAME, payload: { now } });
+  dispatch({
+    type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_MODE,
+    payload: { now, nextMode: SOCCER_CLOCK_PERIOD_MODE.PAUSED },
+  });
 };
 
 const resumeGame = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
-  dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.RESUME_GAME, payload: { now } });
+  dispatch({
+    type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_MODE,
+    payload: { now, nextMode: SOCCER_CLOCK_PERIOD_MODE.RUNNING },
+  });
 };
 
-const setPeriod = (
+const switchPeriodAndMode = (
   newPeriod: SOCCER_CLOCK_PERIOD,
+  newMode: SOCCER_CLOCK_PERIOD_MODE,
   now = Date.now(),
 ): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
-  dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.SET_PERIOD, payload: { now, newPeriod } });
+  dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD_AND_MODE, payload: { now, newPeriod, newMode } });
 };
 
 const endGame = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
@@ -69,6 +79,6 @@ export const soccerClockActions = {
   haltGame,
   pauseGame,
   resumeGame,
-  setPeriod,
+  switchPeriodAndMode,
   endGame,
 };

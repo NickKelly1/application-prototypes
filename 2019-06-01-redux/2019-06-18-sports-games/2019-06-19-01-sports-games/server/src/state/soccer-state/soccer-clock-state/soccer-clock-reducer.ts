@@ -5,15 +5,15 @@ import {
   SOCCER_CLOCK_PERIOD,
   SOCCER_CLOCK_PERIOD_MODE,
   SingleSoccerClockState,
-  SOCCER_CLOCK_ACTION_NAMES,
 } from './soccer-clock.types';
+import { SOCCER_CLOCK_ACTION_NAMES } from './soccer-clock-actions';
 
 const defaultInitialSingleClockState: SingleSoccerClockState = {
   currentPeriod: SOCCER_CLOCK_PERIOD.NOT_STARTED,
+  lastTimeSwitched: null,
   periods: {
     firstHalf: {
       currentMode: SOCCER_CLOCK_PERIOD_MODE.RUNNING,
-      lastTimeSwitched: null,
       modes: {
         [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
         [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
@@ -22,7 +22,6 @@ const defaultInitialSingleClockState: SingleSoccerClockState = {
     },
     midBreak: {
       currentMode: SOCCER_CLOCK_PERIOD_MODE.RUNNING,
-      lastTimeSwitched: null,
       modes: {
         [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
         [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
@@ -31,7 +30,6 @@ const defaultInitialSingleClockState: SingleSoccerClockState = {
     },
     secondHalf: {
       currentMode: SOCCER_CLOCK_PERIOD_MODE.RUNNING,
-      lastTimeSwitched: null,
       modes: {
         [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
         [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
@@ -40,7 +38,6 @@ const defaultInitialSingleClockState: SingleSoccerClockState = {
     },
     notStarted: {
       currentMode: SOCCER_CLOCK_PERIOD_MODE.RUNNING,
-      lastTimeSwitched: null,
       modes: {
         [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
         [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
@@ -49,7 +46,6 @@ const defaultInitialSingleClockState: SingleSoccerClockState = {
     },
     penalties: {
       currentMode: SOCCER_CLOCK_PERIOD_MODE.RUNNING,
-      lastTimeSwitched: null,
       modes: {
         [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
         [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
@@ -58,7 +54,6 @@ const defaultInitialSingleClockState: SingleSoccerClockState = {
     },
     gameOver: {
       currentMode: SOCCER_CLOCK_PERIOD_MODE.RUNNING,
-      lastTimeSwitched: null,
       modes: {
         [SOCCER_CLOCK_PERIOD_MODE.HALTED]: 0,
         [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: 0,
@@ -74,94 +69,65 @@ const defaultInitialState: SoccerClockState = {
 };
 
 export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes> = (
-  currentState: SoccerClockState = { ...defaultInitialState },
+  oldState: SoccerClockState = { ...defaultInitialState },
   action: SoccerGameActionTypes,
 ) => {
   switch (action.type) {
     case SOCCER_CLOCK_ACTION_NAMES.NEW_GAME:
 
-    /**
-     * game is active -> do nothing
-     * game is inactive -> reset state
-     */
-    case SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME:
-      if (!(currentState.current.currentPeriod === SOCCER_CLOCK_PERIOD.NOT_STARTED)) return currentState;
+    case SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME: {
+      if (!(oldState.current.currentPeriod === SOCCER_CLOCK_PERIOD.NOT_STARTED)) return oldState;
+      const { now } = action.payload;
 
-      return {
-        ...currentState,
+      const newState: SoccerClockState = {
+        ...oldState,
         current: {
-          ...currentState.current,
+          ...oldState.current,
           currentPeriod: SOCCER_CLOCK_PERIOD.FIRST_HALF,
+          lastTimeSwitched: now,
           periods: {
-            ...currentState.current.periods,
+            ...oldState.current.periods,
             [SOCCER_CLOCK_PERIOD.FIRST_HALF]: {
-              ...currentState.current.periods[SOCCER_CLOCK_PERIOD.FIRST_HALF],
-              currentMode: SOCCER_CLOCK_PERIOD.FIRST_HALF,
-              lastTimeSwitched: action.payload.now,
+              ...oldState.current.periods[SOCCER_CLOCK_PERIOD.FIRST_HALF],
+              currentMode: SOCCER_CLOCK_PERIOD_MODE.RUNNING,
             },
           },
         },
       };
 
-    case SOCCER_CLOCK_ACTION_NAMES.HALT_GAME:
-      const { currentPeriod } = currentState.current;
+      return newState;
+    }
 
-      const { currentMode: previousMode, lastTimeSwitched: previousLastTimeSwitched } = currentState.current.periods[
-        currentPeriod
-      ];
+    case SOCCER_CLOCK_ACTION_NAMES.SWITCH_MODE: {
+      const { now, nextMode } = action.payload;
+      const { currentPeriod, lastTimeSwitched } = oldState.current;
+      const { currentMode: oldMode } = oldState.current.periods[currentPeriod];
 
       // TODO: handle error gracefully
-      if (previousLastTimeSwitched === null)
-        throw new Error('Invalid state: switching from a mode with lastTimeSwitched === null');
-
-      const hua = Object.values(currentPeriod);
-
-      if (!(Object.values(currentPeriod) in currentState.current.periods)) throw new Error('Invalid state');
-
-      const timeToAddToPreviousPeriod = action.payload.now - previousLastTimeSwitched;
+      if (lastTimeSwitched === null)
+        throw new Error('Invalid oldState: switching from a mode with lastTimeSwitched === null');
 
       // switch to halted mode
-      const next: SoccerClockState = {
-        ...currentState,
+      const newState: SoccerClockState = {
+        ...oldState,
         current: {
-          ...currentState.current,
+          ...oldState.current,
+          lastTimeSwitched: now,
           periods: {
-            ...currentState.current.periods,
+            ...oldState.current.periods,
             [currentPeriod]: {
-              ...currentState.current.periods[currentPeriod],
+              ...oldState.current.periods[currentPeriod],
+              currentMode: nextMode,
+              [oldMode]: oldState.current.periods[currentPeriod].modes[oldMode] + now - lastTimeSwitched,
             },
           },
         },
       };
-      // const next = {
-      //   ...currentState,
-      //   current: {
-      //     ...currentState.current,
-      //     periods: {
-      //       ...currentState.firstHalf
-      //       [SOCCER_CLOCK_PERIOD.FIRST_HALF]: {
-      //         ...currentState.current.periods[SOCCER_CLOCK_PERIOD.FIRST_HALF],
-      //       },
-      //     },
-      //   },
-      // };
 
-      return haloha;
-
-    // if game is halted -> do nothing
-
-    case SOCCER_CLOCK_ACTION_NAMES.PAUSE_GAME:
-    // if game is not active -> do nothing
-    // if game is paused -> do nothing
-    // if game is active -> pause
-
-    case SOCCER_CLOCK_ACTION_NAMES.RESUME_GAME:
-    // if game is active and running -> do nothing
-
-    case SOCCER_CLOCK_ACTION_NAMES.SET_PERIOD:
-    //
+      return newState;
+    }
 
     default:
-      return state;
+      return oldState;
   }
 };
