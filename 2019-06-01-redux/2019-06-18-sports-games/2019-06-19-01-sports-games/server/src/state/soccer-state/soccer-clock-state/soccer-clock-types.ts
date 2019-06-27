@@ -14,23 +14,18 @@ export enum SOCCER_CLOCK_PERIOD_MODE {
 }
 
 interface SoccerClockPeriod {
-  currentMode: SOCCER_CLOCK_PERIOD_MODE;
-  modes: {
-    [SOCCER_CLOCK_PERIOD_MODE.HALTED]: number;
-    [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: number;
-    [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: number;
-  };
+  [SOCCER_CLOCK_PERIOD_MODE.HALTED]: number;
+  [SOCCER_CLOCK_PERIOD_MODE.PAUSED]: number;
+  [SOCCER_CLOCK_PERIOD_MODE.RUNNING]: number;
 }
 
-type SoccerClockPeriods = Record<SOCCER_CLOCK_PERIOD, SoccerClockPeriod>;
+export type SoccerClockPeriods = Record<SOCCER_CLOCK_PERIOD, SoccerClockPeriod>;
 
 export interface SingleSoccerClockState {
   currentPeriod: SOCCER_CLOCK_PERIOD;
+  currentMode: null | SOCCER_CLOCK_PERIOD_MODE;
   lastTimeSwitched: null | number;
   periods: SoccerClockPeriods;
 }
 
-export interface SoccerClockState {
-  current: SingleSoccerClockState;
-  new: SingleSoccerClockState;
-}
+export type SoccerClockState = SingleSoccerClockState;

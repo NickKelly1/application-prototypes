@@ -1,15 +1,10 @@
-import { SoccerTeam, SoccerTeamsState } from './soccer-team.types';
+import { SoccerTeam, SoccerTeamsState, SOCCER_TEAM_NUMBERS } from './soccer-team-types';
 import { SoccerGameActionTypes } from '../soccer-game.types';
 import { ThunkAction } from '../../../lib/store/store.types';
 
 export enum SOCCER_TEAM_ACTION_NAMES {
   CHANGE_NAME = 'CHANGE_NAME',
   INCREMENT_SCORE = 'INCREMENT_SCORE',
-}
-
-export enum SOCCER_TEAM_NUMBERS {
-  ONE = 'TEAM_ONE',
-  TWO = 'TEAM_TWO',
 }
 
 export type SoccerTeamActionTypes =
