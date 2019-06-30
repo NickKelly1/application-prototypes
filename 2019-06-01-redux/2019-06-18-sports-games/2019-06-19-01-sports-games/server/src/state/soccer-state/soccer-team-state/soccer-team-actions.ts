@@ -1,5 +1,5 @@
-import { SoccerTeam, SoccerTeamsState, SOCCER_TEAM_NUMBERS } from './soccer-team-types';
-import { SoccerGameActionTypes } from '../soccer-game.types';
+import { SoccerTeam, SoccerTeamsState, SOCCER_TEAM_NUMBERS } from './soccer-team-state';
+import { SoccerGameActionTypes } from '../soccer-game-state';
 import { ThunkAction } from '../../../lib/store/store.types';
 
 export enum SOCCER_TEAM_ACTION_NAMES {

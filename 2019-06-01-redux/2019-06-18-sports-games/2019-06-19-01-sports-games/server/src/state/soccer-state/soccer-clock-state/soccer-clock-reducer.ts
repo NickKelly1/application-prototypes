@@ -1,19 +1,22 @@
 import { Reducer } from '../../../lib/store/store.types';
-import { SoccerGameActionTypes } from '../soccer-game.types';
+import { SoccerGameActionTypes } from '../soccer-game-state';
 import {
   SoccerClockState,
   SOCCER_CLOCK_PERIOD,
   SOCCER_CLOCK_TIMER,
   SingleSoccerClockState,
-  SoccerClockPeriods,
-} from './soccer-clock-types';
+  SOCCER_CLOCK_PERIODS_WITH_TIMERS,
+  SOCCER_CLOCK_CAN_BEGIN_PERIODS,
+} from './soccer-clock-state';
 import { SOCCER_CLOCK_ACTION_NAMES } from './soccer-clock-actions';
+import { tupleIncludes } from '../../../helpers/tuple-includes';
+import { InvalidStateChangeException } from '../../../exceptions/invalid-state-change-exception';
 
 const defaultInitialSingleClockState: SingleSoccerClockState = {
   currentPeriod: SOCCER_CLOCK_PERIOD.NOT_STARTED,
-  currentTimer: null, // SOCCER_CLOCK_TIMER.RUNNING,
+  currentTimer: null,
   lastTimeSwitched: null,
-  periods: {
+  timers: {
     firstHalf: {
       [SOCCER_CLOCK_TIMER.HALTED]: 0,
       [SOCCER_CLOCK_TIMER.PAUSED]: 0,
@@ -29,17 +32,7 @@ const defaultInitialSingleClockState: SingleSoccerClockState = {
       [SOCCER_CLOCK_TIMER.PAUSED]: 0,
       [SOCCER_CLOCK_TIMER.RUNNING]: 0,
     },
-    notStarted: {
-      [SOCCER_CLOCK_TIMER.HALTED]: 0,
-      [SOCCER_CLOCK_TIMER.PAUSED]: 0,
-      [SOCCER_CLOCK_TIMER.RUNNING]: 0,
-    },
     penalties: {
-      [SOCCER_CLOCK_TIMER.HALTED]: 0,
-      [SOCCER_CLOCK_TIMER.PAUSED]: 0,
-      [SOCCER_CLOCK_TIMER.RUNNING]: 0,
-    },
-    gameOver: {
       [SOCCER_CLOCK_TIMER.HALTED]: 0,
       [SOCCER_CLOCK_TIMER.PAUSED]: 0,
       [SOCCER_CLOCK_TIMER.RUNNING]: 0,
@@ -54,13 +47,21 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
   action: SoccerGameActionTypes,
 ) => {
   switch (action.type) {
+    /**
+     * @description
+     * set up a new game
+     */
     case SOCCER_CLOCK_ACTION_NAMES.NEW_GAME:
       return action.payload.newGameSoccerClockState;
 
+    /**
+     * @description
+     * Begin a new game
+     */
     case SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME: {
       // can't begin unless in "NOT_STARTED"
-      if (oldSoccerClockState.currentPeriod !== SOCCER_CLOCK_PERIOD.NOT_STARTED)
-        throw new Error(`Invalid action: cannot begin game in period: ${oldSoccerClockState.currentPeriod}`);
+      if (!tupleIncludes(SOCCER_CLOCK_CAN_BEGIN_PERIODS, oldSoccerClockState.currentPeriod))
+        throw new InvalidStateChangeException(oldSoccerClockState, action);
 
       const { now } = action.payload;
 
@@ -69,10 +70,10 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
         currentPeriod: SOCCER_CLOCK_PERIOD.FIRST_HALF,
         currentTimer: SOCCER_CLOCK_TIMER.RUNNING,
         lastTimeSwitched: now,
-        periods: {
-          ...oldSoccerClockState.periods,
+        timers: {
+          ...oldSoccerClockState.timers,
           [SOCCER_CLOCK_PERIOD.FIRST_HALF]: {
-            ...oldSoccerClockState.periods[SOCCER_CLOCK_PERIOD.FIRST_HALF],
+            ...oldSoccerClockState.timers[SOCCER_CLOCK_PERIOD.FIRST_HALF],
           },
         },
       };
@@ -80,26 +81,30 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
       return newSoccerClockState;
     }
 
+    /**
+     * @description
+     * Switch timer within a period
+     */
     case SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER: {
       const { now, nextTimer } = action.payload;
       const { currentPeriod, lastTimeSwitched } = oldSoccerClockState;
       const { currentTimer: previousTimer } = oldSoccerClockState;
 
-      // TODO: handle error gracefully
-      if (lastTimeSwitched === null)
-        throw new Error('Invalid oldSoccerClockState: switching from a mode with lastTimeSwitched === null');
-      if (previousTimer === null) throw new Error('Invalid oldSoccerState: previousTimer is null');
+      if (!tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, currentPeriod))
+        throw new InvalidStateChangeException(oldSoccerClockState, action);
+      if (lastTimeSwitched === null) throw new InvalidStateChangeException(oldSoccerClockState, action);
+      if (previousTimer === null) throw new InvalidStateChangeException(oldSoccerClockState, action);
 
       // switch to halted mode
       const newSoccerClockState: SoccerClockState = {
         ...oldSoccerClockState,
         lastTimeSwitched: now,
         currentTimer: nextTimer,
-        periods: {
-          ...oldSoccerClockState.periods,
+        timers: {
+          ...oldSoccerClockState.timers,
           [currentPeriod]: {
-            ...oldSoccerClockState.periods[currentPeriod],
-            [previousTimer]: oldSoccerClockState.periods[currentPeriod][previousTimer] + now - lastTimeSwitched,
+            ...oldSoccerClockState.timers[currentPeriod],
+            [previousTimer]: oldSoccerClockState.timers[currentPeriod][previousTimer] + now - lastTimeSwitched,
           },
         },
       };
@@ -107,16 +112,19 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
       return newSoccerClockState;
     }
 
+    /**
+     * @description
+     * Switch period and timer
+     */
     case SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD: {
-      // const { currentPeriod: previousPeriod, lastTimeSwitched } = oldSoccerClockState;
       const { currentPeriod: previousPeriod, currentTimer: previousTimer, lastTimeSwitched } = oldSoccerClockState;
+      const { now } = action.payload;
 
-      // TODO: handle error gracefully
-      if (lastTimeSwitched === null)
-        throw new Error('Invalid oldSoccerClockState: switching from a mode with lastTimeSwitched === null');
+      let previousPeriodTimer = {};
+      if (tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, previousPeriod)) {
+        if (previousTimer === null) throw new InvalidStateChangeException(oldSoccerClockState, action);
+        if (lastTimeSwitched === null) throw new InvalidStateChangeException(oldSoccerClockState, action);
 
-      let previousPeriodTimer = null;
-      if (previousPeriod in oldSoccerClockState.timers) {
         previousPeriodTimer = {
           [previousPeriod]: {
             ...oldSoccerClockState.timers[previousPeriod],
@@ -126,61 +134,32 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
       }
 
       switch (action.payload.nextPeriod) {
+        case SOCCER_CLOCK_PERIOD.FIRST_HALF:
         case SOCCER_CLOCK_PERIOD.MID_BREAK:
         case SOCCER_CLOCK_PERIOD.SECOND_HALF:
         case SOCCER_CLOCK_PERIOD.PENALTIES: {
           const { now, nextPeriod, nextTimer } = action.payload;
           return {
             ...oldSoccerClockState,
+            ...previousPeriodTimer,
             currentPeriod: nextPeriod,
             currentTimer: nextTimer,
             lastTimeSwitched: now,
-            ...(oldSoccerClockState.timers[previousPeriod]
-              ? {
-                  timers: {
-                    ...oldSoccerClockState.timers,
-                  },
-                }
-              : {}),
           };
         }
         case SOCCER_CLOCK_PERIOD.GAME_OVER:
-          break;
+          const { now, nextPeriod } = action.payload;
+          return {
+            ...oldSoccerClockState,
+            ...previousPeriodTimer,
+            currentPeriod: nextPeriod,
+            lastTimeSwitched: now,
+          };
+        default:
+          throw new InvalidStateChangeException(oldSoccerClockState, action);
       }
-
-      // TODO: handle error gracefully
-      if (lastTimeSwitched === null)
-        throw new Error('Invalid oldSoccerClockState: switching from a mode with lastTimeSwitched === null');
-      if (previousTimer === null) throw new Error('Invalid oldSoccerState: previousTimer is null');
-
-      const newPeriods: SoccerClockPeriods = {
-        ...oldSoccerClockState.periods,
-        // increment time of previousPeriod
-        [previousPeriod]: {
-          ...oldSoccerClockState.periods[previousPeriod],
-          [previousTimer]: oldSoccerClockState.periods[previousPeriod][previousTimer] + now - lastTimeSwitched,
-        },
-        // if previousPeriod === nextPeriod, [previousPeriod] above will be overwritten by [nextPeriod] below
-        [nextPeriod]: {
-          ...oldSoccerClockState.periods[nextPeriod],
-          // ensure time is incremented if period is not changing
-          ...(previousPeriod === nextPeriod
-            ? { [previousTimer]: oldSoccerClockState.periods[previousPeriod][previousTimer] + now - lastTimeSwitched }
-            : {}),
-        },
-      };
-
-      // switch to halted mode
-      const newSoccerClockState: SoccerClockState = {
-        ...oldSoccerClockState,
-        lastTimeSwitched: now,
-        currentTimer: nextTimer,
-        periods: newPeriods,
-      };
-      return newSoccerClockState;
     }
-
     default:
-      return oldSoccerClockState;
+      throw new InvalidStateChangeException(oldSoccerClockState, action);
   }
 };

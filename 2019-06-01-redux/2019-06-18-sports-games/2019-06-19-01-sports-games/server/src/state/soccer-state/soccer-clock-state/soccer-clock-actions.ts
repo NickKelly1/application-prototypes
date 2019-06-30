@@ -1,6 +1,7 @@
 import { ThunkAction } from '../../../lib/store/store.types';
-import { SoccerGameActionTypes } from '../soccer-game.types';
-import { SoccerClockState, SOCCER_CLOCK_PERIOD, SOCCER_CLOCK_TIMER } from './soccer-clock-types';
+import { SoccerGameActionTypes } from '../soccer-game-state';
+import { SoccerClockState, SOCCER_CLOCK_PERIOD, SOCCER_CLOCK_TIMER } from './soccer-clock-state';
+import { ValueFrom } from '../../../../@types/helpers';
 
 export enum SOCCER_CLOCK_ACTION_NAMES {
   NEW_GAME = 'NEW_GAME',
@@ -21,16 +22,16 @@ export type SoccerClockActionTypes =
     }
   | {
       type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER;
-      payload: { now: number; nextTimer: SOCCER_CLOCK_TIMER };
+      payload: { now: number; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> };
     }
   | {
       type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD;
       payload:
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD.FIRST_HALF; nextTimer: SOCCER_CLOCK_TIMER }
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD.MID_BREAK; nextTimer: SOCCER_CLOCK_TIMER }
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD.PENALTIES; nextTimer: SOCCER_CLOCK_TIMER }
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD.SECOND_HALF; nextTimer: SOCCER_CLOCK_TIMER }
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD.GAME_OVER };
+        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['FIRST_HALF']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
+        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['MID_BREAK']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
+        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['SECOND_HALF']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
+        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['PENALTIES']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
+        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['GAME_OVER'] };
     };
 
 /**

@@ -19,6 +19,8 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "cSpell.words": [
     "Cavill",
-    "camelcase"
+    "camelcase",
+    "transitionable",
+    "untransitionable"
   ],
 }

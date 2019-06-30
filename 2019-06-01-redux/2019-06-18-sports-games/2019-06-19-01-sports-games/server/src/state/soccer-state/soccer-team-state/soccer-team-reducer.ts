@@ -1,6 +1,6 @@
-import { SoccerGameActionTypes } from '../soccer-game.types';
+import { SoccerGameActionTypes } from '../soccer-game-state';
 import { SOCCER_TEAM_ACTION_NAMES } from './soccer-team-actions';
-import { SoccerTeamsState, SOCCER_TEAM_NUMBERS } from './soccer-team-types';
+import { SoccerTeamsState, SOCCER_TEAM_NUMBERS } from './soccer-team-state';
 import { Reducer } from '../../../lib/store/store.types';
 
 export const soccerTeamReducer: Reducer<SoccerTeamsState, SoccerGameActionTypes> = (
@@ -11,9 +11,13 @@ export const soccerTeamReducer: Reducer<SoccerTeamsState, SoccerGameActionTypes>
     case SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME:
       return [
         // team 1
-        action.payload.teamNumber === SOCCER_TEAM_NUMBERS.ONE ? { ...state[0], name: action.payload.newName } : state[0],
+        action.payload.teamNumber === SOCCER_TEAM_NUMBERS.ONE
+          ? { ...state[0], name: action.payload.newName }
+          : state[0],
         // team 2
-        action.payload.teamNumber === SOCCER_TEAM_NUMBERS.TWO ? { ...state[1], name: action.payload.newName } : state[1],
+        action.payload.teamNumber === SOCCER_TEAM_NUMBERS.TWO
+          ? { ...state[1], name: action.payload.newName }
+          : state[1],
       ];
 
     case SOCCER_TEAM_ACTION_NAMES.INCREMENT_SCORE:

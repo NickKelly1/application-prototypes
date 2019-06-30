@@ -1,8 +1,8 @@
 import { SOCCER_TEAM_ACTION_NAMES, soccerTeamActions } from './soccer-team-actions';
 import { soccerTeamReducer } from './soccer-team-reducer';
 import { createStore } from '../../../lib/store/store';
-import { SoccerGameActionTypes } from '../soccer-game.types';
-import { SoccerTeamsState, SOCCER_TEAM_NUMBERS } from './soccer-team-types';
+import { SoccerGameActionTypes } from '../soccer-game-state';
+import { SoccerTeamsState, SOCCER_TEAM_NUMBERS } from './soccer-team-state';
 
 const setup = () => {
   const initialState: SoccerTeamsState = [
