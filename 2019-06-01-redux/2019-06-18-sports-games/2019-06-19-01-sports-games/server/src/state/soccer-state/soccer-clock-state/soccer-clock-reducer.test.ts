@@ -72,10 +72,14 @@ const setup = (
   };
 };
 
+/**
+ * @test
+ * DESCRIBE Soccer Clock State
+ */
 describe('Soccer Clock State', () => {
   /**
    * @test
-   * should begin when possible
+   * IT should begin when possible
    */
   it('should begin when possible', () => {
     // setup
@@ -99,146 +103,284 @@ describe('Soccer Clock State', () => {
 
   /**
    * @test
-   * should switch periods when possible
+   * DESCRIBE Action SWITCH_PERIOD
    */
-  it('switch periods where possible', () => {
+  describe(`action "${SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD}"`, () => {
     const now = Date.now();
 
     const allPeriods = Object.values(SOCCER_CLOCK_PERIOD);
+    type allPeriods = typeof allPeriods;
+
     const untransitionablePeriods = [SOCCER_CLOCK_PERIOD.NOT_STARTED];
+    type untransitionablePeriods = typeof untransitionablePeriods;
+
     const transitionablePeriods = inThisButNotThat(allPeriods, untransitionablePeriods);
+    type transitionablePeriods = typeof transitionablePeriods;
+
     const timers = Object.values(SOCCER_CLOCK_TIMER);
+    type timers = typeof timers;
+
+    const periodsWithTimers = SOCCER_CLOCK_PERIODS_WITH_TIMERS;
+    type periodsWithTimers = typeof SOCCER_CLOCK_PERIODS_WITH_TIMERS;
 
     // @note: assume all periods with timers are transitionable
-    const transitionablePeriodsWithTimers = SOCCER_CLOCK_PERIODS_WITH_TIMERS;
-    const transitionablePeriodsWithoutTimers = inThisButNotThat(transitionablePeriods, transitionablePeriodsWithTimers);
+    const transitionablePeriodsWithTimers = periodsWithTimers;
+    type transitionablePeriodsWithTimers = typeof transitionablePeriodsWithTimers;
 
-    // periods with timers
+    const transitionablePeriodsWithoutTimers = inThisButNotThat(transitionablePeriods, transitionablePeriodsWithTimers);
+    type transitionablePeriodsWithoutTimers = typeof transitionablePeriodsWithoutTimers;
+
+    /**
+     * @description
+     * Periods with timers
+     */
     transitionablePeriodsWithTimers.forEach(previousPeriodWithTimer => {
       timers.forEach(previousTimer => {
         transitionablePeriodsWithTimers.forEach(nextPeriodWithTimer => {
-          // periods with timers -> period with timer
           timers.forEach(nextTimer => {
-            const { store } = setup({ period: previousPeriodWithTimer, timer: previousTimer, lastTimeSwitched: now });
+            describe(`transition [FROM] ["${previousPeriodWithTimer}"]["${previousTimer}"] [TO] ["${nextPeriodWithTimer}"]["${nextTimer}"]`, () => {
+              const { store } = setup({
+                period: previousPeriodWithTimer,
+                timer: previousTimer,
+                lastTimeSwitched: now,
+              });
+              const { timeIncrement, nextNow } = incrementTime(now);
+              store.dispatch({
+                type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+                payload: { nextPeriod: nextPeriodWithTimer, now: nextNow, nextTimer },
+              });
+
+              it(`should transition to period ["${nextPeriodWithTimer}"]`, () =>
+                expect(store.getState().currentPeriod).toBe(nextPeriodWithTimer));
+
+              it(`should transition to timer "${nextTimer}"`, () =>
+                expect(store.getState().currentTimer).toBe(nextTimer));
+
+              it(`should change "[${previousPeriodWithTimer}][${previousTimer}]" by delta "${timeIncrement}"`, () =>
+                expect(store.getState().timers[previousPeriodWithTimer][previousTimer]).toEqual(timeIncrement));
+
+              periodsWithTimers.forEach(period =>
+                timers.forEach(timer => {
+                  if (!(period === previousPeriodWithTimer && previousTimer === timer)) {
+                    it(`should NOT change "[${period}][${timer}]"`, () => {
+                      expect(store.getState().timers[period][timer]).toEqual(0);
+                    });
+                  }
+                }),
+              );
+            });
+          });
+        });
+
+        // periods with timers -> period without timer
+        transitionablePeriodsWithoutTimers.forEach(nextPeriodWithoutTimer =>
+          describe(`transition [FROM] ["${previousPeriodWithTimer}"]["${previousTimer}"] [TO] ["${nextPeriodWithoutTimer}"]`, () => {
+            const { store } = setup({
+              period: previousPeriodWithTimer,
+              timer: previousTimer,
+              lastTimeSwitched: now,
+            });
+            const { timeIncrement, nextNow } = incrementTime(now);
+            store.dispatch({
+              type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+              payload: { nextPeriod: nextPeriodWithoutTimer, now: nextNow },
+            });
+
+            it(`should transition to period "[${nextPeriodWithoutTimer}]"`, () =>
+              expect(store.getState().currentPeriod).toBe(nextPeriodWithoutTimer));
+
+            it(`should transition to null timer`, () => expect(store.getState().currentTimer).toBe(null));
+
+            it(`should increment "[${previousPeriodWithTimer}][${previousTimer}]" by "${timeIncrement}"`, () =>
+              expect(store.getState().timers[previousPeriodWithTimer][previousTimer]).toEqual(timeIncrement));
+
+            periodsWithTimers.forEach(period =>
+              timers.forEach(timer => {
+                if (!(period === previousPeriodWithTimer && previousTimer === timer)) {
+                  it(`should NOT change "[${period}][${timer}]"`, () => {
+                    expect(store.getState().timers[period][timer]).toEqual(0);
+                  });
+                }
+              }),
+            );
+          }),
+        );
+
+        // periods with timers -> invalid periods
+        untransitionablePeriods.forEach(untransitionablePeriod =>
+          describe(`transition [FROM] ["${previousPeriodWithTimer}"]["${previousTimer}"] [TO] (invalid) ["${untransitionablePeriod}"]`, () => {
+            const { store } = setup({
+              period: previousPeriodWithTimer,
+              timer: previousTimer,
+              lastTimeSwitched: now,
+            });
+            const { nextNow } = incrementTime(now);
+
+            it(`should throw error trying to transition to "[${untransitionablePeriod}]"`, () => {
+              expect(() => {
+                store.dispatch({
+                  type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+                  // @ts-ignore
+                  payload: { nextPeriod: untransitionablePeriod, now: nextNow },
+                });
+              }).toThrowError();
+            });
+          }),
+        );
+      });
+    });
+
+    /**
+     * @description
+     * Periods without timers
+     */
+    transitionablePeriodsWithoutTimers.forEach(previousPeriodWithoutTimer => {
+      transitionablePeriodsWithTimers.forEach(nextPeriodWithTimer => {
+        timers.forEach(nextTimer => {
+          describe(`transition [FROM] ["${previousPeriodWithoutTimer}"] [TO] ["${nextPeriodWithTimer}"]["${nextTimer}"]`, () => {
+            const { store } = setup({
+              period: previousPeriodWithoutTimer,
+              lastTimeSwitched: now,
+            });
             const { timeIncrement, nextNow } = incrementTime(now);
             store.dispatch({
               type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
               payload: { nextPeriod: nextPeriodWithTimer, now: nextNow, nextTimer },
             });
 
-            //
-            expect(store.getState().currentPeriod).toBe(nextPeriodWithTimer);
+            it(`should transition to period "[${nextPeriodWithTimer}]"`, () =>
+              expect(store.getState().currentPeriod).toBe(nextPeriodWithTimer));
 
-            // assert all timers for next state to be zero
-            if (previousPeriodWithTimer !== nextPeriodWithTimer)
-              timers.forEach(timer => expect(store.getState().timers[nextPeriodWithTimer][timer]).toEqual(0));
-            // assert only the incremented timer to be zero
-            else if (previousPeriodWithTimer === nextPeriodWithTimer)
-              timers.forEach(timer =>
-                expect(store.getState().timers[previousPeriodWithTimer][timer]).toEqual(
-                  timer === previousTimer ? timeIncrement : 0,
-                ),
-              );
+            it(`should transition to timer "${nextTimer}"`, () =>
+              expect(store.getState().currentTimer).toBe(nextTimer));
+
+            periodsWithTimers.forEach(period =>
+              timers.forEach(timer => {
+                it(`should NOT change "[${period}][${timer}]"`, () => {
+                  expect(store.getState().timers[period][timer]).toEqual(0);
+                });
+              }),
+            );
           });
-        });
-
-        // periods with timers -> period without timer
-        transitionablePeriodsWithoutTimers.forEach(nextPeriodWithoutTimer => {
-          const { store } = setup({ period: previousPeriodWithTimer, timer: previousTimer, lastTimeSwitched: now });
-          store.dispatch({
-            type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
-            payload: { nextPeriod: nextPeriodWithoutTimer, now },
-          });
-          expect(store.getState().timers[previousPeriodWithTimer][previousTimer]).toBe(timeIncrement);
-          expect(store.getState().currentPeriod).toBe(nextPeriodWithTimer);
-        });
-
-        // periods with timers -> invalid periods
-        untransitionablePeriods.forEach(untransitionablePeriod => {
-          const { store } = setup({ period: previousPeriodWithTimer, timer: previousTimer, lastTimeSwitched: now });
-          expect(() =>
-            store.dispatch({
-              type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
-              // @ts-ignore
-              payload: { nextPeriod: untransitionablePeriod, now },
-            }),
-          ).toThrowError();
         });
       });
+
+      // periods with timers -> period without timer
+      transitionablePeriodsWithoutTimers.forEach(nextPeriodWithoutTimer =>
+        describe(`transition [FROM] ["${previousPeriodWithoutTimer}"] [TO] ["${nextPeriodWithoutTimer}"]`, () => {
+          const { store } = setup({
+            period: previousPeriodWithoutTimer,
+            lastTimeSwitched: now,
+          });
+          const { nextNow } = incrementTime(now);
+          store.dispatch({
+            type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+            payload: { nextPeriod: nextPeriodWithoutTimer, now: nextNow },
+          });
+
+          it(`should transition to period "[${nextPeriodWithoutTimer}]"`, () =>
+            expect(store.getState().currentPeriod).toBe(nextPeriodWithoutTimer));
+
+          it(`should transition to null timer`, () => expect(store.getState().currentTimer).toBe(null));
+
+          periodsWithTimers.forEach(period =>
+            timers.forEach(timer => {
+              it(`should NOT change "[${period}][${timer}]"`, () => {
+                expect(store.getState().timers[period][timer]).toEqual(0);
+              });
+            }),
+          );
+        }),
+      );
+
+      // periods with timers -> invalid periods
+      untransitionablePeriods.forEach(untransitionablePeriod =>
+        describe(`transition [FROM] ["${previousPeriodWithoutTimer}"] [TO] (invalid) ["${untransitionablePeriod}"]`, () => {
+          const { store } = setup({
+            period: previousPeriodWithoutTimer,
+            lastTimeSwitched: now,
+          });
+          const { nextNow } = incrementTime(now);
+
+          it(`should throw error trying to transition to "[${untransitionablePeriod}]"`, () => {
+            expect(() => {
+              store.dispatch({
+                type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+                // @ts-ignore
+                payload: { nextPeriod: untransitionablePeriod, now: nextNow },
+              });
+            }).toThrowError();
+          });
+        }),
+      );
     });
 
-    // // periods without timers
-    // transitionablePeriodsWithoutTimers.forEach(previousPeriodWithoutTimer => {
-    //   transitionablePeriodsWithTimers.forEach(nextPeriodWithTimer => {
-    //     // periods without -> period with timer
-    //     timers.forEach(nextTimer => {
-    //       const { store } = setup({ period: previousPeriodWithoutTimer });
-    //       store.dispatch({
-    //         type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
-    //         payload: { nextPeriod: nextPeriodWithTimer, now, nextTimer },
-    //       });
-    //     });
-    //   });
+    /**
+     * @description
+     * invalid periods
+     */
+    untransitionablePeriods.forEach(untransitionablePeriod => {
+      transitionablePeriodsWithTimers.forEach(nextPeriodWithTimer => {
+        timers.forEach(nextTimer => {
+          describe(`transition [FROM] (invalid) ["${untransitionablePeriod}"] [TO] ["${nextPeriodWithTimer}"]["${nextTimer}"]`, () => {
+            const { store } = setup({
+              period: untransitionablePeriod,
+              lastTimeSwitched: now,
+            });
+            const { nextNow } = incrementTime(now);
 
-    //   // periods without -> period without timer
-    //   transitionablePeriodsWithoutTimers.forEach(nextPeriodWithoutTimer => {
-    //     const { store } = setup({ period: previousPeriodWithoutTimer });
-    //     store.dispatch({
-    //       type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
-    //       payload: { nextPeriod: nextPeriodWithoutTimer, now },
-    //     });
-    //   });
+            it(`should throw error trying to transition from (invalid) ["${untransitionablePeriod}"] to ["${nextPeriodWithTimer}"]["${nextTimer}"]`, () => {
+              expect(() => {
+                store.dispatch({
+                  type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+                  payload: { nextPeriod: nextPeriodWithTimer, now: nextNow, nextTimer },
+                });
+              }).toThrowError();
+            });
+          });
+        });
+      });
 
-    //   // periods with timers -> invalid periods
-    //   untransitionablePeriods.forEach(nextInvalidPeriod => {
-    //     const { store } = setup({ period: previousPeriodWithoutTimer });
-    //     expect(() =>
-    //       store.dispatch({
-    //         type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
-    //         // @ts-ignore
-    //         payload: { nextPeriod: nextInvalidPeriod, now },
-    //       }),
-    //     ).toThrowError();
-    //   });
-    // });
+      // periods with timers -> period without timer
+      transitionablePeriodsWithoutTimers.forEach(nextPeriodWithoutTimer =>
+        describe(`transition [FROM] (invalid) ["${untransitionablePeriod}"] [TO] ["${nextPeriodWithoutTimer}"]`, () => {
+          const { store } = setup({
+            period: untransitionablePeriod,
+            lastTimeSwitched: now,
+          });
+          const { nextNow } = incrementTime(now);
 
-    // // untransitionable periods
-    // untransitionablePeriods.forEach(previousInvalidPeriod => {
-    //   transitionablePeriodsWithTimers.forEach(nextPeriodWithTimer => {
-    //     // invalid period -> period with timer
-    //     timers.forEach(nextTimer => {
-    //       const { store } = setup({ period: previousInvalidPeriod });
-    //       expect(() => {
-    //         store.dispatch({
-    //           type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
-    //           payload: { nextPeriod: nextPeriodWithTimer, now, nextTimer },
-    //         });
-    //       }).toThrowError();
-    //     });
-    //   });
+          it(`should throw error trying to transition from "[${untransitionablePeriod}]" to ["${nextPeriodWithoutTimer}"]`, () => {
+            expect(() => {
+              store.dispatch({
+                type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+                payload: { nextPeriod: nextPeriodWithoutTimer, now: nextNow },
+              });
+            }).toThrowError();
+          });
+        }),
+      );
 
-    //   // invalid period -> period without timer
-    //   transitionablePeriodsWithoutTimers.forEach(nextPeriodWithoutTimer => {
-    //     const { store } = setup({ period: previousInvalidPeriod });
-    //     expect(() => {
-    //       store.dispatch({
-    //         type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
-    //         payload: { nextPeriod: nextPeriodWithoutTimer, now },
-    //       });
-    //     }).toThrowError();
-    //   });
+      // periods with timers -> invalid periods
+      untransitionablePeriods.forEach(untransitionablePeriod =>
+        describe(`transition [FROM] (invalid) ["${untransitionablePeriod}"] [TO] (invalid) ["${untransitionablePeriod}"]`, () => {
+          const { store } = setup({
+            period: untransitionablePeriod,
+            lastTimeSwitched: now,
+          });
+          const { nextNow } = incrementTime(now);
 
-    //   // invalid period -> invalid periods
-    //   untransitionablePeriods.forEach(nextInvalidPeriod => {
-    //     const { store } = setup({ period: previousInvalidPeriod });
-    //     expect(() =>
-    //       store.dispatch({
-    //         type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
-    //         // @ts-ignore
-    //         payload: { nextPeriod: nextInvalidPeriod, now },
-    //       }),
-    //     ).toThrowError();
-    //   });
-    // });
+          it(`should throw error trying to transition to "[${untransitionablePeriod}]"`, () => {
+            expect(() => {
+              store.dispatch({
+                type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+                // @ts-ignore
+                payload: { nextPeriod: untransitionablePeriod, now: nextNow },
+              });
+            }).toThrowError();
+          });
+        }),
+      );
+    });
   });
 });

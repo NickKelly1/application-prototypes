@@ -145,6 +145,10 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
             currentPeriod: nextPeriod,
             currentTimer: nextTimer,
             lastTimeSwitched: now,
+            timers: {
+              ...oldSoccerClockState.timers,
+              ...previousPeriodTimer,
+            },
           };
         }
         case SOCCER_CLOCK_PERIOD.GAME_OVER:
@@ -153,7 +157,12 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
             ...oldSoccerClockState,
             ...previousPeriodTimer,
             currentPeriod: nextPeriod,
+            currentTimer: null,
             lastTimeSwitched: now,
+            timers: {
+              ...oldSoccerClockState.timers,
+              ...previousPeriodTimer,
+            },
           };
         default:
           throw new InvalidStateChangeException(oldSoccerClockState, action);
