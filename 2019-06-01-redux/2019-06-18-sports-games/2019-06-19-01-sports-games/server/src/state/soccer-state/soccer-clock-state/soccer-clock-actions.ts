@@ -8,7 +8,6 @@ export enum SOCCER_CLOCK_ACTION_NAMES {
   BEGIN_GAME = 'BEGIN_GAME',
   SWITCH_TIMER = 'SWITCH_TIMER',
   SWITCH_PERIOD = 'SWITCH_PERIOD',
-  END_GAME = 'END_GAME',
 }
 
 export type SoccerClockActionTypes =
@@ -26,11 +25,13 @@ export type SoccerClockActionTypes =
     }
   | {
       type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD;
-      payload:
+      payload:  // @note: must include all periods - with timers & without // periods with timers
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['FIRST_HALF']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['MID_BREAK']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['SECOND_HALF']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['PENALTIES']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
+        // periods without timers
+        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['NOT_STARTED'] }
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['GAME_OVER'] };
     };
 

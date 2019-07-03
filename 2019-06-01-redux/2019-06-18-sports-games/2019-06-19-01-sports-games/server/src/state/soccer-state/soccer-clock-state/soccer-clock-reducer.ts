@@ -90,12 +90,13 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
       const { currentPeriod, lastTimeSwitched } = oldSoccerClockState;
       const { currentTimer: previousTimer } = oldSoccerClockState;
 
-      if (!tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, currentPeriod))
-        throw new InvalidStateChangeException(oldSoccerClockState, action);
+      // cannot switch timer if current period doesn't have timers
+      if (!tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, currentPeriod)) return oldSoccerClockState;
+
+      // should have a previous timer and last time switched
       if (lastTimeSwitched === null) throw new InvalidStateChangeException(oldSoccerClockState, action);
       if (previousTimer === null) throw new InvalidStateChangeException(oldSoccerClockState, action);
 
-      // switch to halted mode
       const newSoccerClockState: SoccerClockState = {
         ...oldSoccerClockState,
         lastTimeSwitched: now,
@@ -118,7 +119,7 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
      */
     case SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD: {
       const { currentPeriod: previousPeriod, currentTimer: previousTimer, lastTimeSwitched } = oldSoccerClockState;
-      const { now } = action.payload;
+      const { now, nextPeriod } = action.payload;
 
       let previousPeriodTimer = {};
       if (tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, previousPeriod)) {
@@ -134,11 +135,12 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
       }
 
       switch (action.payload.nextPeriod) {
+        // periods with timers
         case SOCCER_CLOCK_PERIOD.FIRST_HALF:
         case SOCCER_CLOCK_PERIOD.MID_BREAK:
         case SOCCER_CLOCK_PERIOD.SECOND_HALF:
         case SOCCER_CLOCK_PERIOD.PENALTIES: {
-          const { now, nextPeriod, nextTimer } = action.payload;
+          const { nextTimer } = action.payload;
           return {
             ...oldSoccerClockState,
             ...previousPeriodTimer,
@@ -151,8 +153,10 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
             },
           };
         }
+
+        // periods without timers
+        case SOCCER_CLOCK_PERIOD.NOT_STARTED:
         case SOCCER_CLOCK_PERIOD.GAME_OVER:
-          const { now, nextPeriod } = action.payload;
           return {
             ...oldSoccerClockState,
             ...previousPeriodTimer,
