@@ -103,7 +103,7 @@ describe('Soccer Clock State', () => {
                 lastTimeSwitched: now,
               }),
             );
-            const { timeIncrement, nextNow } = incrementTime(now);
+            const { timeIncrement, nextNow } = soccerClockTestHelpers.incrementTime(now);
             store.dispatch({
               type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
               payload: { nextPeriod: nextPeriodWithoutTimer, now: nextNow },
@@ -139,7 +139,7 @@ describe('Soccer Clock State', () => {
                 lastTimeSwitched: now,
               }),
             );
-            const { nextNow } = incrementTime(now);
+            const { nextNow } = soccerClockTestHelpers.incrementTime(now);
             store.dispatch({
               type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
               payload: { nextPeriod: nextPeriodWithTimer, now: nextNow, nextTimer },
@@ -166,7 +166,7 @@ describe('Soccer Clock State', () => {
               lastTimeSwitched: now,
             }),
           );
-          const { nextNow } = incrementTime(now);
+          const { nextNow } = soccerClockTestHelpers.incrementTime(now);
           store.dispatch({
             type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
             payload: { nextPeriod: nextPeriodWithoutTimer, now: nextNow },
@@ -200,7 +200,7 @@ describe('Soccer Clock State', () => {
               }),
             );
 
-            const { nextNow, timeIncrement } = incrementTime(now);
+            const { nextNow, timeIncrement } = soccerClockTestHelpers.incrementTime(now);
 
             store.dispatch({
               type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER,
@@ -231,7 +231,7 @@ describe('Soccer Clock State', () => {
             }),
           );
 
-          const { nextNow } = incrementTime(now);
+          const { nextNow } = soccerClockTestHelpers.incrementTime(now);
 
           const initialState = store.getState();
           store.dispatch({
