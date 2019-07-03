@@ -105,13 +105,14 @@ const resumeGame = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameA
  * @param now
  */
 const nextPeriod = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => (dispatch, getState) => {
-  const { currentPeriod } = getState();
+  const { currentPeriod: previousPeriod, currentTimer } = getState();
 
-  switch (currentPeriod) {
+  switch (previousPeriod) {
     // first half -> mid break
     case SOCCER_CLOCK_PERIOD.FIRST_HALF: {
       const nextPeriod = SOCCER_CLOCK_PERIOD.MID_BREAK;
-      const nextTimer = SOCCER_CLOCK_TIMER.RUNNING;
+      // @note: if currentTimer is null then the state is invalid
+      const nextTimer = currentTimer !== null ? currentTimer : SOCCER_CLOCK_TIMER.HALTED;
       dispatch({
         type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
         payload: { now, nextPeriod, nextTimer },
@@ -121,7 +122,8 @@ const nextPeriod = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameA
     // mid break -> second half
     case SOCCER_CLOCK_PERIOD.MID_BREAK: {
       const nextPeriod = SOCCER_CLOCK_PERIOD.SECOND_HALF;
-      const nextTimer = SOCCER_CLOCK_TIMER.RUNNING;
+      // @note: if currentTimer is null then the state is invalid
+      const nextTimer = currentTimer !== null ? currentTimer : SOCCER_CLOCK_TIMER.HALTED;
       dispatch({
         type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
         payload: { now, nextPeriod, nextTimer },
@@ -148,7 +150,7 @@ const nextPeriod = (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameA
       break;
     }
     default:
-      throw new TypeError(`Cannot call nextPeriod when current period is: "${currentPeriod}"`);
+      throw new TypeError(`Cannot call nextPeriod when current period is: "${previousPeriod}"`);
   }
 };
 
