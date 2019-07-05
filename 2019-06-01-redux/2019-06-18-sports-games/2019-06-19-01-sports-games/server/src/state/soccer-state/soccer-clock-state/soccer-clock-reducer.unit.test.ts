@@ -1,20 +1,17 @@
 import {
-  SingleSoccerClockState,
   SOCCER_CLOCK_PERIOD,
   SOCCER_CLOCK_TIMER,
-  SoccerClockState,
   SOCCER_CLOCK_PERIODS_WITH_TIMERS,
   SOCCER_CLOCK_CAN_BEGIN_PERIODS,
   SOCCER_CLOCK_ALL_TIMERS,
   SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS,
+  SOCCER_CLOCK_ALL_PERIODS,
 } from './soccer-clock-state';
-import { createStore } from '../../../lib/store/store';
-import { soccerClockReducer } from './soccer-clock-reducer';
 import { SOCCER_CLOCK_ACTION_NAMES } from './soccer-clock-actions';
-import { SoccerGameActionTypes } from '../soccer-game-state';
-import { ValueFrom } from '../../../../@types/helpers';
 import { inThisButNotThat } from '../../../helpers/in-this-but-not-that';
-import { soccerClockTestHelpers } from './_soccer-clock-test-helpers.test';
+import { soccerClockTestHelpers } from './soccer-clock.helpers.test';
+import { tupleIncludes } from '../../../helpers/tuple-includes';
+import { ElementOf, ValueFrom } from '../../../../@types/helpers';
 
 /**
  * @test
@@ -33,7 +30,9 @@ describe('Soccer Clock State', () => {
 
     validPeriods.forEach(validPeriod => {
       const { store } = soccerClockTestHelpers.setup(
-        soccerClockTestHelpers.soccerClockStateFactory({ currentPeriod: validPeriod }),
+        soccerClockTestHelpers.createSoccerClockState({
+          currentPeriod: validPeriod,
+        }),
       );
       store.dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME, payload: { now } });
       expect(store.getState().currentPeriod).toEqual(SOCCER_CLOCK_PERIOD.FIRST_HALF);
@@ -41,11 +40,43 @@ describe('Soccer Clock State', () => {
       expect(store.getState().lastTimeSwitched).toEqual(now);
     });
 
-    invalidPeriods.forEach(invalidPeriod => {
-      const { store } = soccerClockTestHelpers.setup(
-        soccerClockTestHelpers.soccerClockStateFactory({ currentPeriod: invalidPeriod }),
-      );
+    /**
+     * @description
+     * Runs tests expected to throw errors
+     *
+     * Conditionally uses different states based on inputs
+     *
+     * @param invalidPeriod
+     * @param timer
+     * @param lastTimeSwitched
+     */
+    const throwTestRunner = <P extends ElementOf<SOCCER_CLOCK_ALL_PERIODS>>(
+      invalidPeriod: P,
+      timer: P extends ElementOf<SOCCER_CLOCK_PERIODS_WITH_TIMERS> ? ElementOf<SOCCER_CLOCK_ALL_TIMERS> : undefined,
+      lastTimeSwitched: P extends ElementOf<SOCCER_CLOCK_PERIODS_WITH_TIMERS> ? number : undefined,
+    ) => {
+      // TODO: get types working so they don't have to be hard coded
+      const stateArguments = !tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, invalidPeriod)
+        ? { currentPeriod: invalidPeriod as ElementOf<SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS> }
+        : {
+            currentPeriod: invalidPeriod as ElementOf<SOCCER_CLOCK_PERIODS_WITH_TIMERS>,
+            currentTimer: timer as ElementOf<SOCCER_CLOCK_ALL_TIMERS>,
+            lastTimeSwitched: lastTimeSwitched as number,
+          };
+
+      const { store } = soccerClockTestHelpers.setup(soccerClockTestHelpers.createSoccerClockState(stateArguments));
       expect(() => store.dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME, payload: { now } })).toThrowError();
+    };
+
+    // fire throwTestRunner
+    invalidPeriods.forEach(invalidPeriod => {
+      if (tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, invalidPeriod)) {
+        SOCCER_CLOCK_ALL_TIMERS.forEach(timer => {
+          throwTestRunner(invalidPeriod, timer, soccerClockTestHelpers.incrementTime(now).nextNow);
+        });
+      } else {
+        throwTestRunner(invalidPeriod, undefined, undefined);
+      }
     });
   });
 
@@ -66,7 +97,7 @@ describe('Soccer Clock State', () => {
           SOCCER_CLOCK_ALL_TIMERS.forEach(nextTimer => {
             it(`Should transition FROM -> [${previousPeriodWithTimer}][${previousTimer}] -> TO -> [${nextPeriodWithTimer}][${nextTimer}]`, () => {
               const { store } = soccerClockTestHelpers.setup(
-                soccerClockTestHelpers.soccerClockStateFactory({
+                soccerClockTestHelpers.createSoccerClockState({
                   currentPeriod: previousPeriodWithTimer,
                   currentTimer: previousTimer,
                   lastTimeSwitched: now,
@@ -97,7 +128,7 @@ describe('Soccer Clock State', () => {
         SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS.forEach(nextPeriodWithoutTimer =>
           it(`Should transition FROM -> [${previousPeriodWithTimer}][${previousTimer}] -> TO -> [${nextPeriodWithoutTimer}]`, () => {
             const { store } = soccerClockTestHelpers.setup(
-              soccerClockTestHelpers.soccerClockStateFactory({
+              soccerClockTestHelpers.createSoccerClockState({
                 currentPeriod: previousPeriodWithTimer,
                 currentTimer: previousTimer,
                 lastTimeSwitched: now,
@@ -134,9 +165,8 @@ describe('Soccer Clock State', () => {
         SOCCER_CLOCK_ALL_TIMERS.forEach(nextTimer => {
           it(`Should transition FROM -> [${previousPeriodWithoutTimer}] -> TO -> [${nextPeriodWithTimer}][${nextTimer}]`, () => {
             const { store } = soccerClockTestHelpers.setup(
-              soccerClockTestHelpers.soccerClockStateFactory({
+              soccerClockTestHelpers.createSoccerClockState({
                 currentPeriod: previousPeriodWithoutTimer,
-                lastTimeSwitched: now,
               }),
             );
             const { nextNow } = soccerClockTestHelpers.incrementTime(now);
@@ -161,9 +191,8 @@ describe('Soccer Clock State', () => {
       SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS.forEach(nextPeriodWithoutTimer =>
         it(`Should transition FROM -> [${previousPeriodWithoutTimer}] -> TO -> [${nextPeriodWithoutTimer}]`, () => {
           const { store } = soccerClockTestHelpers.setup(
-            soccerClockTestHelpers.soccerClockStateFactory({
+            soccerClockTestHelpers.createSoccerClockState({
               currentPeriod: previousPeriodWithoutTimer,
-              lastTimeSwitched: now,
             }),
           );
           const { nextNow } = soccerClockTestHelpers.incrementTime(now);
@@ -193,7 +222,7 @@ describe('Soccer Clock State', () => {
         SOCCER_CLOCK_ALL_TIMERS.forEach(nextTimer => {
           it(`Should transition IN [${currentPeriodWithTimer}] FROM -> [${previousTimer}] -> TO -> [${nextTimer}]`, () => {
             const { store } = soccerClockTestHelpers.setup(
-              soccerClockTestHelpers.soccerClockStateFactory({
+              soccerClockTestHelpers.createSoccerClockState({
                 currentPeriod: currentPeriodWithTimer,
                 currentTimer: previousTimer,
                 lastTimeSwitched: now,
@@ -226,7 +255,7 @@ describe('Soccer Clock State', () => {
       SOCCER_CLOCK_ALL_TIMERS.forEach(nextTimer => {
         it(`Should cause no transition IN [${currentPeriodWithoutTimer}]`, () => {
           const { store } = soccerClockTestHelpers.setup(
-            soccerClockTestHelpers.soccerClockStateFactory({
+            soccerClockTestHelpers.createSoccerClockState({
               currentPeriod: currentPeriodWithoutTimer,
             }),
           );

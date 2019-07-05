@@ -13,7 +13,7 @@ import { ElementOf } from '../../@types/helpers';
  */
 export const tupleIncludes = <T extends readonly string[] | string[]>(
   tuple: T,
-  valueToCheck: string,
+  valueToCheck: any,
 ): valueToCheck is ElementOf<T> => {
   if (tuple.includes(valueToCheck)) return true;
   return false;
