@@ -8,19 +8,15 @@ export const soccerTeamReducer: Reducer<SoccerTeamsState, SoccerGameActionTypes>
   action: SoccerGameActionTypes,
 ): SoccerTeamsState => {
   switch (action.type) {
-    case SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME:
+    case SOCCER_TEAM_ACTION_NAMES.CHANGE_TEAM_NAME:
       return [
         // team 1
-        action.payload.teamNumber === SOCCER_TEAM_NUMBERS.ONE
-          ? { ...state[0], name: action.payload.newName }
-          : state[0],
+        action.payload.teamNumber === SOCCER_TEAM_NUMBERS.ONE ? { ...state[0], name: action.payload.newName } : state[0],
         // team 2
-        action.payload.teamNumber === SOCCER_TEAM_NUMBERS.TWO
-          ? { ...state[1], name: action.payload.newName }
-          : state[1],
+        action.payload.teamNumber === SOCCER_TEAM_NUMBERS.TWO ? { ...state[1], name: action.payload.newName } : state[1],
       ];
 
-    case SOCCER_TEAM_ACTION_NAMES.INCREMENT_SCORE:
+    case SOCCER_TEAM_ACTION_NAMES.INCREMENT_TEAM_SCORE:
       return [
         // team 1
         action.payload.teamNumber === SOCCER_TEAM_NUMBERS.ONE

@@ -19,7 +19,10 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "cSpell.words": [
     "Cavill",
+    "beginnable",
     "camelcase",
+    "ltsa",
+    "stringable",
     "transitionable",
     "untransitionable"
   ],

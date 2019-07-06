@@ -29,7 +29,7 @@ const setup = () => {
 };
 
 describe('Soccer State', () => {
-  it(`should change teams name when "${SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME}" is fired`, () => {
+  it(`should change teams name when "${SOCCER_TEAM_ACTION_NAMES.CHANGE_TEAM_NAME}" is fired`, () => {
     const { initialState, store } = setup();
 
     // target
@@ -54,7 +54,7 @@ describe('Soccer State', () => {
     expect(store.getState()[otherTeamIndex].name).toBe(otherTeamName);
   });
 
-  it(`should increment score when "${SOCCER_TEAM_ACTION_NAMES.INCREMENT_SCORE}" is fired`, () => {
+  it(`should increment score when "${SOCCER_TEAM_ACTION_NAMES.INCREMENT_TEAM_SCORE}" is fired`, () => {
     const { initialState, store } = setup();
 
     // target

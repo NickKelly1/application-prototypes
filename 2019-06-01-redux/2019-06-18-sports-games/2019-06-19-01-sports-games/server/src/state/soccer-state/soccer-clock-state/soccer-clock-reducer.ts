@@ -85,13 +85,14 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
      * @description
      * Switch timer within a period
      */
-    case SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER: {
+    case SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER: {
       const { now, nextTimer } = action.payload;
       const { currentPeriod, lastTimeSwitched } = oldSoccerClockState;
       const { currentTimer: previousTimer } = oldSoccerClockState;
 
       // cannot switch timer if current period doesn't have timers
-      if (!tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, currentPeriod)) return oldSoccerClockState;
+      if (!tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, currentPeriod))
+        throw new InvalidStateChangeException(oldSoccerClockState, action);
 
       // should have a previous timer and last time switched
       if (lastTimeSwitched === null) throw new InvalidStateChangeException(oldSoccerClockState, action);
@@ -117,7 +118,7 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
      * @description
      * Switch period and timer
      */
-    case SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD: {
+    case SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD: {
       const { currentPeriod: previousPeriod, currentTimer: previousTimer, lastTimeSwitched } = oldSoccerClockState;
       const { now, nextPeriod } = action.payload;
 

@@ -6,8 +6,8 @@ import { ValueFrom } from '../../../../@types/helpers';
 export enum SOCCER_CLOCK_ACTION_NAMES {
   NEW_GAME = 'NEW_GAME',
   BEGIN_GAME = 'BEGIN_GAME',
-  SWITCH_TIMER = 'SWITCH_TIMER',
-  SWITCH_PERIOD = 'SWITCH_PERIOD',
+  SWITCH_CLOCK_TIMER = 'SWITCH_CLOCK_TIMER',
+  SWITCH_CLOCK_PERIOD = 'SWITCH_CLOCK_PERIOD',
 }
 
 export type SoccerClockActionTypes =
@@ -20,11 +20,11 @@ export type SoccerClockActionTypes =
       payload: { now: number };
     }
   | {
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER;
+      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER;
       payload: { now: number; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> };
     }
   | {
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD;
+      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD;
       payload:  // @note: must include all periods - with timers & without // periods with timers
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['FIRST_HALF']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['MID_BREAK']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
@@ -68,7 +68,7 @@ export const soccerClockActions = {
    */
   haltGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
     dispatch({
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER,
+      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER,
       payload: { now, nextTimer: SOCCER_CLOCK_TIMER.HALTED },
     });
   },
@@ -81,7 +81,7 @@ export const soccerClockActions = {
    */
   pauseGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
     dispatch({
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER,
+      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER,
       payload: { now, nextTimer: SOCCER_CLOCK_TIMER.PAUSED },
     });
   },
@@ -94,7 +94,7 @@ export const soccerClockActions = {
    */
   resumeGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
     dispatch({
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_TIMER,
+      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER,
       payload: { now, nextTimer: SOCCER_CLOCK_TIMER.RUNNING },
     });
   },
@@ -114,7 +114,7 @@ export const soccerClockActions = {
         const nextPeriod = SOCCER_CLOCK_PERIOD.MID_BREAK;
         const nextTimer = currentTimer !== null ? currentTimer : SOCCER_CLOCK_TIMER.HALTED;
         dispatch({
-          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD,
           payload: { now, nextPeriod, nextTimer },
         });
         break;
@@ -124,7 +124,7 @@ export const soccerClockActions = {
         const nextPeriod = SOCCER_CLOCK_PERIOD.SECOND_HALF;
         const nextTimer = currentTimer !== null ? currentTimer : SOCCER_CLOCK_TIMER.HALTED;
         dispatch({
-          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD,
           payload: { now, nextPeriod, nextTimer },
         });
         break;
@@ -134,7 +134,7 @@ export const soccerClockActions = {
       case SOCCER_CLOCK_PERIOD.SECOND_HALF: {
         const nextPeriod = SOCCER_CLOCK_PERIOD.GAME_OVER;
         dispatch({
-          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD,
           payload: { now, nextPeriod },
         });
         break;
@@ -143,7 +143,7 @@ export const soccerClockActions = {
       case SOCCER_CLOCK_PERIOD.PENALTIES: {
         const nextPeriod = SOCCER_CLOCK_PERIOD.GAME_OVER;
         dispatch({
-          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_PERIOD,
+          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD,
           payload: { now, nextPeriod },
         });
         break;

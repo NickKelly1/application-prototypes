@@ -3,20 +3,20 @@ import { SoccerGameActionTypes } from '../soccer-game-state';
 import { ThunkAction } from '../../../lib/store/store.types';
 
 export enum SOCCER_TEAM_ACTION_NAMES {
-  CHANGE_NAME = 'CHANGE_NAME',
-  INCREMENT_SCORE = 'INCREMENT_SCORE',
+  CHANGE_TEAM_NAME = 'CHANGE_TEAM_NAME',
+  INCREMENT_TEAM_SCORE = 'INCREMENT_TEAM_SCORE',
 }
 
 export type SoccerTeamActionTypes =
   | {
-      type: SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME;
+      type: SOCCER_TEAM_ACTION_NAMES.CHANGE_TEAM_NAME;
       payload: {
         teamNumber: SOCCER_TEAM_NUMBERS;
         newName: SoccerTeam['name'];
       };
     }
   | {
-      type: SOCCER_TEAM_ACTION_NAMES.INCREMENT_SCORE;
+      type: SOCCER_TEAM_ACTION_NAMES.INCREMENT_TEAM_SCORE;
       payload: {
         teamNumber: SOCCER_TEAM_NUMBERS;
         incrementBy: number;
@@ -39,7 +39,7 @@ const incrementScore = (
   incrementBy: SoccerTeam['score'],
 ): ThunkAction<SoccerTeamsState, SoccerGameActionTypes> => dispatch => {
   dispatch({
-    type: SOCCER_TEAM_ACTION_NAMES.INCREMENT_SCORE,
+    type: SOCCER_TEAM_ACTION_NAMES.INCREMENT_TEAM_SCORE,
     payload: { teamNumber, incrementBy },
   });
 };
@@ -56,7 +56,7 @@ const changeName = (
   newName: SoccerTeam['name'],
 ): ThunkAction<SoccerTeamsState, SoccerGameActionTypes> => dispatch => {
   dispatch({
-    type: SOCCER_TEAM_ACTION_NAMES.CHANGE_NAME,
+    type: SOCCER_TEAM_ACTION_NAMES.CHANGE_TEAM_NAME,
     payload: { teamNumber, newName },
   });
 };
