@@ -1,8 +1,8 @@
-import { SOCCER_TEAM_ACTION_NAMES, soccerTeamActions } from './soccer-team-actions';
+import { soccerTeamActions } from './soccer-team-actions';
 import { soccerTeamReducer } from './soccer-team-reducer';
 import { createStore } from '../../../lib/store/store';
-import { SoccerGameActionTypes } from '../soccer-game-state';
 import { SoccerTeamsState, SOCCER_TEAM_NUMBERS } from './soccer-team-state';
+import { SoccerEventPayloads, SOCCER_EVENTS } from '../soccer-game-events';
 
 const setup = () => {
   const initialState: SoccerTeamsState = [
@@ -20,7 +20,7 @@ const setup = () => {
     },
   ];
 
-  const store = createStore<SoccerTeamsState, SoccerGameActionTypes>(initialState, [soccerTeamReducer]);
+  const store = createStore<SoccerTeamsState, SoccerEventPayloads>(initialState, [soccerTeamReducer]);
 
   return {
     initialState,
@@ -29,7 +29,7 @@ const setup = () => {
 };
 
 describe('Soccer State', () => {
-  it(`should change teams name when "${SOCCER_TEAM_ACTION_NAMES.CHANGE_TEAM_NAME}" is fired`, () => {
+  it(`should change teams name when "${SOCCER_EVENTS.CHANGE_TEAM_NAME}" is fired`, () => {
     const { initialState, store } = setup();
 
     // target
@@ -54,7 +54,7 @@ describe('Soccer State', () => {
     expect(store.getState()[otherTeamIndex].name).toBe(otherTeamName);
   });
 
-  it(`should increment score when "${SOCCER_TEAM_ACTION_NAMES.INCREMENT_TEAM_SCORE}" is fired`, () => {
+  it(`should increment score when "${SOCCER_EVENTS.INCREMENT_TEAM_SCORE}" is fired`, () => {
     const { initialState, store } = setup();
 
     // target

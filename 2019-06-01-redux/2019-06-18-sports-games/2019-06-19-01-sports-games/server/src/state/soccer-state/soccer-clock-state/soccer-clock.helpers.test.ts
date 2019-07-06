@@ -7,11 +7,11 @@ import {
   SOCCER_CLOCK_ALL_TIMERS,
   SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS,
 } from './soccer-clock-state';
-import { SoccerGameActionTypes } from '../soccer-game-state';
 import { createStore } from '../../../lib/store/store';
 import { soccerClockReducer } from './soccer-clock-reducer';
 import { tupleIncludes } from '../../../helpers/tuple-includes';
 import { ValueFrom } from '../../../../@types/helpers';
+import { SoccerEventPayloads } from '../soccer-game-events';
 
 const MAX_TIME_INCREMENT = 10_000; // 10 seconds
 
@@ -84,7 +84,7 @@ const createSoccerClockState = (inputSoccerClockState: Partial<SoccerClockState>
 // TODO make input throw compile error if not matching one of the potential inputs below
 // (e.g. if you supply timer, you must also supply lastTimeSwitched)
 const setup = (initialState = createSoccerClockState()) => {
-  const store = createStore<SoccerClockState, SoccerGameActionTypes>(initialState, [soccerClockReducer]);
+  const store = createStore<SoccerClockState, SoccerEventPayloads>(initialState, [soccerClockReducer]);
 
   return {
     initialState,

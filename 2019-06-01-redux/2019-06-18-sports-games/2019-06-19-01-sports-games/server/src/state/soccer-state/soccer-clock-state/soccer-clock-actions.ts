@@ -1,39 +1,7 @@
 import { ThunkAction } from '../../../lib/store/store.types';
-import { SoccerGameActionTypes } from '../soccer-game-state';
 import { SoccerClockState, SOCCER_CLOCK_PERIOD, SOCCER_CLOCK_TIMER } from './soccer-clock-state';
 import { ValueFrom } from '../../../../@types/helpers';
-
-export enum SOCCER_CLOCK_ACTION_NAMES {
-  NEW_GAME = 'NEW_GAME',
-  BEGIN_GAME = 'BEGIN_GAME',
-  SWITCH_CLOCK_TIMER = 'SWITCH_CLOCK_TIMER',
-  SWITCH_CLOCK_PERIOD = 'SWITCH_CLOCK_PERIOD',
-}
-
-export type SoccerClockActionTypes =
-  | {
-      type: SOCCER_CLOCK_ACTION_NAMES.NEW_GAME;
-      payload: { now: number; newGameSoccerClockState: SoccerClockState };
-    }
-  | {
-      type: SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME;
-      payload: { now: number };
-    }
-  | {
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER;
-      payload: { now: number; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> };
-    }
-  | {
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD;
-      payload:  // @note: must include all periods - with timers & without // periods with timers
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['FIRST_HALF']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['MID_BREAK']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['SECOND_HALF']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['PENALTIES']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
-        // periods without timers
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['NOT_STARTED'] }
-        | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['GAME_OVER'] };
-    };
+import { SoccerEventPayloads, SOCCER_EVENTS } from '../soccer-game-events';
 
 export const soccerClockActions = {
   /**
@@ -46,8 +14,8 @@ export const soccerClockActions = {
   newGame: (
     newGameSoccerClockState: SoccerClockState,
     now = Date.now(),
-  ): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
-    dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.NEW_GAME, payload: { now, newGameSoccerClockState } });
+  ): ThunkAction<SoccerClockState, SoccerEventPayloads> => dispatch => {
+    dispatch({ type: SOCCER_EVENTS.NEW_GAME, payload: { now, newGameSoccerClockState } });
   },
 
   /**
@@ -56,8 +24,8 @@ export const soccerClockActions = {
    *
    * @param now
    */
-  beginGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
-    dispatch({ type: SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME, payload: { now } });
+  beginGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerEventPayloads> => dispatch => {
+    dispatch({ type: SOCCER_EVENTS.BEGIN_GAME, payload: { now } });
   },
 
   /**
@@ -66,9 +34,9 @@ export const soccerClockActions = {
    *
    * @param now
    */
-  haltGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
+  haltGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerEventPayloads> => dispatch => {
     dispatch({
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER,
+      type: SOCCER_EVENTS.SWITCH_CLOCK_TIMER,
       payload: { now, nextTimer: SOCCER_CLOCK_TIMER.HALTED },
     });
   },
@@ -79,9 +47,9 @@ export const soccerClockActions = {
    *
    * @param now
    */
-  pauseGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
+  pauseGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerEventPayloads> => dispatch => {
     dispatch({
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER,
+      type: SOCCER_EVENTS.SWITCH_CLOCK_TIMER,
       payload: { now, nextTimer: SOCCER_CLOCK_TIMER.PAUSED },
     });
   },
@@ -92,9 +60,9 @@ export const soccerClockActions = {
    *
    * @param now
    */
-  resumeGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => dispatch => {
+  resumeGame: (now = Date.now()): ThunkAction<SoccerClockState, SoccerEventPayloads> => dispatch => {
     dispatch({
-      type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER,
+      type: SOCCER_EVENTS.SWITCH_CLOCK_TIMER,
       payload: { now, nextTimer: SOCCER_CLOCK_TIMER.RUNNING },
     });
   },
@@ -105,7 +73,7 @@ export const soccerClockActions = {
    *
    * @param now
    */
-  nextPeriod: (now = Date.now()): ThunkAction<SoccerClockState, SoccerGameActionTypes> => (dispatch, getState) => {
+  nextPeriod: (now = Date.now()): ThunkAction<SoccerClockState, SoccerEventPayloads> => (dispatch, getState) => {
     const { currentPeriod: previousPeriod, currentTimer } = getState();
 
     switch (previousPeriod) {
@@ -114,7 +82,7 @@ export const soccerClockActions = {
         const nextPeriod = SOCCER_CLOCK_PERIOD.MID_BREAK;
         const nextTimer = currentTimer !== null ? currentTimer : SOCCER_CLOCK_TIMER.HALTED;
         dispatch({
-          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD,
+          type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD,
           payload: { now, nextPeriod, nextTimer },
         });
         break;
@@ -124,7 +92,7 @@ export const soccerClockActions = {
         const nextPeriod = SOCCER_CLOCK_PERIOD.SECOND_HALF;
         const nextTimer = currentTimer !== null ? currentTimer : SOCCER_CLOCK_TIMER.HALTED;
         dispatch({
-          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD,
+          type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD,
           payload: { now, nextPeriod, nextTimer },
         });
         break;
@@ -134,7 +102,7 @@ export const soccerClockActions = {
       case SOCCER_CLOCK_PERIOD.SECOND_HALF: {
         const nextPeriod = SOCCER_CLOCK_PERIOD.GAME_OVER;
         dispatch({
-          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD,
+          type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD,
           payload: { now, nextPeriod },
         });
         break;
@@ -143,7 +111,7 @@ export const soccerClockActions = {
       case SOCCER_CLOCK_PERIOD.PENALTIES: {
         const nextPeriod = SOCCER_CLOCK_PERIOD.GAME_OVER;
         dispatch({
-          type: SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD,
+          type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD,
           payload: { now, nextPeriod },
         });
         break;

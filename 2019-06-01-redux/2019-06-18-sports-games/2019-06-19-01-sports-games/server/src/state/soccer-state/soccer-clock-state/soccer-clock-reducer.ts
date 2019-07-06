@@ -1,5 +1,4 @@
 import { Reducer } from '../../../lib/store/store.types';
-import { SoccerGameActionTypes } from '../soccer-game-state';
 import {
   SoccerClockState,
   SOCCER_CLOCK_PERIOD,
@@ -8,9 +7,9 @@ import {
   SOCCER_CLOCK_PERIODS_WITH_TIMERS,
   SOCCER_CLOCK_CAN_BEGIN_PERIODS,
 } from './soccer-clock-state';
-import { SOCCER_CLOCK_ACTION_NAMES } from './soccer-clock-actions';
 import { tupleIncludes } from '../../../helpers/tuple-includes';
 import { InvalidStateChangeException } from '../../../exceptions/invalid-state-change-exception';
+import { SOCCER_EVENTS, SoccerEventPayloads } from '../soccer-game-events';
 
 const defaultInitialSingleClockState: SingleSoccerClockState = {
   currentPeriod: SOCCER_CLOCK_PERIOD.NOT_STARTED,
@@ -42,23 +41,23 @@ const defaultInitialSingleClockState: SingleSoccerClockState = {
 
 const defaultInitialState: SoccerClockState = defaultInitialSingleClockState;
 
-export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes> = (
+export const soccerClockReducer: Reducer<SoccerClockState, SoccerEventPayloads> = (
   oldSoccerClockState: SoccerClockState = { ...defaultInitialState },
-  action: SoccerGameActionTypes,
+  action: SoccerEventPayloads,
 ) => {
   switch (action.type) {
     /**
      * @description
      * set up a new game
      */
-    case SOCCER_CLOCK_ACTION_NAMES.NEW_GAME:
+    case SOCCER_EVENTS.NEW_GAME:
       return action.payload.newGameSoccerClockState;
 
     /**
      * @description
      * Begin a new game
      */
-    case SOCCER_CLOCK_ACTION_NAMES.BEGIN_GAME: {
+    case SOCCER_EVENTS.BEGIN_GAME: {
       // can't begin unless in "NOT_STARTED"
       if (!tupleIncludes(SOCCER_CLOCK_CAN_BEGIN_PERIODS, oldSoccerClockState.currentPeriod))
         throw new InvalidStateChangeException(oldSoccerClockState, action);
@@ -85,7 +84,7 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
      * @description
      * Switch timer within a period
      */
-    case SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_TIMER: {
+    case SOCCER_EVENTS.SWITCH_CLOCK_TIMER: {
       const { now, nextTimer } = action.payload;
       const { currentPeriod, lastTimeSwitched } = oldSoccerClockState;
       const { currentTimer: previousTimer } = oldSoccerClockState;
@@ -118,7 +117,7 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerGameActionTypes
      * @description
      * Switch period and timer
      */
-    case SOCCER_CLOCK_ACTION_NAMES.SWITCH_CLOCK_PERIOD: {
+    case SOCCER_EVENTS.SWITCH_CLOCK_PERIOD: {
       const { currentPeriod: previousPeriod, currentTimer: previousTimer, lastTimeSwitched } = oldSoccerClockState;
       const { now, nextPeriod } = action.payload;
 
