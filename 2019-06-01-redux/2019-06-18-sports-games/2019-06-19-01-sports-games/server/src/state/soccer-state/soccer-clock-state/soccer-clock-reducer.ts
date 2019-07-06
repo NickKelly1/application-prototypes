@@ -9,7 +9,7 @@ import {
 } from './soccer-clock-state';
 import { tupleIncludes } from '../../../helpers/tuple-includes';
 import { InvalidStateChangeException } from '../../../exceptions/invalid-state-change-exception';
-import { SOCCER_EVENTS, SoccerEventPayloads } from '../soccer-game-events';
+import { SOCCER_EVENT, SoccerEventPayloads } from '../soccer-events';
 
 const defaultInitialSingleClockState: SingleSoccerClockState = {
   currentPeriod: SOCCER_CLOCK_PERIOD.NOT_STARTED,
@@ -50,14 +50,14 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerEventPayloads> 
      * @description
      * set up a new game
      */
-    case SOCCER_EVENTS.NEW_GAME:
+    case SOCCER_EVENT.NEW_GAME:
       return action.payload.newGameSoccerClockState;
 
     /**
      * @description
      * Begin a new game
      */
-    case SOCCER_EVENTS.BEGIN_GAME: {
+    case SOCCER_EVENT.BEGIN_GAME: {
       // can't begin unless in "NOT_STARTED"
       if (!tupleIncludes(SOCCER_CLOCK_CAN_BEGIN_PERIODS, oldSoccerClockState.currentPeriod))
         throw new InvalidStateChangeException(oldSoccerClockState, action);
@@ -84,7 +84,7 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerEventPayloads> 
      * @description
      * Switch timer within a period
      */
-    case SOCCER_EVENTS.SWITCH_CLOCK_TIMER: {
+    case SOCCER_EVENT.SWITCH_CLOCK_TIMER: {
       const { now, nextTimer } = action.payload;
       const { currentPeriod, lastTimeSwitched } = oldSoccerClockState;
       const { currentTimer: previousTimer } = oldSoccerClockState;
@@ -117,7 +117,7 @@ export const soccerClockReducer: Reducer<SoccerClockState, SoccerEventPayloads> 
      * @description
      * Switch period and timer
      */
-    case SOCCER_EVENTS.SWITCH_CLOCK_PERIOD: {
+    case SOCCER_EVENT.SWITCH_CLOCK_PERIOD: {
       const { currentPeriod: previousPeriod, currentTimer: previousTimer, lastTimeSwitched } = oldSoccerClockState;
       const { now, nextPeriod } = action.payload;
 

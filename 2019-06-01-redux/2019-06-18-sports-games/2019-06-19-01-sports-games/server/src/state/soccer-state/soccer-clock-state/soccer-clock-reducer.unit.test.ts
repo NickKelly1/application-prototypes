@@ -6,12 +6,30 @@ import {
   SOCCER_CLOCK_ALL_TIMERS,
   SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS,
   SOCCER_CLOCK_ALL_PERIODS,
+  SoccerClockState,
 } from './soccer-clock-state';
 import { inThisButNotThat } from '../../../helpers/in-this-but-not-that';
-import { soccerClockTestHelpers } from './soccer-clock.helpers.test';
 import { tupleIncludes } from '../../../helpers/tuple-includes';
 import { ElementOf } from '../../../../@types/helpers';
-import { SOCCER_EVENTS } from '../soccer-game-events';
+import { SOCCER_EVENT, SoccerEventPayloads } from '../soccer-events';
+import { createStore } from '../../../lib/store/store';
+import { soccerClockReducer } from './soccer-clock-reducer';
+import { soccerTestHelpers } from '../soccer-test-helpers.test';
+
+/**
+ * @description
+ * Setup for tests
+ *
+ * @param initialState
+ */
+const setup = (initialState = soccerTestHelpers.createSoccerClockTestState()) => {
+  const store = createStore<SoccerClockState, SoccerEventPayloads>(initialState, [soccerClockReducer]);
+
+  return {
+    initialState,
+    store,
+  };
+};
 
 /**
  * @test
@@ -23,18 +41,18 @@ describe('Soccer Clock State', () => {
    * IT should begin when possible
    */
   it('should begin when possible', () => {
-    // soccerClockTestHelpers.setup
+    // setup
     const now = Date.now();
     const validPeriods = SOCCER_CLOCK_CAN_BEGIN_PERIODS;
     const invalidPeriods = inThisButNotThat(Object.values(SOCCER_CLOCK_PERIOD), validPeriods);
 
     validPeriods.forEach(validPeriod => {
-      const { store } = soccerClockTestHelpers.setup(
-        soccerClockTestHelpers.createSoccerClockState({
+      const { store } = setup(
+        soccerTestHelpers.createSoccerClockTestState({
           currentPeriod: validPeriod,
         }),
       );
-      store.dispatch({ type: SOCCER_EVENTS.BEGIN_GAME, payload: { now } });
+      store.dispatch({ type: SOCCER_EVENT.BEGIN_GAME, payload: { now } });
       expect(store.getState().currentPeriod).toEqual(SOCCER_CLOCK_PERIOD.FIRST_HALF);
       expect(store.getState().currentTimer).toEqual(SOCCER_CLOCK_TIMER.RUNNING);
       expect(store.getState().lastTimeSwitched).toEqual(now);
@@ -62,15 +80,15 @@ describe('Soccer Clock State', () => {
             lastTimeSwitched: lastTimeSwitched as number,
           };
 
-      const { store } = soccerClockTestHelpers.setup(soccerClockTestHelpers.createSoccerClockState(stateArguments));
-      expect(() => store.dispatch({ type: SOCCER_EVENTS.BEGIN_GAME, payload: { now } })).toThrowError();
+      const { store } = setup(soccerTestHelpers.createSoccerClockTestState(stateArguments));
+      expect(() => store.dispatch({ type: SOCCER_EVENT.BEGIN_GAME, payload: { now } })).toThrowError();
     };
 
     // fire invalidBeginTests
     invalidPeriods.forEach(invalidPeriod => {
       if (tupleIncludes(SOCCER_CLOCK_PERIODS_WITH_TIMERS, invalidPeriod)) {
         SOCCER_CLOCK_ALL_TIMERS.forEach(timer => {
-          invalidBeginTests(invalidPeriod, timer, soccerClockTestHelpers.incrementTime(now).nextNow);
+          invalidBeginTests(invalidPeriod, timer, soccerTestHelpers.incrementTime(now).nextNow);
         });
       } else {
         invalidBeginTests(invalidPeriod, undefined, undefined);
@@ -82,7 +100,7 @@ describe('Soccer Clock State', () => {
    * @description
    * DESCRIBE Action SWITCH_CLOCK_PERIOD
    */
-  describe(`Action "${SOCCER_EVENTS.SWITCH_CLOCK_PERIOD}"`, () => {
+  describe(`Action "${SOCCER_EVENT.SWITCH_CLOCK_PERIOD}"`, () => {
     const now = Date.now();
 
     /**
@@ -97,16 +115,16 @@ describe('Soccer Clock State', () => {
         SOCCER_CLOCK_PERIODS_WITH_TIMERS.forEach(nextPeriodWithTimer => {
           SOCCER_CLOCK_ALL_TIMERS.forEach(nextTimer => {
             it(`Should transition FROM -> [${previousPeriodWithTimer}][${previousTimer}] -> TO -> [${nextPeriodWithTimer}][${nextTimer}]`, () => {
-              const { store } = soccerClockTestHelpers.setup(
-                soccerClockTestHelpers.createSoccerClockState({
+              const { store } = setup(
+                soccerTestHelpers.createSoccerClockTestState({
                   currentPeriod: previousPeriodWithTimer,
                   currentTimer: previousTimer,
                   lastTimeSwitched: now,
                 }),
               );
-              const { timeIncrement, nextNow } = soccerClockTestHelpers.incrementTime(now);
+              const { timeIncrement, nextNow } = soccerTestHelpers.incrementTime(now);
               store.dispatch({
-                type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD,
+                type: SOCCER_EVENT.SWITCH_CLOCK_PERIOD,
                 payload: { nextPeriod: nextPeriodWithTimer, now: nextNow, nextTimer },
               });
 
@@ -131,16 +149,16 @@ describe('Soccer Clock State', () => {
          */
         SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS.forEach(nextPeriodWithoutTimer =>
           it(`Should transition FROM -> [${previousPeriodWithTimer}][${previousTimer}] -> TO -> [${nextPeriodWithoutTimer}]`, () => {
-            const { store } = soccerClockTestHelpers.setup(
-              soccerClockTestHelpers.createSoccerClockState({
+            const { store } = setup(
+              soccerTestHelpers.createSoccerClockTestState({
                 currentPeriod: previousPeriodWithTimer,
                 currentTimer: previousTimer,
                 lastTimeSwitched: now,
               }),
             );
-            const { timeIncrement, nextNow } = soccerClockTestHelpers.incrementTime(now);
+            const { timeIncrement, nextNow } = soccerTestHelpers.incrementTime(now);
             store.dispatch({
-              type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD,
+              type: SOCCER_EVENT.SWITCH_CLOCK_PERIOD,
               payload: { nextPeriod: nextPeriodWithoutTimer, now: nextNow },
             });
 
@@ -172,14 +190,14 @@ describe('Soccer Clock State', () => {
       SOCCER_CLOCK_PERIODS_WITH_TIMERS.forEach(nextPeriodWithTimer => {
         SOCCER_CLOCK_ALL_TIMERS.forEach(nextTimer => {
           it(`Should transition FROM -> [${previousPeriodWithoutTimer}] -> TO -> [${nextPeriodWithTimer}][${nextTimer}]`, () => {
-            const { store } = soccerClockTestHelpers.setup(
-              soccerClockTestHelpers.createSoccerClockState({
+            const { store } = setup(
+              soccerTestHelpers.createSoccerClockTestState({
                 currentPeriod: previousPeriodWithoutTimer,
               }),
             );
-            const { nextNow } = soccerClockTestHelpers.incrementTime(now);
+            const { nextNow } = soccerTestHelpers.incrementTime(now);
             store.dispatch({
-              type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD,
+              type: SOCCER_EVENT.SWITCH_CLOCK_PERIOD,
               payload: { nextPeriod: nextPeriodWithTimer, now: nextNow, nextTimer },
             });
 
@@ -201,14 +219,14 @@ describe('Soccer Clock State', () => {
        */
       SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS.forEach(nextPeriodWithoutTimer =>
         it(`Should transition FROM -> [${previousPeriodWithoutTimer}] -> TO -> [${nextPeriodWithoutTimer}]`, () => {
-          const { store } = soccerClockTestHelpers.setup(
-            soccerClockTestHelpers.createSoccerClockState({
+          const { store } = setup(
+            soccerTestHelpers.createSoccerClockTestState({
               currentPeriod: previousPeriodWithoutTimer,
             }),
           );
-          const { nextNow } = soccerClockTestHelpers.incrementTime(now);
+          const { nextNow } = soccerTestHelpers.incrementTime(now);
           store.dispatch({
-            type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD,
+            type: SOCCER_EVENT.SWITCH_CLOCK_PERIOD,
             payload: { nextPeriod: nextPeriodWithoutTimer, now: nextNow },
           });
 
@@ -225,7 +243,7 @@ describe('Soccer Clock State', () => {
     });
   });
 
-  describe(`Action "${SOCCER_EVENTS.SWITCH_CLOCK_TIMER}"`, () => {
+  describe(`Action "${SOCCER_EVENT.SWITCH_CLOCK_TIMER}"`, () => {
     const now = Date.now();
 
     /**
@@ -236,18 +254,18 @@ describe('Soccer Clock State', () => {
       SOCCER_CLOCK_ALL_TIMERS.forEach(previousTimer => {
         SOCCER_CLOCK_ALL_TIMERS.forEach(nextTimer => {
           it(`Should transition IN [${currentPeriodWithTimer}] FROM -> [${previousTimer}] -> TO -> [${nextTimer}]`, () => {
-            const { store } = soccerClockTestHelpers.setup(
-              soccerClockTestHelpers.createSoccerClockState({
+            const { store } = setup(
+              soccerTestHelpers.createSoccerClockTestState({
                 currentPeriod: currentPeriodWithTimer,
                 currentTimer: previousTimer,
                 lastTimeSwitched: now,
               }),
             );
 
-            const { nextNow, timeIncrement } = soccerClockTestHelpers.incrementTime(now);
+            const { nextNow, timeIncrement } = soccerTestHelpers.incrementTime(now);
 
             store.dispatch({
-              type: SOCCER_EVENTS.SWITCH_CLOCK_TIMER,
+              type: SOCCER_EVENT.SWITCH_CLOCK_TIMER,
               payload: { nextTimer, now: nextNow },
             });
 
@@ -273,16 +291,16 @@ describe('Soccer Clock State', () => {
     SOCCER_CLOCK_PERIODS_WITHOUT_TIMERS.forEach(currentPeriodWithoutTimer => {
       SOCCER_CLOCK_ALL_TIMERS.forEach(nextTimer => {
         it(`Should fail to transition IN [${currentPeriodWithoutTimer}]`, () => {
-          const { store } = soccerClockTestHelpers.setup(
-            soccerClockTestHelpers.createSoccerClockState({
+          const { store } = setup(
+            soccerTestHelpers.createSoccerClockTestState({
               currentPeriod: currentPeriodWithoutTimer,
             }),
           );
-          const { nextNow } = soccerClockTestHelpers.incrementTime(now);
+          const { nextNow } = soccerTestHelpers.incrementTime(now);
 
           expect(() => {
             store.dispatch({
-              type: SOCCER_EVENTS.SWITCH_CLOCK_TIMER,
+              type: SOCCER_EVENT.SWITCH_CLOCK_TIMER,
               payload: { nextTimer, now: nextNow },
             });
           }).toThrowError();

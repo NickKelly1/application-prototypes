@@ -4,22 +4,24 @@ import {
   StoreMiddlewareFunction,
   NextStoreMiddlewareFunction,
   DispatchFunction,
+  Store,
+  StoreListener,
 } from './store.types';
 
 /**
  * @description
  * Create and return a store for managing application state
  */
-export const createStore = <UState, UActionTypes>(
+export const createStore = <UState, UEventPayloads>(
   initialState: UState,
-  reducers: Reducer<UState, UActionTypes>[],
-  middleware: StoreMiddlewareFunction<UState, UActionTypes>[] = [],
-) => {
+  reducers: Reducer<UState, UEventPayloads>[],
+  middleware: StoreMiddlewareFunction<UState, UEventPayloads>[] = [],
+): Store<UState, UEventPayloads> => {
   let state: UState = initialState;
 
-  const actionsTaken: UActionTypes[] = [];
+  const actionsTaken: UEventPayloads[] = [];
 
-  const listeners: ((state: UState) => void)[] = [];
+  const listeners: (StoreListener<UState>)[] = [];
 
   const getState: GetStateFunction<UState> = () => state;
 
@@ -34,8 +36,8 @@ export const createStore = <UState, UActionTypes>(
    */
   const applyMiddleware = (
     mutableState: UState,
-    action: UActionTypes,
-    dispatch: DispatchFunction<UActionTypes>,
+    action: UEventPayloads,
+    dispatch: DispatchFunction<UEventPayloads>,
   ): boolean => {
     let shouldContinue = true;
     const next: NextStoreMiddlewareFunction = () => (shouldContinue = true);
@@ -57,8 +59,13 @@ export const createStore = <UState, UActionTypes>(
    *
    * @param action
    */
-  const dispatch = (action: UActionTypes) => {
+  const dispatch = (action: UEventPayloads) => {
     actionsTaken.push(action);
+
+    // TODO: wrap process in try-catch and revert to pre-actioned state if error is thrown
+    // makes state changes act as transactions
+    // @note: use InvalidStateChangeException to revert to previous state
+    // @note: re-throw other errors
 
     const mutableState = { ...state };
     const shouldContinue = applyMiddleware(mutableState, action, dispatch);
@@ -68,7 +75,7 @@ export const createStore = <UState, UActionTypes>(
     state = newState;
   };
 
-  const subscribe = (listener: typeof listeners[0]) => {
+  const subscribe = (listener: StoreListener<UState>) => {
     listeners.push(listener);
     return function(): void {
       const index = listeners.indexOf(listener);

@@ -1,8 +1,8 @@
 import { SOCCER_CLOCK_PERIOD, SOCCER_CLOCK_TIMER, SoccerClockState } from './soccer-clock-state/soccer-clock-state';
 import { ValueFrom } from '../../../@types/helpers';
-import { SOCCER_TEAM_NUMBERS, SoccerTeam } from './soccer-team-state/soccer-team-state';
+import { SOCCER_TEAM_NUMBER, SoccerTeam } from './soccer-team-state/soccer-team-state';
 
-export enum SOCCER_EVENTS {
+export enum SOCCER_EVENT {
   NEW_GAME = 'NEW_GAME',
   BEGIN_GAME = 'BEGIN_GAME',
   SWITCH_CLOCK_TIMER = 'SWITCH_CLOCK_TIMER',
@@ -13,33 +13,33 @@ export enum SOCCER_EVENTS {
 
 export type SoccerEventPayloads =
   | {
-      type: SOCCER_EVENTS.CHANGE_TEAM_NAME;
+      type: SOCCER_EVENT.CHANGE_TEAM_NAME;
       payload: {
-        teamNumber: SOCCER_TEAM_NUMBERS;
+        teamNumber: ValueFrom<SOCCER_TEAM_NUMBER>;
         newName: SoccerTeam['name'];
       };
     }
   | {
-      type: SOCCER_EVENTS.INCREMENT_TEAM_SCORE;
+      type: SOCCER_EVENT.INCREMENT_TEAM_SCORE;
       payload: {
-        teamNumber: SOCCER_TEAM_NUMBERS;
+        teamNumber: ValueFrom<SOCCER_TEAM_NUMBER>;
         incrementBy: number;
       };
     }
   | {
-      type: SOCCER_EVENTS.NEW_GAME;
+      type: SOCCER_EVENT.NEW_GAME;
       payload: { now: number; newGameSoccerClockState: SoccerClockState };
     }
   | {
-      type: SOCCER_EVENTS.BEGIN_GAME;
+      type: SOCCER_EVENT.BEGIN_GAME;
       payload: { now: number };
     }
   | {
-      type: SOCCER_EVENTS.SWITCH_CLOCK_TIMER;
+      type: SOCCER_EVENT.SWITCH_CLOCK_TIMER;
       payload: { now: number; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> };
     }
   | {
-      type: SOCCER_EVENTS.SWITCH_CLOCK_PERIOD;
+      type: SOCCER_EVENT.SWITCH_CLOCK_PERIOD;
       payload:  // @note: must include all periods - with timers & without // periods with timers
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['FIRST_HALF']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }
         | { now: number; nextPeriod: SOCCER_CLOCK_PERIOD['MID_BREAK']; nextTimer: ValueFrom<SOCCER_CLOCK_TIMER> }

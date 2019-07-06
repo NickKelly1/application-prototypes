@@ -1,13 +1,18 @@
-export enum SOCCER_TEAM_NUMBERS {
-  ONE = 'TEAM_ONE',
-  TWO = 'TEAM_TWO',
-}
+import { ValueFrom } from '../../../../@types/helpers';
+
+export const SOCCER_TEAM_NUMBER = { ONE: 'TEAM_ONE', TWO: 'TEAM_TWO' } as const;
+export type SOCCER_TEAM_NUMBER = typeof SOCCER_TEAM_NUMBER;
+
+export const SOCCER_TEAM_SIDE = { HOME: 'HOME', AWAY: 'AWAY' } as const;
+export type SOCCER_TEAM_SIDE = typeof SOCCER_TEAM_SIDE;
 
 export interface SoccerTeam {
-  number: SOCCER_TEAM_NUMBERS;
   name: string;
   score: number;
-  type: 'home' | 'away';
+  side: ValueFrom<SOCCER_TEAM_SIDE>;
 }
 
-export type SoccerTeamsState = [SoccerTeam, SoccerTeam];
+export interface SoccerTeamsState {
+  [SOCCER_TEAM_NUMBER.ONE]: SoccerTeam & { number: SOCCER_TEAM_NUMBER['ONE']; order: 1 };
+  [SOCCER_TEAM_NUMBER.TWO]: SoccerTeam & { number: SOCCER_TEAM_NUMBER['TWO']; order: 2 };
+}
