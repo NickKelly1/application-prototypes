@@ -1,4 +1,5 @@
 import http, { IncomingMessage, ServerResponse } from 'http';
+import { Worker } from 'cluster';
 
 const PORT = 3050;
 
@@ -12,3 +13,5 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse): vo
 server.listen(PORT, (): void => {
   console.log('Server started at port 3000'); // server object
 });
+
+// socket;
