@@ -1,3 +1,5 @@
-import { run } from './socket/socket-client-server';
+import { runSocketIoServer } from './socketio/socketio-server';
 
-run();
+const { httpServer, socketServer } = runSocketIoServer();
+
+console.log('ran server...');
