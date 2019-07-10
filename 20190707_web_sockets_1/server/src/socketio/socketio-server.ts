@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Server as HttpServer, createServer as createHttpServer, IncomingMessage, ServerResponse } from 'http';
 import SocketIo from 'socket.io';
-import { createReadStream } from 'fs';
+import { createReadStream, readFileSync } from 'fs';
 import { resolve } from 'path';
 
 // http server
@@ -11,11 +11,19 @@ export const runSocketIoServer = () => {
 
   const httpServer = createHttpServer((req: IncomingMessage, res: ServerResponse) => {
     console.log('[httpServer:createHttpServer]');
-    const htmlFile = resolve(__dirname, 'socket-io-client.html');
-    console.log('[httpServer:createHttpServer:resolve]', htmlFile);
-    createReadStream(htmlFile)
-      .pipe(res)
-      .end();
+
+    const clientHtmlFile = resolve(__dirname, 'socket-io-client.html');
+    const clientJsFile = resolve(__dirname, 'client-js-file.js');
+
+    const js = readFileSync(clientJsFile).toString('utf8');
+    const html = readFileSync(clientHtmlFile)
+      .toString('utf8')
+      .replace('REPLACE_ME', js);
+
+    res.end(html);
+    // createReadStream(clientHtmlFile)
+    //   .pipe(res)
+    //   .end();
   });
 
   httpServer.listen(HTTP_SERVER_PORT, () => {
