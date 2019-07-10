@@ -1,78 +1,41 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Server as HttpServer, createServer as createHttpServer, IncomingMessage, ServerResponse } from 'http';
+import http from 'http';
 import SocketIo from 'socket.io';
 import { createReadStream, readFileSync } from 'fs';
 import { resolve } from 'path';
-
-// http server
+import {
+  SOCKET_IO_SERVER_EVENTS,
+  SOCKET_IO_CLIENT_MESSAGE,
+  SOCKET_IO_SERVER_MESSAGE,
+  ServerSocket,
+} from '../shared/messages';
 
 export const runSocketIoServer = () => {
   const HTTP_SERVER_PORT = 3000;
 
-  const httpServer = createHttpServer((req: IncomingMessage, res: ServerResponse) => {
-    console.log('[httpServer:createHttpServer]');
-
-    const clientHtmlFile = resolve(__dirname, 'socket-io-client.html');
-    const clientJsFile = resolve(__dirname, 'client-js-file.js');
-
-    const js = readFileSync(clientJsFile).toString('utf8');
-    const html = readFileSync(clientHtmlFile)
-      .toString('utf8')
-      .replace('REPLACE_ME', js);
-
-    res.end(html);
-    // createReadStream(clientHtmlFile)
-    //   .pipe(res)
-    //   .end();
-  });
+  const httpServer = http.createServer();
 
   httpServer.listen(HTTP_SERVER_PORT, () => {
     console.log('[httpServer:listen]', `Server listening at port ${HTTP_SERVER_PORT}`);
   });
 
-  // socket server (wraps http server)
-
   const socketServer = SocketIo(httpServer);
-
-  const SOCKET_IO_SERVER_EVENTS = {
-    CONNECTION: 'connection',
-    CONNECT: 'connect',
-  } as const;
-
-  const SOCKET_IO_OUTGOING_SERVER_MESSAGES = {
-    NEW_MESSAGE: 'new message',
-    ADD_USER: 'add user',
-    LOGIN: 'login',
-    USER_JOINED: 'user joined',
-    TYPING: 'typing',
-    STOP_TYPING: 'stop typing',
-    USER_LEFT: 'user left',
-  } as const;
-
-  const SOCKET_IO_INCOMING_CLIENT_MESSAGES = {
-    NEW_MESSAGE: 'new message',
-    ADD_USER: 'add user',
-    LOGIN: 'login',
-    TYPING: 'typing',
-    STOP_TYPING: 'stop typing',
-    DISCONNECT: 'disconnect',
-  } as const;
 
   // Chatroom
   let userCount = 0;
 
-  socketServer.on(SOCKET_IO_SERVER_EVENTS.CONNECTION, (socket: SocketIo.Socket) => {
+  socketServer.on(SOCKET_IO_SERVER_EVENTS.CONNECTION, (socket: ServerSocket<SocketIO.Socket>) => {
     let userHasBeenAdded = false;
 
-    socket.on(SOCKET_IO_INCOMING_CLIENT_MESSAGES.NEW_MESSAGE, data => {
-      socket.broadcast.emit(SOCKET_IO_OUTGOING_SERVER_MESSAGES.NEW_MESSAGE, {
+    socket.on(SOCKET_IO_CLIENT_MESSAGE.NEW_MESSAGE, data => {
+      socket.broadcast.emit(SOCKET_IO_SERVER_MESSAGE.NEW_MESSAGE, {
         // TODO: add username to socket
         username: (socket as any).username,
         message: data,
       });
     });
 
-    socket.on(SOCKET_IO_INCOMING_CLIENT_MESSAGES.ADD_USER, (username: string) => {
+    socket.on(SOCKET_IO_CLIENT_MESSAGE.ADD_USER, (username: string) => {
       if (userHasBeenAdded) return;
 
       // store username in socket session for the client
@@ -82,28 +45,28 @@ export const runSocketIoServer = () => {
       userHasBeenAdded = true;
       socket.emit('login', {});
 
-      socket.broadcast.emit(SOCKET_IO_OUTGOING_SERVER_MESSAGES.USER_JOINED, {
+      socket.broadcast.emit(SOCKET_IO_SERVER_MESSAGE.USER_JOINED, {
         username: (socket as any).username,
         userCount,
       });
     });
 
-    socket.on(SOCKET_IO_INCOMING_CLIENT_MESSAGES.TYPING, () => {
-      socket.broadcast.emit(SOCKET_IO_OUTGOING_SERVER_MESSAGES.TYPING, {
+    socket.on(SOCKET_IO_CLIENT_MESSAGE.TYPING, () => {
+      socket.broadcast.emit(SOCKET_IO_SERVER_MESSAGE.TYPING, {
         username: (socket as any).username,
       });
     });
 
-    socket.on(SOCKET_IO_INCOMING_CLIENT_MESSAGES.STOP_TYPING, () => {
-      socket.broadcast.emit(SOCKET_IO_OUTGOING_SERVER_MESSAGES.STOP_TYPING, {
+    socket.on(SOCKET_IO_CLIENT_MESSAGE.STOP_TYPING, () => {
+      socket.broadcast.emit(SOCKET_IO_SERVER_MESSAGE.STOP_TYPING, {
         username: (socket as any).username,
       });
     });
 
-    socket.on(SOCKET_IO_INCOMING_CLIENT_MESSAGES.DISCONNECT, () => {
+    socket.on(SOCKET_IO_CLIENT_MESSAGE.DISCONNECT, () => {
       if (userHasBeenAdded) --userCount;
 
-      socket.broadcast.emit(SOCKET_IO_OUTGOING_SERVER_MESSAGES.USER_LEFT, {
+      socket.broadcast.emit(SOCKET_IO_SERVER_MESSAGE.USER_LEFT, {
         username: (socket as any).username,
         userCount,
       });
