@@ -6,7 +6,7 @@ import {
   SOCKET_SERVER_MESSAGE,
   SocketClientMessagePayloads,
   SocketServerMessagePayloads,
-} from '../shared/SocketTypes';
+} from '../shared/socket-types';
 
 export class SocketWrapper<
   IncomingMessagePayloads extends Record<ValueFrom<IncomingMessageNames>, any>,
