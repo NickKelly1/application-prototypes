@@ -24,6 +24,7 @@
     "ltsa",
     "stringable",
     "transitionable",
+    "unsanitized",
     "untransitionable"
   ],
 }

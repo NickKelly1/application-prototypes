@@ -1,56 +1,67 @@
 import SocketIo from 'socket.io';
 import { EventEmitter } from 'events';
-import { ValueFrom, Obj } from '../../@types/helpers';
-import { SOCKET_SERVER_MESSAGE, SOCKET_CLIENT_MESSAGE, SocketClientMessagePayloads } from '../shared/socket-types';
+import { getStringKeysOf } from '../helpers/object-keys';
+import { AStringKeyOf } from '../../@types/helper-types';
+import { AuthTokenUserMap } from '../models/user-model';
+import { hasFunctionProperty } from '../helpers/has-property';
+import { SOCKET_CLIENT_MESSAGE } from '../shared/socket-client-messages';
+import { SocketServerMessagePayloads } from '../shared/socket-server-messages';
+import { SocketClientMessageValidators } from '../socket/socket-client-message-validator';
 
-type z<T> = T extends any[] ? string : string;
+class ServerSocketListener<
+  Messages = SOCKET_CLIENT_MESSAGE,
+  Payloads = SocketServerMessagePayloads,
+  Validator = SocketClientMessageValidators
+> extends EventEmitter {
 
-const incomingSocketValidator = <
-  Message extends string | symbol,
-  ReturnPayload = Message extends keyof SocketClientMessagePayloads ? SocketClientMessagePayloads[Message] : null
->(
-  message: Message,
-  payload: any,
-): { payload: ReturnPayload; errors: string[] } => {
-  switch (message) {
-    case SOCKET_CLIENT_MESSAGE.NEW_MESSAGE:
-      // TODO: validate with type guard
-      // TODO: implement as middleware
-      payload;
-      break;
-
-    default:
-      break;
-  }
-
-  return { payload: null, messages: ['@todo!'] };
-};
-
-// incomingSocketValidator(SOCKET_CLIENT_MESSAGE.NEW_MESSAGE, );
-
-class SocketListener<V extends { readonly [index: string]: Obj }, M = Exclude<keyof V, string>> extends EventEmitter {
-  private socket: SocketIo.Socket;
-  private incomingMessageNames: readonly (M)[];
-  private validator: V;
-
-  public constructor(socket: SocketIo.Socket, messages: readonly (M)[], validator: V) {
+  /**
+   * @constructor
+   *
+   * @param socket
+   * @param validator
+   * @param getAuthTokenUserMap
+   */
+  public constructor(socket: SocketIo.Socket, validator: Validator, getAuthTokenUserMap: () => AuthTokenUserMap) {
     super();
-    this.socket = socket;
-    this.incomingMessageNames = messages;
-    this.validator = validator;
-
-    messages.forEach(message => {
-      socket.on(message | Symbol.iterator, payload => this.handleReceiveMessage(message, payload));
-    });
+    this.bindSocketMessages(socket, validator, getAuthTokenUserMap);
   }
 
-  private handleReceiveMessage = (message: string, payload: unknown) => {
-    if (!(payload instanceof Object)) {
+  private bindSocketMessages = (
+    socket: SocketIo.Socket,
+    validator: Validator,
+    getAuthTokenUserMap: () => AuthTokenUserMap,
+  ) => {
+    socket.on
+
+    switch () {
+      case value:
+        
+        break;
+    
+      default:
+        break;
+    }
+
+    socket.on(message, payload => this.handleReceiveMessage(validator, message, payload, getAuthTokenUserMap));
+    switch (key) {
+      case value:
+        break;
+
+      default:
+        break;
+    }
+
+    if (!(unknownPayload instanceof Object)) {
       // invalid
       return;
     }
 
-    payload._message = message;
-    this.emit(message, payload);
+    if (hasFunctionProperty(validator, message)) {
+      const errors: string[] = [];
+      const z = validator[message](getAuthTokenUserMap(), unknownPayload, errors);
+      //
+    } else {
+      throw new Error('warning!!!');
+    }
   };
 }

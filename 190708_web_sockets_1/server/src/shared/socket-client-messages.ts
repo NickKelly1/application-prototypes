@@ -1,5 +1,5 @@
-import { WithAuth, WithMessage } from '../../@types/sockets';
-import { UserModel, UserModelWithPassword } from '../models/user';
+import { WithAuth, WithMessage } from '../../@types/socket-types';
+import { UserModel, UserModelWithPassword } from '../models/user-model';
 import { RoomModel } from '../models/room';
 
 export const SOCKET_CLIENT_MESSAGE = {
@@ -10,12 +10,12 @@ export const SOCKET_CLIENT_MESSAGE = {
   TYPING: 'TYPING',
   STOP_TYPING: 'STOP_TYPING',
   LOG_OUT: 'LOG_OUT',
-  DISCONNECT: 'DISCONNECT',
 } as const;
 export type SOCKET_CLIENT_MESSAGE = typeof SOCKET_CLIENT_MESSAGE;
 // export const SOCKET_IO_CLIENT_MESSAGES = Object.values(SOCKET_CLIENT_MESSAGE);
 // export type SOCKET_IO_CLIENT_MESSAGES = typeof SOCKET_IO_CLIENT_MESSAGES;}
 
+// payload map
 export interface SocketClientMessagePayloads {
   [SOCKET_CLIENT_MESSAGE.NEW_MESSAGE]: WithAuth & WithMessage<SOCKET_CLIENT_MESSAGE['NEW_MESSAGE']>;
   [SOCKET_CLIENT_MESSAGE.ATTEMPT_SIGN_UP]: WithMessage<SOCKET_CLIENT_MESSAGE['ATTEMPT_SIGN_UP']> & {

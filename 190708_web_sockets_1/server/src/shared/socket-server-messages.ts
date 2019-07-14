@@ -1,4 +1,4 @@
-import { UserModel } from '../models/user';
+import { UserModel } from '../models/user-model';
 
 export const SOCKET_SERVER_MESSAGE = {
   NEW_MESSAGE: 'NEW_MESSAGE',

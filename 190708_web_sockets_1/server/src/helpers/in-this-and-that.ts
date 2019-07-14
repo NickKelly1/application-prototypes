@@ -1,4 +1,4 @@
-import { ElementOf } from '../../@types/helpers';
+import { AnElementOf } from '../../@types/helper-types';
 
 /**
  * @description
@@ -21,6 +21,6 @@ import { ElementOf } from '../../@types/helpers';
 export const inThisAndThat = <T extends any[] | readonly any[], U extends any[] | readonly any[]>(
   inThis: T,
   andThat: U,
-): Extract<ElementOf<T>, ElementOf<U>>[] => {
+): Extract<AnElementOf<T>, AnElementOf<U>>[] => {
   return inThis.filter(shouldIBeKept => andThat.includes(shouldIBeKept));
 };

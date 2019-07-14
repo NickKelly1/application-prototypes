@@ -1,4 +1,4 @@
-import { ElementOf } from '../../@types/helpers';
+import { AnElementOf } from '../../@types/helper-types';
 
 /**
  * @description
@@ -21,6 +21,6 @@ import { ElementOf } from '../../@types/helpers';
 export const inThisButNotThat = <T extends any[] | readonly any[], U extends any[] | readonly any[]>(
   inThis: T,
   butNotThis: U,
-): Exclude<ElementOf<T>, ElementOf<U>>[] => {
+): Exclude<AnElementOf<T>, AnElementOf<U>>[] => {
   return inThis.filter(shouldIBeKept => !butNotThis.includes(shouldIBeKept));
 };

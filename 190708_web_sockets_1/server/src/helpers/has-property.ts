@@ -1,4 +1,4 @@
-import { Obj, $TS_FIX_ME } from '../../@types/helpers';
+import { $TS_FIX_ME } from '../../@types/helper-types';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -10,8 +10,10 @@ import { Obj, $TS_FIX_ME } from '../../@types/helpers';
  * @param obj
  * @param propertyName
  */
-export const hasProperty = <T extends Obj, P extends PropertyKey>(obj: T, property: P): obj is T & { [index in P]: any } =>
-  obj.hasOwnProperty(property);
+export const hasProperty = <T extends Record<string, any>, P extends PropertyKey>(
+  obj: T,
+  property: P,
+): obj is T & { [index in P]: any } => obj.hasOwnProperty(property);
 
 /**
  * @description
@@ -21,7 +23,7 @@ export const hasProperty = <T extends Obj, P extends PropertyKey>(obj: T, proper
  * @param obj
  * @param propertyName
  */
-export const hasStringProperty = <T extends Obj, P extends PropertyKey>(
+export const hasStringProperty = <T extends Record<string, any>, P extends PropertyKey>(
   obj: T,
   property: P,
 ): obj is T & { [index in P]: string } => hasProperty(obj, property) && typeof obj[property] === 'string';
@@ -34,7 +36,7 @@ export const hasStringProperty = <T extends Obj, P extends PropertyKey>(
  * @param obj
  * @param propertyName
  */
-export const hasNumberProperty = <T extends Obj, P extends PropertyKey>(
+export const hasNumberProperty = <T extends Record<string, any>, P extends PropertyKey>(
   obj: T,
   property: P,
 ): obj is T & { [index in P]: number } => hasProperty(obj, property) && typeof obj[property] === 'number';
@@ -47,7 +49,7 @@ export const hasNumberProperty = <T extends Obj, P extends PropertyKey>(
  * @param obj
  * @param propertyName
  */
-export const hasArrayProperty = <T extends Obj, P extends PropertyKey>(
+export const hasArrayProperty = <T extends Record<string, any>, P extends PropertyKey>(
   obj: T,
   property: P,
 ): obj is T & { [index in P]: any[] } => hasProperty(obj, property) && (obj[property] as $TS_FIX_ME<any>) instanceof Array;
@@ -60,7 +62,21 @@ export const hasArrayProperty = <T extends Obj, P extends PropertyKey>(
  * @param obj
  * @param propertyName
  */
-export const hasObjectProperty = <T extends Obj, P extends PropertyKey>(
+export const hasObjectProperty = <T extends Record<string, any>, P extends PropertyKey>(
   obj: T,
   property: P,
-): obj is T & { [index in P]: Obj } => hasProperty(obj, property) && (obj[property] as $TS_FIX_ME<any>) instanceof Object;
+): obj is T & { [index in P]: Record<string, any> } =>
+  hasProperty(obj, property) && (obj[property] as $TS_FIX_ME<any>) instanceof Object;
+
+/**
+ * @description
+ * Determines if the property exists on the object and is of type function
+ * Type guard
+ *
+ * @param obj
+ * @param propertyName
+ */
+export const hasFunctionProperty = <T extends Record<string, any>, P extends PropertyKey>(
+  obj: T,
+  property: P,
+): obj is T & { [index in P]: Record<string, any> } => hasProperty(obj, property) && typeof obj[property] === 'function';

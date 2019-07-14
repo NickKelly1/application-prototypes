@@ -1,9 +1,8 @@
-import { Obj } from '../../@types/helpers';
-import { UserAuth, AuthTokenUserMap } from '../models/user';
+import { UserAuth, AuthTokenUserMap } from '../models/user-model';
 import { hasStringProperty, hasObjectProperty } from '../helpers/has-property';
 import { APP_CONSTANTS } from '../shared/app-constants';
 import { SOCKET_CLIENT_MESSAGE, SocketClientMessagePayloads } from '../shared/socket-client-messages';
-import { WithMessage } from '../../@types/sockets';
+import { WithMessage, SocketMessagePayloadValidator } from '../../@types/socket-types';
 
 /**
  * @description
@@ -12,7 +11,7 @@ import { WithMessage } from '../../@types/sockets';
  *
  * @param payload
  */
-const hasAuth = <T extends Obj>(payload: T): payload is T & { auth: UserAuth } =>
+const hasAuth = <T extends Record<string, any>>(payload: T): payload is T & { auth: UserAuth } =>
   hasObjectProperty(payload, 'auth') && hasStringProperty(payload.auth, 'token');
 
 /**
@@ -32,7 +31,10 @@ const isLoggedInUser = (userAuth: UserAuth, authTokenUserMap: AuthTokenUserMap, 
 /**
  * Socket Client Message Validators
  */
-export const SocketClientMessageValidators = {
+export const SocketClientPayloadSanitizer: SocketMessagePayloadValidator<
+  SOCKET_CLIENT_MESSAGE,
+  SocketClientMessagePayloads
+> = {
   /**
    * @description
    * New Message Client socket validation handler
@@ -43,18 +45,19 @@ export const SocketClientMessageValidators = {
    */
   [SOCKET_CLIENT_MESSAGE.NEW_MESSAGE]: (
     authTokenUserMap: AuthTokenUserMap,
-    payload: WithMessage<SOCKET_CLIENT_MESSAGE['NEW_MESSAGE']>,
+    unsanitizedPayload: WithMessage<SOCKET_CLIENT_MESSAGE['NEW_MESSAGE']>,
+    sanitizedPayload: {},
     errors: string[],
-  ): payload is SocketClientMessagePayloads[SOCKET_CLIENT_MESSAGE['NEW_MESSAGE']] => {
-    if (!hasAuth(payload)) {
+  ): sanitizedPayload is SocketClientMessagePayloads[SOCKET_CLIENT_MESSAGE['NEW_MESSAGE']] => {
+    if (!hasAuth(unsanitizedPayload)) {
       errors.push('missing authentication');
       return false;
     }
-    if (!isLoggedInUser(payload.auth, authTokenUserMap)) {
+    if (!isLoggedInUser(unsanitizedPayload.auth, authTokenUserMap)) {
       errors.push('log-in expired');
       return false;
     }
-    if (!hasStringProperty(payload, 'message')) {
+    if (!hasStringProperty(unsanitizedPayload, 'message')) {
       errors.push('must provide a message');
       return false;
     }
@@ -62,6 +65,8 @@ export const SocketClientMessageValidators = {
       errors.push(`message exceeded maximum length: ${APP_CONSTANTS.MAX_MESSAGE_LENGTH}`);
       return false;
     }
+
+    sanitizedPayload = { aids: 'hello' };
 
     return true;
   },
@@ -220,3 +225,7 @@ export const SocketClientMessageValidators = {
     return true;
   },
 } as const;
+
+const SocketClientMessageValidator = {
+  isValid,
+};
