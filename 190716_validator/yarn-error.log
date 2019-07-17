@@ -1,11 +1,11 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/ts.validator.fluent
+  C:\Program Files\nodejs\node.exe C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add @types/json-schema-to-typescript
 
 PATH: 
   C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Nick\bin;C:\Users\Nick\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Nick\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files\Microsoft MPI\Bin;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Users\Nick\AppData\Local\Microsoft\WindowsApps;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files\dotnet;C:\Program Files\Microsoft SQL Server\130\Tools\Binn;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn;C:\Program Files\Microsoft SQL Server\140\Tools\Binn;C:\Program Files\Microsoft SQL Server\140\DTS\Binn;C:\Program Files (x86)\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn;C:\Program Files (x86)\Microsoft SQL Server\140\DTS\Binn;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio;C:\Program Files\MATLAB\R2017a\runtime\win64;C:\Program Files\MATLAB\R2017a\bin;C:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\WINDOWS\System32\OpenSSH;C:\Program Files\PuTTY;C:\Program Files\Microsoft VS Code\bin;C:\HashiCorp\Vagrant\bin;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\ProgramData\chocolatey\bin;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn;C:\Program Files\nodejs;C:\Program Files\Gource\cmd;C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Nick\AppData\Local\Programs\Python\Python37\Scripts;C:\Users\Nick\AppData\Local\Programs\Python\Python37;C:\Users\Nick\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft VS Code\bin;C:\Users\Nick\AppData\Roaming\Dashlane\5.3.2.14186\ucrt;C:\Program Files\Sublime Text 3;C:\Users\Nick\AppData\Roaming\Composer\vendor\bin;C:\Users\Nick\AppData\Local\Microsoft\WindowsApps;C:\Users\Nick\AppData\Local\Programs\Microsoft VS Code Insiders\bin;C:\Users\Nick\AppData\Local\Programs\Fiddler;C:\Program Files\CMake\bin;C:\Program Files\Redis\64bit;C:\Users\Nick\AppData\Roaming\npm;C:\Users\Nick\AppData\Local\GitHubDesktop\bin;C:\Python27;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
 
 Yarn version: 
-  1.16.0
+  1.17.3
 
 Node version: 
   12.2.0
@@ -14,13 +14,13 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2fts.validator.fluent: Not found
-      at Request.params.callback [as _callback] (C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66091:18)
-      at Request.self.callback (C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:129590:22)
+  Error: https://registry.yarnpkg.com/@types%2fjson-schema-to-typescript: Not found
+      at Request.params.callback [as _callback] (C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:66830:18)
+      at Request.self.callback (C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:140464:22)
       at Request.emit (events.js:196:13)
-      at Request.<anonymous> (C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:130562:10)
+      at Request.<anonymous> (C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141436:10)
       at Request.emit (events.js:196:13)
-      at IncomingMessage.<anonymous> (C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:130484:12)
+      at IncomingMessage.<anonymous> (C:\Users\Nick\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:141358:12)
       at Object.onceWrapper (events.js:284:20)
       at IncomingMessage.emit (events.js:201:15)
       at endReadableNT (_stream_readable.js:1130:12)
@@ -44,6 +44,7 @@ npm manifest:
       "eslint-plugin-node": "^9.1.0",
       "eslint-plugin-prettier": "^3.1.0",
       "jest": "^24.8.0",
+      "json-schema-to-typescript": "^6.1.3",
       "prettier": "^1.18.2",
       "ts-jest": "^24.0.2",
       "ts-node-dev": "^1.0.0-pre.40"
@@ -389,6 +390,11 @@ Lockfile:
     dependencies:
       "@babel/types" "^7.3.0"
   
+  "@types/cli-color@^0.3.29":
+    version "0.3.29"
+    resolved "https://registry.yarnpkg.com/@types/cli-color/-/cli-color-0.3.29.tgz#c83a71fe02c8c7e1ccec048dd6a2458d1f6c96ea"
+    integrity sha1-yDpx/gLIx+HM7ASN1qJFjR9sluo=
+  
   "@types/eslint-visitor-keys@^1.0.0":
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -414,10 +420,47 @@ Lockfile:
       "@types/istanbul-lib-coverage" "*"
       "@types/istanbul-lib-report" "*"
   
+  "@types/json-schema@^7.0.3":
+    version "7.0.3"
+    resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.3.tgz#bdfd69d61e464dcc81b25159c270d75a73c1a636"
+    integrity sha512-Il2DtDVRGDcqjDtE+rF8iqg1CArehSK84HZJCT7AMITlyXRBpuPhqGLDQMowraqqu1coEaimg4ZOqggt6L6L+A==
+  
+  "@types/lodash@^4.14.121":
+    version "4.14.136"
+    resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.136.tgz#413e85089046b865d960c9ff1d400e04c31ab60f"
+    integrity sha512-0GJhzBdvsW2RUccNHOBkabI8HZVdOXmXbXhuKlDEd5Vv12P7oAVGfomGp3Ne21o5D/qu1WmthlNKFaoZJJeErA==
+  
+  "@types/minimist@^1.2.0":
+    version "1.2.0"
+    resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.0.tgz#69a23a3ad29caf0097f06eda59b361ee2f0639f6"
+    integrity sha1-aaI6OtKcrwCX8G7aWbNh7i8GOfY=
+  
+  "@types/mz@0.0.32":
+    version "0.0.32"
+    resolved "https://registry.yarnpkg.com/@types/mz/-/mz-0.0.32.tgz#e8248b4e41424c052edc1725dd33650c313a3659"
+    integrity sha512-cy3yebKhrHuOcrJGkfwNHhpTXQLgmXSv1BX+4p32j+VUQ6aP2eJ5cL7OvGcAQx75fCTFaAIIAKewvqL+iwSd4g==
+    dependencies:
+      "@types/node" "*"
+  
+  "@types/node@*":
+    version "12.6.6"
+    resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.6.tgz#831587377c35bb28fa33b6fe5f849a26a3f4a412"
+    integrity sha512-SMgj3x28MkJyHdWaMv/g/ca3LYDi5gR7O8mX0VKazvFOnmlDXctSEdd/8jfSqozjKFK1R9If1QZWkafX7yQTpA==
+  
+  "@types/node@^11.10.4":
+    version "11.13.17"
+    resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.17.tgz#2e7efbfe5253561087812571e5e6a1e4b1d6295b"
+    integrity sha512-7W3kSMa8diVH6s24a8Qrmvwu+vG3ahOC/flMHFdWSdnPYoQI0yPO84h5zOWYXAha2Npn3Pw3SSuQSwBUfaniyQ==
+  
   "@types/node@^12.0.12":
     version "12.6.4"
     resolved "https://registry.yarnpkg.com/@types/node/-/node-12.6.4.tgz#e0b5ac3ccbf183cd3c230967c323632d6cf927ae"
     integrity sha512-ZKrDzI6KhrqtLpccI1YxMh4d+qzNnftNtp6iL9c4mLTNgzguFu7VR7pXH/C/MfzikMeoXjvISL9mlIGNGGDXDg==
+  
+  "@types/prettier@^1.16.1":
+    version "1.16.4"
+    resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-1.16.4.tgz#5e5e97702cb68498aaba7349b941648daaf2385c"
+    integrity sha512-MG7ExKBo7AQ5UrL1awyYLNinNM/kyXgE4iP4Ul9fB+T7n768Z5Xem8IZeP6Bna0xze8gkDly49Rgge2HOEw4xA==
   
   "@types/stack-utils@^1.0.1":
     version "1.0.1"
@@ -529,7 +572,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/ansi-escapes/-/ansi-escapes-3.2.0.tgz#8780b98ff9dbf5638152d1f1fe5c1d7b4442976b"
     integrity sha512-cBhpre4ma+U0T1oM5fXg7Dy1Jw7zzwv7lt/GoCpr+hDQJoYnKVPLL4dCvSEFMmQurOQvSrwT7SL/DAlhBI97RQ==
   
-  ansi-regex@^2.0.0:
+  ansi-regex@^2.0.0, ansi-regex@^2.1.1:
     version "2.1.1"
     resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-2.1.1.tgz#c3b33ab5ee360d86e0e628f0468ae7ef27d654df"
     integrity sha1-w7M6te42DYbg5ijwRorn7yfWVN8=
@@ -550,6 +593,11 @@ Lockfile:
     integrity sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==
     dependencies:
       color-convert "^1.9.0"
+  
+  any-promise@^1.0.0:
+    version "1.3.0"
+    resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
+    integrity sha1-q8av7tzqUugJzcA3au0845Y10X8=
   
   anymatch@^2.0.0:
     version "2.0.0"
@@ -801,6 +849,11 @@ Lockfile:
       union-value "^1.0.0"
       unset-value "^1.0.0"
   
+  call-me-maybe@^1.0.1:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/call-me-maybe/-/call-me-maybe-1.0.1.tgz#26d208ea89e37b5cbde60250a15f031c16a4d66b"
+    integrity sha1-JtII6onje1y95gJQoV8DHBak1ms=
+  
   callsites@^3.0.0:
     version "3.1.0"
     resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
@@ -874,6 +927,18 @@ Lockfile:
       define-property "^0.2.5"
       isobject "^3.0.0"
       static-extend "^0.1.1"
+  
+  cli-color@^1.4.0:
+    version "1.4.0"
+    resolved "https://registry.yarnpkg.com/cli-color/-/cli-color-1.4.0.tgz#7d10738f48526824f8fe7da51857cb0f572fe01f"
+    integrity sha512-xu6RvQqqrWEo6MPR1eixqGPywhYBHRs653F9jfXB2Hx4jdM/3WxiNE1vppRmxtMIfl16SFYTpYlrnqH/HsK/2w==
+    dependencies:
+      ansi-regex "^2.1.1"
+      d "1"
+      es5-ext "^0.10.46"
+      es6-iterator "^2.0.3"
+      memoizee "^0.4.14"
+      timers-ext "^0.1.5"
   
   cli-cursor@^2.1.0:
     version "2.1.0"
@@ -1004,6 +1069,14 @@ Lockfile:
     integrity sha1-mI3zP+qxke95mmE2nddsF635V+o=
     dependencies:
       array-find-index "^1.0.1"
+  
+  d@1:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/d/-/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
+    integrity sha512-m62ShEObQ39CfralilEQRjH6oAMtNCV1xJyEx5LpRYUVN+EviphDgUc/F3hnYbADmkiNs67Y+3ylmlG7Lnu+FA==
+    dependencies:
+      es5-ext "^0.10.50"
+      type "^1.0.1"
   
   dashdash@^1.12.0:
     version "1.14.1"
@@ -1211,6 +1284,42 @@ Lockfile:
       is-date-object "^1.0.1"
       is-symbol "^1.0.2"
   
+  es5-ext@^0.10.35, es5-ext@^0.10.45, es5-ext@^0.10.46, es5-ext@^0.10.50, es5-ext@~0.10.14, es5-ext@~0.10.2, es5-ext@~0.10.46:
+    version "0.10.50"
+    resolved "https://registry.yarnpkg.com/es5-ext/-/es5-ext-0.10.50.tgz#6d0e23a0abdb27018e5ac4fd09b412bc5517a778"
+    integrity sha512-KMzZTPBkeQV/JcSQhI5/z6d9VWJ3EnQ194USTUwIYZ2ZbpN8+SGXQKt1h68EX44+qt+Fzr8DO17vnxrw7c3agw==
+    dependencies:
+      es6-iterator "~2.0.3"
+      es6-symbol "~3.1.1"
+      next-tick "^1.0.0"
+  
+  es6-iterator@^2.0.3, es6-iterator@~2.0.3:
+    version "2.0.3"
+    resolved "https://registry.yarnpkg.com/es6-iterator/-/es6-iterator-2.0.3.tgz#a7de889141a05a94b0854403b2d0a0fbfa98f3b7"
+    integrity sha1-p96IkUGgWpSwhUQDstCg+/qY87c=
+    dependencies:
+      d "1"
+      es5-ext "^0.10.35"
+      es6-symbol "^3.1.1"
+  
+  es6-symbol@^3.1.1, es6-symbol@~3.1.1:
+    version "3.1.1"
+    resolved "https://registry.yarnpkg.com/es6-symbol/-/es6-symbol-3.1.1.tgz#bf00ef4fdab6ba1b46ecb7b629b4c7ed5715cc77"
+    integrity sha1-vwDvT9q2uhtG7Le2KbTH7VcVzHc=
+    dependencies:
+      d "1"
+      es5-ext "~0.10.14"
+  
+  es6-weak-map@^2.0.2:
+    version "2.0.3"
+    resolved "https://registry.yarnpkg.com/es6-weak-map/-/es6-weak-map-2.0.3.tgz#b6da1f16cc2cc0d9be43e6bdbfc5e7dfcdf31d53"
+    integrity sha512-p5um32HOTO1kP+w7PRnB+5lQ43Z6muuMuIMffvDN8ZB4GcnjLBV6zGStpbASIMk4DCAvEaamhe2zhyCb/QXXsA==
+    dependencies:
+      d "1"
+      es5-ext "^0.10.46"
+      es6-iterator "^2.0.3"
+      es6-symbol "^3.1.1"
+  
   escape-string-regexp@^1.0.5:
     version "1.0.5"
     resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
@@ -1399,6 +1508,14 @@ Lockfile:
     version "2.0.2"
     resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
     integrity sha1-Cr9PHKpbyx96nYrMbepPqqBLrJs=
+  
+  event-emitter@^0.3.5:
+    version "0.3.5"
+    resolved "https://registry.yarnpkg.com/event-emitter/-/event-emitter-0.3.5.tgz#df8c69eef1647923c7157b9ce83840610b02cc39"
+    integrity sha1-34xp7vFkeSPHFXuc6DhAYQsCzDk=
+    dependencies:
+      d "1"
+      es5-ext "~0.10.14"
   
   exec-sh@^0.3.2:
     version "0.3.2"
@@ -1613,6 +1730,11 @@ Lockfile:
       asynckit "^0.4.0"
       combined-stream "^1.0.6"
       mime-types "^2.1.12"
+  
+  format-util@^1.0.3:
+    version "1.0.3"
+    resolved "https://registry.yarnpkg.com/format-util/-/format-util-1.0.3.tgz#032dca4a116262a12c43f4c3ec8566416c5b2d95"
+    integrity sha1-Ay3KShFiYqEsQ/TD7IVmQWxbLZU=
   
   fragment-cache@^0.2.1:
     version "0.2.1"
@@ -2075,7 +2197,7 @@ Lockfile:
     dependencies:
       isobject "^3.0.1"
   
-  is-promise@^2.1.0:
+  is-promise@^2.1, is-promise@^2.1.0:
     version "2.1.0"
     resolved "https://registry.yarnpkg.com/is-promise/-/is-promise-2.1.0.tgz#79a2a9ece7f096e80f36d2b2f3bc16c1ff4bf3fa"
     integrity sha1-eaKp7OfwlugPNtKy87wWwf9L8/o=
@@ -2548,7 +2670,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
     integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
   
-  js-yaml@^3.13.1:
+  js-yaml@^3.12.1, js-yaml@^3.13.1:
     version "3.13.1"
     resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
     integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
@@ -2603,6 +2725,36 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
     integrity sha512-mrqyZKfX5EhL7hvqcV6WG1yYjnjeuYDzDhhcAAUrq8Po85NBQBJP+ZDUT75qZQ98IkUoBqdkExkukOU7Ts2wrw==
   
+  json-schema-ref-parser@^6.1.0:
+    version "6.1.0"
+    resolved "https://registry.yarnpkg.com/json-schema-ref-parser/-/json-schema-ref-parser-6.1.0.tgz#30af34aeab5bee0431da805dac0eb21b574bf63d"
+    integrity sha512-pXe9H1m6IgIpXmE5JSb8epilNTGsmTb2iPohAXpOdhqGFbQjNeHHsZxU+C8w6T81GZxSPFLeUoqDJmzxx5IGuw==
+    dependencies:
+      call-me-maybe "^1.0.1"
+      js-yaml "^3.12.1"
+      ono "^4.0.11"
+  
+  json-schema-to-typescript@^6.1.3:
+    version "6.1.3"
+    resolved "https://registry.yarnpkg.com/json-schema-to-typescript/-/json-schema-to-typescript-6.1.3.tgz#245364e8564263e53738320b46227f304491cc77"
+    integrity sha512-6nG2EPSyu3Po0FYsMEw/RpJDd6dqBr8DYIbqPZsxrRFE8g0Mxzbt6L6vlKJYrcPe9707INivn4NPJfemlXSLKw==
+    dependencies:
+      "@types/cli-color" "^0.3.29"
+      "@types/json-schema" "^7.0.3"
+      "@types/lodash" "^4.14.121"
+      "@types/minimist" "^1.2.0"
+      "@types/mz" "0.0.32"
+      "@types/node" "^11.10.4"
+      "@types/prettier" "^1.16.1"
+      cli-color "^1.4.0"
+      json-schema-ref-parser "^6.1.0"
+      json-stringify-safe "^5.0.1"
+      lodash "^4.17.11"
+      minimist "^1.2.0"
+      mz "^2.7.0"
+      prettier "^1.16.4"
+      stdin "0.0.1"
+  
   json-schema-traverse@^0.4.1:
     version "0.4.1"
     resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-0.4.1.tgz#69f6a87d9513ab8bb8fe63bdb0979c448e684660"
@@ -2618,7 +2770,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
     integrity sha1-nbe1lJatPzz+8wp1FC0tkwrXJlE=
   
-  json-stringify-safe@~5.0.1:
+  json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
     version "5.0.1"
     resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
     integrity sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
@@ -2771,6 +2923,13 @@ Lockfile:
       currently-unhandled "^0.4.1"
       signal-exit "^3.0.0"
   
+  lru-queue@0.1:
+    version "0.1.0"
+    resolved "https://registry.yarnpkg.com/lru-queue/-/lru-queue-0.1.0.tgz#2738bd9f0d3cf4f84490c5736c48699ac632cda3"
+    integrity sha1-Jzi9nw089PhEkMVzbEhpmsYyzaM=
+    dependencies:
+      es5-ext "~0.10.2"
+  
   make-dir@^2.1.0:
     version "2.1.0"
     resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-2.1.0.tgz#5f0310e18b8be898cc07009295a30ae41e91e6f5"
@@ -2823,6 +2982,20 @@ Lockfile:
       map-age-cleaner "^0.1.1"
       mimic-fn "^2.0.0"
       p-is-promise "^2.0.0"
+  
+  memoizee@^0.4.14:
+    version "0.4.14"
+    resolved "https://registry.yarnpkg.com/memoizee/-/memoizee-0.4.14.tgz#07a00f204699f9a95c2d9e77218271c7cd610d57"
+    integrity sha512-/SWFvWegAIYAO4NQMpcX+gcra0yEZu4OntmUdrBaWrJncxOqAziGFlHxc7yjKVK2uu3lpPW27P27wkR82wA8mg==
+    dependencies:
+      d "1"
+      es5-ext "^0.10.45"
+      es6-weak-map "^2.0.2"
+      event-emitter "^0.3.5"
+      is-promise "^2.1"
+      lru-queue "0.1"
+      next-tick "1"
+      timers-ext "^0.1.5"
   
   meow@^3.3.0:
     version "3.7.0"
@@ -2955,6 +3128,15 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
     integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
   
+  mz@^2.7.0:
+    version "2.7.0"
+    resolved "https://registry.yarnpkg.com/mz/-/mz-2.7.0.tgz#95008057a56cafadc2bc63dde7f9ff6955948e32"
+    integrity sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==
+    dependencies:
+      any-promise "^1.0.0"
+      object-assign "^4.0.1"
+      thenify-all "^1.0.0"
+  
   nan@^2.12.1:
     version "2.14.0"
     resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
@@ -2995,6 +3177,11 @@ Lockfile:
     version "2.6.1"
     resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.1.tgz#ac27ada66167fa8849a6addd837f6b189ad2081c"
     integrity sha512-iyam8fBuCUpWeKPGpaNMetEocMt364qkCsfL9JuhjXX6dRnguRVOfk2GZaDpPjcOKiiXCPINZC1GczQ7iTq3Zw==
+  
+  next-tick@1, next-tick@^1.0.0:
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
+    integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
   
   nice-try@^1.0.4:
     version "1.0.5"
@@ -3162,6 +3349,13 @@ Lockfile:
     integrity sha1-BnQoIw/WdEOyeUsiu6UotoZ5YtQ=
     dependencies:
       mimic-fn "^1.0.0"
+  
+  ono@^4.0.11:
+    version "4.0.11"
+    resolved "https://registry.yarnpkg.com/ono/-/ono-4.0.11.tgz#c7f4209b3e396e8a44ef43b9cedc7f5d791d221d"
+    integrity sha512-jQ31cORBFE6td25deYeD80wxKBMj+zBmHTrVxnc6CKhx8gho6ipmWM5zj/oeoqioZ99yqBls9Z/9Nss7J26G2g==
+    dependencies:
+      format-util "^1.0.3"
   
   optimist@^0.6.1:
     version "0.6.1"
@@ -3437,7 +3631,7 @@ Lockfile:
     dependencies:
       fast-diff "^1.1.2"
   
-  prettier@^1.18.2:
+  prettier@^1.16.4, prettier@^1.18.2:
     version "1.18.2"
     resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.18.2.tgz#6823e7c5900017b4bd3acf46fe9ac4b4d7bda9ea"
     integrity sha512-OeHeMc0JhFE9idD4ZdtNibzY0+TPHSpSSb9h8FqtP+YnoZZ1sl8Vc9b1sasjfymH3SonAF4QcA2+mzHPhMvIiw==
@@ -4000,6 +4194,11 @@ Lockfile:
       define-property "^0.2.5"
       object-copy "^0.1.0"
   
+  stdin@0.0.1:
+    version "0.0.1"
+    resolved "https://registry.yarnpkg.com/stdin/-/stdin-0.0.1.tgz#d3041981aaec3dfdbc77a1b38d6372e38f5fb71e"
+    integrity sha1-0wQZgarsPf28d6GzjWNy449ftx4=
+  
   stealthy-require@^1.1.1:
     version "1.1.1"
     resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
@@ -4153,6 +4352,20 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
     integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
   
+  thenify-all@^1.0.0:
+    version "1.6.0"
+    resolved "https://registry.yarnpkg.com/thenify-all/-/thenify-all-1.6.0.tgz#1a1918d402d8fc3f98fbf234db0bcc8cc10e9726"
+    integrity sha1-GhkY1ALY/D+Y+/I02wvMjMEOlyY=
+    dependencies:
+      thenify ">= 3.1.0 < 4"
+  
+  "thenify@>= 3.1.0 < 4":
+    version "3.3.0"
+    resolved "https://registry.yarnpkg.com/thenify/-/thenify-3.3.0.tgz#e69e38a1babe969b0108207978b9f62b88604839"
+    integrity sha1-5p44obq+lpsBCCB5eLn2K4hgSDk=
+    dependencies:
+      any-promise "^1.0.0"
+  
   throat@^4.0.0:
     version "4.1.0"
     resolved "https://registry.yarnpkg.com/throat/-/throat-4.1.0.tgz#89037cbc92c56ab18926e6ba4cbb200e15672a6a"
@@ -4162,6 +4375,14 @@ Lockfile:
     version "2.3.8"
     resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
     integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
+  
+  timers-ext@^0.1.5:
+    version "0.1.7"
+    resolved "https://registry.yarnpkg.com/timers-ext/-/timers-ext-0.1.7.tgz#6f57ad8578e07a3fb9f91d9387d65647555e25c6"
+    integrity sha512-b85NUNzTSdodShTIbky6ZF02e8STtVVfD+fu4aXXShEELpozH+bCpJLYMPZbsABN2wDH7fJpqIoXxJpzbf0NqQ==
+    dependencies:
+      es5-ext "~0.10.46"
+      next-tick "1"
   
   tmp@^0.0.33:
     version "0.0.33"
@@ -4334,6 +4555,11 @@ Lockfile:
     integrity sha1-WITKtRLPHTVeP7eE8wgEsrUg23I=
     dependencies:
       prelude-ls "~1.1.2"
+  
+  type@^1.0.1:
+    version "1.0.1"
+    resolved "https://registry.yarnpkg.com/type/-/type-1.0.1.tgz#084c9a17fcc9151a2cdb1459905c2e45e4bb7d61"
+    integrity sha512-MAM5dBMJCJNKs9E7JXo4CXRAansRfG0nlJxW7Wf6GZzSOvH31zClSaHdIMWLehe/EGMBkqeC55rrkaOr5Oo7Nw==
   
   typescript@^3.5.2:
     version "3.5.3"

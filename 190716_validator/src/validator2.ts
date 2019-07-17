@@ -1,3 +1,5 @@
+import { hasStringProperty } from './helpers/has-property';
+
 console.log('hello world');
 
 class Employee {
@@ -62,42 +64,59 @@ const data = {};
 //   return { ...validators, chain: { input, runningResult, success: false } };
 // }
 
-type ChainableResult<TInput, TRunningOutput, TAddToOutput> =
-  | {
-      input: TInput;
-      runningOutput: TRunningOutput;
-      success: false;
-    }
-  | {
-      input: TInput;
-      runningOutput: TRunningOutput & TAddToOutput;
-      success: true;
+// type ChainableResult<TInput, TRunningOutput, TAddToOutput> =
+//   | {
+//       input: TInput;
+//       runningOutput: TRunningOutput;
+//       success: false;
+//     }
+//   | {
+//       input: TInput;
+//       runningOutput: TRunningOutput & TAddToOutput;
+//       success: true;
+//     };
+
+// interface ValidatorFunctions {
+//   hasString: <TInput, TRunningOutput, TAddToOutput>(
+//     input: TInput,
+//     runningOutput: TRunningOutput,
+//   ) => ChainableResult<TInput, TRunningOutput, TAddToOutput>;
+// }
+
+// class ChainValidator<TInput, TRunningOutput, TPreviousAddToOutput> {
+//   private currentChain: ChainableResult<TInput, TRunningOutput, TPreviousAddToOutput>;
+
+//   public constructor(chainableInput: ChainableResult<TInput, TRunningOutput, TPreviousAddToOutput>) {
+//     this.currentChain = chainableInput;
+//   }
+
+//   public hasString = (): ChainValidator<
+//     TInput,
+//     ChainableResult<TInput, TRunningOutput, TPreviousAddToOutput>,
+//     { thisIsTheNextString: string }
+//   > => {
+//     const { currentChain } = this;
+//     return new ChainValidator({
+//       input: currentChain.input,
+//       runningOutput: { ...currentChain.runningOutput, thisIsTheNextString: 'hi :)' },
+//       success: true,
+//     });
+//   };
+// }
+
+const hasString = <T, U, K extends PropertyKey>(
+  input: T,
+  accumulator: U,
+  property: K,
+): { isTrue: false; accumulator: U } | { isTrue: true; accumulator: U & { [index in K]: string } } => {
+  if (hasStringProperty(input, property)) {
+    const nextAccumulator: U & { [index in K]: string } = { ...accumulator, [property]: input[property] };
+
+    accumulator[property] = input[property];
+    return {
+      input,
+      accumulator: nextAccumulator,
+      property,
     };
-
-interface ValidatorFunctions {
-  hasString: <TInput, TRunningOutput, TAddToOutput>(
-    input: TInput,
-    runningOutput: TRunningOutput,
-  ) => ChainableResult<TInput, TRunningOutput, TAddToOutput>;
-}
-
-class ChainValidator<TInput, TRunningOutput, TPreviousAddToOutput> {
-  private currentChain: ChainableResult<TInput, TRunningOutput, TPreviousAddToOutput>;
-
-  public constructor(chainableInput: ChainableResult<TInput, TRunningOutput, TPreviousAddToOutput>) {
-    this.currentChain = chainableInput;
   }
-
-  public hasString = (): ChainValidator<
-    TInput,
-    ChainableResult<TInput, TRunningOutput, TPreviousAddToOutput>,
-    { thisIsTheNextString: string }
-  > => {
-    const { currentChain } = this;
-    return new ChainValidator({
-      input: currentChain.input,
-      runningOutput: { ...currentChain.runningOutput, thisIsTheNextString: 'hi :)' },
-      success: true,
-    });
-  };
-}
+};
