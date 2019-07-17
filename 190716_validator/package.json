@@ -36,6 +36,8 @@
     "compile-types:1": "ts-node-dev src/json-schema/schemas-to-typescript",
     "compile-types:2": "ts-node-dev src/typescript-json-schema/typescript-to-schemas",
     "compile-types:3": "typescript-json-schema src/typescript-json-schema/types/my-type.d.ts MyType",
+    "compile-types:4": "ts-node-dev src/validator4/validator4.ts",
+    "compile-types:4:inspect-break": "ts-node-dev --inspect-brk --debug src/validator4/validator4.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   }
