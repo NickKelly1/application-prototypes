@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "properties": {
+    "owner": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "date_of_birth": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "date_of_birth",
+        "name"
+      ]
+    },
+    "number": {
+      "type": "number"
+    },
+    "expires_at": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "expires_at",
+    "number",
+    "owner"
+  ],
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
