@@ -1,5 +1,5 @@
-import { UserAuth } from '../models/user-model';
-import { StringConstObject } from '../../@types/helper-types';
+import { UserAuth } from '../shared/models/user-model';
+import { StringConstObject } from '../../@types/helpers/helper-types';
 
 export interface SocketPayloadWithAuth {
   auth: UserAuth;

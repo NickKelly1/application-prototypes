@@ -1,4 +1,4 @@
-import { $TS_FIX_ME } from '../../@types/helper-types';
+import { $TS_FIX_ME } from '../../@types/helpers/helper-types';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 

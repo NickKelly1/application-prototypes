@@ -23,6 +23,7 @@
     "beginnable",
     "camelcase",
     "ltsa",
+    "respawn",
     "stringable",
     "transitionable",
     "unsanitized",

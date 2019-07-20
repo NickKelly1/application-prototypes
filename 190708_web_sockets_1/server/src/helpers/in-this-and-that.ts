@@ -1,4 +1,4 @@
-import { AnElementOf } from '../../@types/helper-types';
+import { AnElementOf } from '../../@types/helpers/helper-types';
 
 /**
  * @description

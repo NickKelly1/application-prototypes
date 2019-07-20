@@ -1,0 +1,139 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "anyOf": [
+        {
+            "$ref": "#/definitions/SocketClientMessageAttemptLogIn"
+        },
+        {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/WithClientAuthentication"
+                },
+                {
+                    "properties": {
+                        "_type": {
+                            "enum": [
+                                "ATTEMPT_LOG_OUT"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            ]
+        },
+        {
+            "$ref": "#/definitions/SocketClientMessageAttemptSignUp"
+        },
+        {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/WithClientAuthentication"
+                },
+                {
+                    "properties": {
+                        "_type": {
+                            "enum": [
+                                "NEW_CHAT_MESSAGE"
+                            ],
+                            "type": "string"
+                        },
+                        "chat_message": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            ]
+        },
+        {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/WithClientAuthentication"
+                },
+                {
+                    "properties": {
+                        "_type": {
+                            "enum": [
+                                "STOP_TYPING"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            ]
+        },
+        {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/WithClientAuthentication"
+                },
+                {
+                    "properties": {
+                        "_type": {
+                            "enum": [
+                                "TYPING"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            ]
+        }
+    ],
+    "definitions": {
+        "SocketClientMessageAttemptLogIn": {
+            "description": "\"Attempt Log In\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "ATTEMPT_LOG_IN"
+                    ],
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketClientMessageAttemptSignUp": {
+            "description": "\"Attempt Sign Up\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "ATTEMPT_SIGN_UP"
+                    ],
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "WithClientAuthentication": {
+            "description": "Mixin for SocketClientMessages",
+            "properties": {
+                "auth": {
+                    "properties": {
+                        "token": {
+                            "type": "string"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        }
+    }
+}
+

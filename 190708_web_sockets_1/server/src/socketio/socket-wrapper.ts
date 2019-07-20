@@ -1,6 +1,6 @@
 import SocketIo from 'socket.io';
 import { EventEmitter } from 'events';
-import { AValueOf } from '../../@types/helper-types';
+import { AValueOf } from '../../@types/helpers/helper-types';
 
 export class SocketWrapper<
   IncomingMessagePayloads extends Record<AValueOf<IncomingMessageNames>, any>,

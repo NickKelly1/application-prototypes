@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "ajv": "^6.10.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
@@ -14,7 +15,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint:fix": "eslint './src/**/*.{ts,tsx}'"
+    "lint:fix": "eslint './src/**/*.{ts,tsx}'",
+    "build:schemas": "yarn build:client-socket-message-schema && yarn build:server-socket-message-schema",
+    "build:client-socket-message-schema": "typescript-json-schema \"src/shared/io/sockets/types/socket-client-message.ts\" \"SocketClientMessage\" --out \"src/shared/io/sockets/schemas/socket-client-message.schema.json\"",
+    "build:server-socket-message-schema": "typescript-json-schema \"src/shared/io/sockets/types/socket-server-message.ts\" \"SocketServerMessage\" --out \"src/shared/io/sockets/schemas/socket-server-message.schema.json\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -32,6 +36,7 @@
     ]
   },
   "devDependencies": {
+    "@types/ajv": "^1.0.0",
     "@types/jest": "24.0.15",
     "@types/node": "12.6.2",
     "@types/react": "^16.8.23",
@@ -42,6 +47,7 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-config-react": "^1.1.7",
     "eslint-plugin-prettier": "^3.1.0",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "typescript-json-schema": "^0.38.3"
   }
 }

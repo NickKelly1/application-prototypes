@@ -6,6 +6,9 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/ajv": "^1.0.0",
+    "@types/debug": "^4.1.4",
+    "@types/jest": "^24.0.15",
     "@types/node": "^12.0.12",
     "@types/prop-types": "^15.7.1",
     "@types/socket.io": "^2.1.2",
@@ -19,10 +22,11 @@
     "jest": "^24.8.0",
     "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",
-    "ts-node-dev": "^1.0.0-pre.40"
+    "ts-node-dev": "^1.0.0-pre.40",
+    "typescript-json-schema": "^0.38.3"
   },
   "dependencies": {
-    "@types/debug": "^4.1.4",
+    "ajv": "^6.10.2",
     "debug": "^4.1.1",
     "prop-types": "^15.7.2",
     "socket.io": "^2.2.0",
@@ -37,6 +41,10 @@
     "dev:inspect": "ts-node-dev --inspect --notify false --prefer-ts --debug --transpileOnly --respawn src/app.ts",
     "dev:inspect-break": "ts-node-dev --inspect-brk --notify false --prefer-ts --debug --transpileOnly --respawn src/app.ts",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:schemas": "ts-node-dev --inspect --notify false --prefer-ts --debug --respawn src/app2.ts",
+    "test:watch": "jest --watch",
+    "build:schemas": "yarn build:client-socket-message-schema && yarn build:server-socket-message-schema",
+    "build:client-socket-message-schema": "typescript-json-schema \"src/shared/io/sockets/types/socket-client-message.ts\" \"SocketClientMessage\" --out \"src/shared/io/sockets/schemas/socket-client-message.schema.json\"",
+    "build:server-socket-message-schema": "typescript-json-schema \"src/shared/io/sockets/types/socket-server-message.ts\" \"SocketServerMessage\" --out \"src/shared/io/sockets/schemas/socket-server-message.schema.json\""
   }
 }

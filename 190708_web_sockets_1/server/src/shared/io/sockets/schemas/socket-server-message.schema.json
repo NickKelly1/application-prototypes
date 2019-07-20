@@ -1,0 +1,182 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "anyOf": [
+        {
+            "$ref": "#/definitions/SocketServerMessageLogInFail"
+        },
+        {
+            "$ref": "#/definitions/SocketServerMessageLogInSuccess"
+        },
+        {
+            "$ref": "#/definitions/SocketServerMessageNewChatMessage"
+        },
+        {
+            "$ref": "#/definitions/SocketServerMessageSignUpFail"
+        },
+        {
+            "$ref": "#/definitions/SocketServerMessageSignUpSuccess"
+        },
+        {
+            "$ref": "#/definitions/SocketServerMessageUserJoinedRoom"
+        },
+        {
+            "$ref": "#/definitions/SocketServerMessageUserLeftRoom"
+        },
+        {
+            "$ref": "#/definitions/SocketServerMessageUserStoppedTyping"
+        },
+        {
+            "$ref": "#/definitions/SocketServerMessageUserTyping"
+        }
+    ],
+    "definitions": {
+        "SocketServerMessageLogInFail": {
+            "description": "\"Log In Fail\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "LOG_IN_FAIL"
+                    ],
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketServerMessageLogInSuccess": {
+            "description": "\"Log In Fail\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "LOG_IN_SUCCESS"
+                    ],
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketServerMessageNewChatMessage": {
+            "description": "\"New Message\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "NEW_CHAT_MESSAGE"
+                    ],
+                    "type": "string"
+                },
+                "chat_message_id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketServerMessageSignUpFail": {
+            "description": "\"Sign Up Fail\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "SIGN_UP_FAIL"
+                    ],
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketServerMessageSignUpSuccess": {
+            "description": "\"Sign Up Success\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "SIGN_UP_SUCCESS"
+                    ],
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketServerMessageUserJoinedRoom": {
+            "description": "\"User Joined Room\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "USER_JOINED_ROOM"
+                    ],
+                    "type": "string"
+                },
+                "room_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketServerMessageUserLeftRoom": {
+            "description": "\"User Left Room\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "USER_LEFT_ROOM"
+                    ],
+                    "type": "string"
+                },
+                "room_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketServerMessageUserStoppedTyping": {
+            "description": "\"User Stopped Typing\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "USER_STOPPED_TYPING"
+                    ],
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "SocketServerMessageUserTyping": {
+            "description": "\"User Typing\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "USER_TYPING"
+                    ],
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        }
+    }
+}
+

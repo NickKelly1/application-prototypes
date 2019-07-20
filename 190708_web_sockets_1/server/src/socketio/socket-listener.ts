@@ -1,8 +1,8 @@
 import SocketIo from 'socket.io';
 import { EventEmitter } from 'events';
 import { getStringKeysOf } from '../helpers/object-keys';
-import { AStringKeyOf } from '../../@types/helper-types';
-import { AuthTokenUserMap } from '../models/user-model';
+import { AStringKeyOf } from '../../@types/helpers/helper-types';
+import { AuthTokenUserMap } from '../shared/models/user-model';
 import { hasFunctionProperty, hasStringProperty } from '../helpers/has-property';
 import { SOCKET_CLIENT_MESSAGE } from '../shared/socket-client-messages';
 import { SocketServerMessagePayloads } from '../shared/socket-server-messages';

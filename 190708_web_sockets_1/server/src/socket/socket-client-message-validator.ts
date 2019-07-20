@@ -1,4 +1,4 @@
-import { UserAuth, AuthTokenUserMap } from '../models/user-model';
+import { UserAuth, AuthTokenUserMap } from '../shared/models/user-model';
 import { hasStringProperty, hasObjectProperty } from '../helpers/has-property';
 import { APP_CONSTANTS } from '../shared/app-constants';
 import { SOCKET_CLIENT_MESSAGE, SocketClientMessagePayloads } from '../shared/socket-client-messages';
@@ -8,8 +8,8 @@ import {
   DoesSanitization,
   UnsanitizedPayload,
   SanitizerFunctionOutput,
-} from '../../@types/sanitizer-types';
-import { AStringValueOf, AStringKeyOf } from '../../@types/helper-types';
+} from '../../@types/helpers/sanitizer-types';
+import { AStringValueOf, AStringKeyOf } from '../../@types/helpers/helper-types';
 import { SocketPayloadWithAuth } from './socket-types';
 
 /**

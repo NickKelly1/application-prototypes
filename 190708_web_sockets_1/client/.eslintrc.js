@@ -16,6 +16,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/explicit-function-return-type': 0,
     'prettier/prettier': ['error', { singleQuote: true }],
+    '@typescript-eslint/camelcase': 0,
   },
   settings: {
     react: {

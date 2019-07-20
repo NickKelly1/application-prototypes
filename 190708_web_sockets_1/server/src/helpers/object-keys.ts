@@ -1,4 +1,4 @@
-import { $TS_FIX_ME, AStringKeyOf, AStringOrNumberKeyOf } from '../../@types/helper-types';
+import { $TS_FIX_ME, AStringKeyOf, AStringOrNumberKeyOf } from '../../@types/helpers/helper-types';
 
 /**
  * @description
