@@ -1,4 +1,5 @@
 import { RoomModel } from '../../../models/room';
+import { UserModel, UserModelWithPassword } from '../../../models/user-model';
 
 /**
  * @description
@@ -13,7 +14,6 @@ export const SOCKET_CLIENT_MESSAGE_TYPE = {
   ATTEMPT_LOG_IN: 'ATTEMPT_LOG_IN',
   ATTEMPT_LOG_OUT: 'ATTEMPT_LOG_OUT',
   ATTEMPT_SIGN_UP: 'ATTEMPT_SIGN_UP',
-  NEW_CHAT_MESSAGE: 'NEW_CHAT_MESSAGE',
   STOP_TYPING: 'STOP_TYPING',
   TYPING: 'TYPING',
 } as const;
@@ -38,8 +38,8 @@ export interface SocketClientMessageAttemptJoinRoom {
  */
 export interface SocketClientMessageAttemptLogIn {
   _type: SOCKET_CLIENT_MESSAGE_TYPE['ATTEMPT_LOG_IN'];
-  email: string;
-  password: string;
+  email: UserModel['email'];
+  password: UserModelWithPassword['password'];
 }
 
 /**
@@ -60,23 +60,9 @@ export type SocketClientMessageAttemptLogOut = WithClientAuthentication & {
  */
 export interface SocketClientMessageAttemptSignUp {
   _type: SOCKET_CLIENT_MESSAGE_TYPE['ATTEMPT_SIGN_UP'];
-  email: string;
-  password: string;
+  email: UserModel['email'];
+  password: UserModelWithPassword['password'];
 }
-
-/**
- * @deprecated
- * This message is invalid - should be done via post request
- *
- * @payload
- *
- * @description
- * "New Message" payload
- */
-export type SocketClientMessageNewChatMessage = WithClientAuthentication & {
-  _type: SOCKET_CLIENT_MESSAGE_TYPE['NEW_CHAT_MESSAGE'];
-  chat_message: string;
-};
 
 /**
  * @payload
@@ -105,9 +91,9 @@ export type SocketClientMessageTyping = WithClientAuthentication & {
  * recognise it as "required", rather it only defines it
  */
 export type SocketClientMessage =
+  | SocketClientMessageAttemptJoinRoom
   | SocketClientMessageAttemptLogIn
   | SocketClientMessageAttemptLogOut
   | SocketClientMessageAttemptSignUp
-  | SocketClientMessageNewChatMessage
   | SocketClientMessageStopTyping
   | SocketClientMessageTyping;

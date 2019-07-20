@@ -26,11 +26,15 @@ describe('Socket Client Messages schemas', () => {
     const schema = ajv.compile(require(SOCKET_CLIENT_MESSAGE_PAYLOAD_SCHEMAS_PATH));
 
     const stringEmail = 'stringEmail';
+    const roomIdString = 'roomIdString';
     const stringPassword = 'stringPassword';
-    const stringChatMessage = 'stringChatMessage';
     const authObject = { token: 'authToken' };
 
     const goodPayloads: SocketClientMessage[] = [
+      {
+        _type: SOCKET_CLIENT_MESSAGE_TYPE.ATTEMPT_JOIN_ROOM,
+        room_id: roomIdString,
+      },
       {
         _type: SOCKET_CLIENT_MESSAGE_TYPE.ATTEMPT_LOG_IN,
         email: stringEmail,
@@ -46,11 +50,6 @@ describe('Socket Client Messages schemas', () => {
         auth: authObject,
       },
       {
-        _type: SOCKET_CLIENT_MESSAGE_TYPE.NEW_CHAT_MESSAGE,
-        auth: authObject,
-        chat_message: stringChatMessage,
-      },
-      {
         _type: SOCKET_CLIENT_MESSAGE_TYPE.STOP_TYPING,
         auth: authObject,
       },
@@ -63,7 +62,7 @@ describe('Socket Client Messages schemas', () => {
     // demonstrate that every possible message is tested
     Object.values(SOCKET_CLIENT_MESSAGE_TYPE).forEach(socketClientMessageType => {
       it(`Should test ${socketClientMessageType}`, () => {
-        goodPayloads.some(goodPayload => goodPayload._type === socketClientMessageType);
+        expect(goodPayloads.some(goodPayload => goodPayload._type === socketClientMessageType)).toBe(true);
       });
     });
 
@@ -90,11 +89,6 @@ describe('Socket Client Messages schemas', () => {
       {
         _type: SOCKET_CLIENT_MESSAGE_TYPE.ATTEMPT_LOG_OUT,
         auth: authObject,
-      },
-      {
-        _type: SOCKET_CLIENT_MESSAGE_TYPE.NEW_CHAT_MESSAGE,
-        auth: authObject,
-        chat_message: stringChatMessage,
       },
       {
         _type: SOCKET_CLIENT_MESSAGE_TYPE.STOP_TYPING,

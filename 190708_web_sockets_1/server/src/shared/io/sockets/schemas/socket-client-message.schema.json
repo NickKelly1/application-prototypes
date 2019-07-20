@@ -2,6 +2,9 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "anyOf": [
         {
+            "$ref": "#/definitions/SocketClientMessageAttemptJoinRoom"
+        },
+        {
             "$ref": "#/definitions/SocketClientMessageAttemptLogIn"
         },
         {
@@ -24,27 +27,6 @@
         },
         {
             "$ref": "#/definitions/SocketClientMessageAttemptSignUp"
-        },
-        {
-            "allOf": [
-                {
-                    "$ref": "#/definitions/WithClientAuthentication"
-                },
-                {
-                    "properties": {
-                        "_type": {
-                            "enum": [
-                                "NEW_CHAT_MESSAGE"
-                            ],
-                            "type": "string"
-                        },
-                        "chat_message": {
-                            "type": "string"
-                        }
-                    },
-                    "type": "object"
-                }
-            ]
         },
         {
             "allOf": [
@@ -84,6 +66,21 @@
         }
     ],
     "definitions": {
+        "SocketClientMessageAttemptJoinRoom": {
+            "description": "\"Attempt Join Room\" payload",
+            "properties": {
+                "_type": {
+                    "enum": [
+                        "ATTEMPT_JOIN_ROOM"
+                    ],
+                    "type": "string"
+                },
+                "room_id": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
         "SocketClientMessageAttemptLogIn": {
             "description": "\"Attempt Log In\" payload",
             "properties": {

@@ -76,7 +76,7 @@ describe('Socket Server Messages schemas', () => {
     // demonstrate that every possible message is tested
     Object.values(SOCKET_SERVER_MESSAGE_TYPE).forEach(socketServerMessageType => {
       it(`Should test ${socketServerMessageType}`, () => {
-        goodPayloads.some(goodPayload => goodPayload._type === socketServerMessageType);
+        expect(goodPayloads.some(goodPayload => goodPayload._type === socketServerMessageType)).toBe(true);
       });
     });
 
