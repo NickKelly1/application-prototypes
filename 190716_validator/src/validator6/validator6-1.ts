@@ -29,20 +29,14 @@ const getProducts = () => {
   ];
 
   const result = Products.decode(apiResponse);
-
+  ThrowReporter.report(result);
   // Throws:
   //  Error: Invalid value "2" supplied to : Array<{ id: number, name: string, quantity: number, type: ("FURNITURE" | "BOOK") }>/1:
   //  { id: number, name: string, quantity: number, type: ("FURNITURE" | "BOOK") }/id: number
   // ThrowReporter.report(result);
 
-  if (result._tag === 'Right') {
-    result.right;
-  } else {
-    result.left;
-  }
-
   // @ts-ignore
-  return result.value;
+  return result;
 };
 
 console.log(getProducts());
