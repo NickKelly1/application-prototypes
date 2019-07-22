@@ -155,7 +155,7 @@ function lift<B, C>(g: (b: B) => C): (fb: Task<B>) => Task<C> {
  *    which maps each function `f: (a: A) => B` to a function `lift(f): (fa: F<A>) => F<B>` (**mapping between morphisms**)
  *
  * The following properties must hold
- *  - `lift(identity X) = identity F<X>` **identities map to identities**
+ *  - `lift(identity<X>) = identity<F<X>>` **identities map to identities**
  *  - `lift(g ∘ f) = lift(g) ∘ lift(f)` **mapping a composition is the composition of the mappings**
  *
  * The `lift` function is also known through a variant called `map`, which is basically `lift` with the arguments rearranged

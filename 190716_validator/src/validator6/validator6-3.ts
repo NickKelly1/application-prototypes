@@ -110,8 +110,10 @@ const NumberFromString = new ioTs.Type<number, string, unknown>(
   String,
 );
 
-console.log('Number From String', PathReporter.report(NumberFromString.decode('a')));
+console.log('Number From String', NumberFromString.decode('a'));
 // console.log(PathReporter.report(NumberFromString.decode('a')));
 // console.log(PathReporter.report(NumberFromString.decode('a')));
 
 console.log('...Finished');
+
+// man this stuff is HARD...
