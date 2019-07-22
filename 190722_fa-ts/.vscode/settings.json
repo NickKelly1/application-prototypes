@@ -20,10 +20,20 @@
   "cSpell.words": [
     "Chainable",
     "Guilio",
+    "Monoid",
+    "Monoids",
     "Semigroup",
     "Setoid's",
     "Struct",
     "contramap",
-    "contramaps"
+    "contramaps",
+    "effectful",
+    "endo",
+    "endofunctor",
+    "endofunctors",
+    "parallelisable",
+    "semigroup's",
+    "semigroups",
+    "viceversa"
   ],
 }
