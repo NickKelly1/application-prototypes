@@ -18,7 +18,21 @@ class SplashPage extends React.Component {
    * @inheritdoc
    */
   public render() {
-    return <div>SplashPage</div>;
+    console.log({ ...this.props });
+    return (
+      <div>
+        <div>SplashPage</div>
+        <div>
+          <div>Threads Header</div>
+          <div>
+            <div>Thread 1</div>
+            <div>Thread 2</div>
+            <div>Thread 3</div>
+            <div>Thread 4</div>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 

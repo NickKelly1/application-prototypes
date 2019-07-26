@@ -1,3 +1,22 @@
+/* http://colormind.io/ */
+
+:root {
+  /* theme */
+  --main-bg-color: #455352;
+  --text-color: #f2e087;
+  --shade-color: #c9b879;
+}
+
+.App {
+  background-color: var(--main-bg-color);
+  color: var(--text-color);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
 /* .App {
   text-align: center;
 }
