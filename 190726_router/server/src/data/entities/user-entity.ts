@@ -16,6 +16,8 @@ export interface UserEntityAttributes {
 }
 
 export class UserEntity implements UserEntityAttributes {
+  public primaryKey = 'id' as const;
+
   public id: Maybe<number> = none();
 
   public name: UserEntityAttributes['name'];

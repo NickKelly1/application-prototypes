@@ -10,6 +10,8 @@ export interface PostEntityAttributes {
 }
 
 export class PostEntity implements PostEntityAttributes {
+  public primaryKey = 'id' as const;
+
   public id: Maybe<number> = none();
 
   public owner_id: PostEntityAttributes['owner_id'];

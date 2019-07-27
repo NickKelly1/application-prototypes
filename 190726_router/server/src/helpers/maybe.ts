@@ -1,9 +1,9 @@
 export class None {
-  public _tag: 'none' = 'none';
+  public _tag = 'none' as const;
 }
 
 export class Some<T> {
-  public _tag: 'some' = 'some';
+  public _tag = 'some' as const;
   public value: T;
 
   public constructor(value: T) {

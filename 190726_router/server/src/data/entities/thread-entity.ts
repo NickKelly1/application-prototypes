@@ -10,6 +10,8 @@ export interface ThreadEntityAttributes {
 }
 
 export class ThreadEntity implements ThreadEntityAttributes {
+  public primaryKey = 'id' as const;
+
   public id: Maybe<number> = none();
 
   public owner_id: ThreadEntityAttributes['owner_id'];
