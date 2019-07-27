@@ -4,7 +4,7 @@ class AboutPage extends React.Component {
   /**
    * @inheritdoc
    */
-  render() {
+  public render() {
     console.log('eslint blocker');
 
     return (

@@ -1,4 +1,5 @@
 import React from 'react';
+import './SplashPage.scss';
 
 interface SplashPageProps {
   //
