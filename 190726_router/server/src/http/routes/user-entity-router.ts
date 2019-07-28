@@ -55,7 +55,7 @@ export class UserEntityRouter {
 
     const userId = parseInt(user_id, 10);
 
-    if (Number.isFinite(userId)) {
+    if (isFinite(userId)) {
       const response = await this.controller.get(userId);
       res.status(HTTP_STATUS.GET).json(response);
     } else {
@@ -129,7 +129,7 @@ export class UserEntityRouter {
 
     const userId = parseInt(user_id, 10);
 
-    if (Number.isFinite(userId)) {
+    if (isFinite(userId)) {
       const response = await this.controller.delete(userId);
       res.status(HTTP_STATUS.DELETED).json(response);
     } else {

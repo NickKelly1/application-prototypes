@@ -137,3 +137,11 @@ export type AStringKeyOf<T> = Extract<keyof T, string>;
  * type A_STRING_KEY_OF = AStringKeyOf<typeof movieBusinessSummary> // 'name' | 'owner' | 'movies' | 0 | 1
  */
 export type AStringOrNumberKeyOf<T> = Extract<keyof T, string | number>;
+
+/**
+ * @description
+ * Keys from a Record with unknown values
+ */
+export type UnsanitisedObject<T extends Record<string, any>, O extends keyof any = never> = Partial<
+  Record<AStringKeyOf<Omit<T, O>>, unknown>
+>;
