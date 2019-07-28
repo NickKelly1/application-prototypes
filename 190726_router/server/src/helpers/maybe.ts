@@ -13,11 +13,6 @@ export class Some<T> {
 
 export type Maybe<T> = None | Some<T>;
 
-/**
- * @note:
- *  - doesn't work when we use Extends Maybe<infer T>..., only if check extends Some<infer T>...
- *  - is this a bug?
- */
 export type MaybeValue<MaybeType> = MaybeType extends Some<infer T> ? T : never;
 
 export const none = () => new None();
