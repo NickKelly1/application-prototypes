@@ -2,12 +2,12 @@ import { sequenceT } from 'fp-ts/lib/Apply';
 import { getValidation, right, left, Either, map, isLeft, mapLeft } from 'fp-ts/lib/Either';
 import { getSemigroup, NonEmptyArray } from 'fp-ts/lib/NonEmptyArray';
 import { pipe } from 'fp-ts/lib/pipeable';
-import { isBetween } from './rules/number/is-between';
-import { isInteger } from './rules/number/is-integer';
-import { isNumber } from './rules/number/is-number';
-import { containsCharacters } from './rules/string/contains-characters';
-import { containsWordCountBetween } from './rules/string/contains-word-count-between';
-import { isString } from './rules/string/is-string';
+import { isBetweenRule } from './rules/number/is-between-rule';
+import { isIntegerRule } from './rules/number/is-integer-rule';
+import { isNumberRule } from './rules/number/is-number-rule';
+import { containsCharactersRule } from './rules/string/contains-characters-rule';
+import { containsWordCountBetweenRule } from './rules/string/contains-word-count-between-rule';
+import { isStringRule } from './rules/string/is-string-rule';
 
 // @see https://dev.to/gcanti/getting-started-with-fp-ts-either-vs-validation-5eja
 
@@ -53,10 +53,10 @@ export const v = {
     );
   },
 
-  isBetween,
-  isInteger,
-  isNumber,
-  containsCharacters,
-  containsWordCountBetween,
-  isString,
+  isBetweenRule,
+  isIntegerRule,
+  isNumberRule,
+  containsCharactersRule,
+  containsWordCountBetweenRule,
+  isStringRule,
 };
