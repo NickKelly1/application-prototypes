@@ -89,7 +89,7 @@ export class CreateUserEntityRequest {
 import * as ioTs from 'io-ts';
 import { ThrowReporter } from 'io-ts/lib/ThrowReporter';
 import { PathReporter } from 'io-ts/lib/PathReporter';
-import { isRight, fold } from 'fp-ts/lib/Either';
+import { isRight, fold, isLeft } from 'fp-ts/lib/Either';
 import { isObjectMember } from '@babel/types';
 import { hasStringProperty, hasNumberProperty } from '../../../helpers/has-property';
 import { pipe } from 'fp-ts/lib/pipeable';
@@ -146,35 +146,45 @@ const createUserRequestBody1 = new ioTs.Type<CreateUserRequestBody1, CreateUserR
 
 const result1 = createUserRequestBody1.decode({});
 
-console.dir(result1, { depth: 4 });
+// console.dir(result1, { depth: 4 });
 
-const MyNumber = new ioTs.Type<number>(
+const isNumberRule = new ioTs.Type<number>(
   'number',
   (u: unknown): u is number => typeof u === 'number',
-  (u: unknown, c) => (typeof u === 'number' ? ioTs.success(u) : ioTs.failure(u, c, "It wasn't a number bro!")),
+  (u: unknown, c) => (typeof u === 'number' ? ioTs.success(u) : ioTs.failure(u, c, "It wasn't a number!")),
   ioTs.identity,
 );
 
-const NonEmptyString = new ioTs.Type<string>(
+const isIntegerRule = new ioTs.Type<number>(
+  'integer',
+  (u: unknown): u is number => typeof u === 'number',
+  (u: unknown, c) =>
+    typeof u === 'number' && Number.isInteger(u) ? ioTs.success(u) : ioTs.failure(u, c, "It wasn't an integer!"),
+  ioTs.identity,
+);
+
+const isNonEmptyStringRule = new ioTs.Type<string>(
   'Non Empty String',
   (u: unknown): u is string => typeof u === 'string' && u.length > 0,
   (u: unknown, c) =>
-    typeof u === 'string' && u.length > 0 ? ioTs.success(u) : ioTs.failure(u, c, "It wasn't a non empty string bro!"),
+    typeof u === 'string' && u.length > 0 ? ioTs.success(u) : ioTs.failure(u, c, "It wasn't a non empty string!"),
   ioTs.identity,
 );
 
 const CreateUserRequestBodyValidator2 = ioTs.type({
-  name: NonEmptyString,
-  age: MyNumber,
+  name: isNonEmptyStringRule,
+  age: isNumberRule,
 });
 type CreateUserRequestBody2 = ioTs.TypeOf<typeof CreateUserRequestBodyValidator2>;
+
+// TODO: validator factories
 
 CreateUserRequestBodyValidator2.decode({});
 
 const result2 = CreateUserRequestBodyValidator2.decode({});
 
-console.dir(result2, { depth: 4 });
-console.dir(PathReporter.report(result2), { depth: 4 });
+// console.dir(result2, { depth: 4 });
+// console.dir(PathReporter.report(result2), { depth: 4 });
 
 // const getPaths = <A>(v: t.Validation<A>): Array<string> => {
 //   return pipe(
@@ -184,27 +194,46 @@ console.dir(PathReporter.report(result2), { depth: 4 });
 // };
 
 // working! if verbose...
-const getPaths = <A>(v: ioTs.Validation<A>): Record<string, string[]> => {
-  return pipe(
-    v,
-    fold(
-      errors =>
-        errors.reduce(
-          (runningErrors: Record<string, string[]>, error) => {
-            if (error.context.length > 1 && error.message)
-              runningErrors[error.context[error.context.length - 1].key] = [error.message];
+// const getPaths = <A>(v: ioTs.Validation<A>): Record<string, string[]> => {
+//   return pipe(
+//     v,
+//     fold(
+//       errors =>
+//         errors.reduce(
+//           (runningErrors: Record<string, string[]>, error) => {
+//             if (error.context.length > 1 && error.message)
+//               runningErrors[error.context[error.context.length - 1].key] = [error.message];
 
-            return runningErrors;
-          },
-          ({} as any) as Record<string, string[]>,
-        ),
-      () => ({}),
-    ),
+//             return runningErrors;
+//           },
+//           ({} as any) as Record<string, string[]>,
+//         ),
+//       () => ({}),
+//     ),
+//   );
+// };
+
+// console.log(getPaths(result2));
+// console.log(getPaths(CreateUserRequestBodyValidator2.decode({ name: 'hoi', age: 99 })));
+
+const result = CreateUserRequestBodyValidator2.decode({ name: 12345, age: '123' });
+
+if (isLeft(result)) {
+  console.log('failed...', result);
+  const errors = result.left.reduce(
+    (acc, error) => {
+      const key = error.context.reduce((levelAcc, level) => (levelAcc += level.key), '');
+      if (!acc[key]) acc[key] = [];
+      if (error.message) acc[key].push(error.message);
+      return acc;
+    },
+    ({} as any) as Record<string, string[]>,
   );
-};
 
-console.log(getPaths(result2));
-console.log(getPaths(CreateUserRequestBodyValidator2.decode({ name: 'hoi', age: 99 })));
+  console.log('errors:', errors);
+} else {
+  console.log('passed...', result);
+}
 
 // const Product = ioTs.interface({
 //   id: ioTs.number,
