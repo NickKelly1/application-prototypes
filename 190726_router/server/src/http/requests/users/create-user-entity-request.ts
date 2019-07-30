@@ -89,7 +89,7 @@ export class CreateUserEntityRequest {
 import * as ioTs from 'io-ts';
 import { ThrowReporter } from 'io-ts/lib/ThrowReporter';
 import { PathReporter } from 'io-ts/lib/PathReporter';
-import { isRight, fold, isLeft } from 'fp-ts/lib/Either';
+import { isRight, fold, isLeft, Either, left, right, Left } from 'fp-ts/lib/Either';
 import { isObjectMember } from '@babel/types';
 import { hasStringProperty, hasNumberProperty } from '../../../helpers/has-property';
 import { pipe } from 'fp-ts/lib/pipeable';
@@ -171,17 +171,34 @@ const isNonEmptyStringRule = new ioTs.Type<string>(
   ioTs.identity,
 );
 
-const CreateUserRequestBodyValidator2 = ioTs.type({
-  name: isNonEmptyStringRule,
-  age: isNumberRule,
-});
-type CreateUserRequestBody2 = ioTs.TypeOf<typeof CreateUserRequestBodyValidator2>;
-
 // TODO: validator factories
 
-CreateUserRequestBodyValidator2.decode({});
+const isString = (check: unknown): check is string => typeof check === 'string';
 
-const result2 = CreateUserRequestBodyValidator2.decode({});
+const createNumberRule = (options: { integer?: boolean; min?: number; max?: number }) => {
+  const optionalPredicates: ((u: number) => Either<string, number>)[] = [];
+
+  if (options.integer) optionalPredicates.push((u: number) => (Number.isInteger(u) ? right(u) : left('Must be an integer')));
+
+  if (hasNumberProperty(options, 'min'))
+    optionalPredicates.push((u: number) => (u >= options.min ? right(u) : left(`Must be greater than ${options.min}`)));
+
+  if (hasNumberProperty(options, 'max'))
+    optionalPredicates.push((u: number) => (u <= options.max ? right(u) : left(`Must be less than ${options.max}`)));
+
+  return new ioTs.Type<number>(
+    'number',
+    (u: unknown): u is number => typeof u === 'number' && optionalPredicates.every(predicate => isRight(predicate(u))),
+    (u: unknown, c) => {
+      if (!(typeof u === 'number')) return ioTs.failure(u, c, 'Must be a number');
+      const checks = optionalPredicates.map(predicate => predicate(u));
+      const errorMessages = checks.map(check => (isLeft(check) ? check.left : null)).filter(isString);
+      if (errorMessages.length === 0) return ioTs.success(u);
+      return ioTs.failure(u, c, errorMessages.join('\n'));
+    },
+    ioTs.identity,
+  );
+};
 
 // console.dir(result2, { depth: 4 });
 // console.dir(PathReporter.report(result2), { depth: 4 });
@@ -216,7 +233,18 @@ const result2 = CreateUserRequestBodyValidator2.decode({});
 // console.log(getPaths(result2));
 // console.log(getPaths(CreateUserRequestBodyValidator2.decode({ name: 'hoi', age: 99 })));
 
-const result = CreateUserRequestBodyValidator2.decode({ name: 12345, age: '123' });
+const CreateUserRequestBodyValidator2 = ioTs.type({
+  name: isNonEmptyStringRule,
+  age: createNumberRule({ integer: true, min: -1, max: 5 }),
+});
+
+type CreateUserRequestBody2 = ioTs.TypeOf<typeof CreateUserRequestBodyValidator2>;
+
+// CreateUserRequestBodyValidator2.decode({});
+
+// const result2 = CreateUserRequestBodyValidator2.decode({});
+
+const result = CreateUserRequestBodyValidator2.decode({ name: 12345, age: -5.5 });
 
 if (isLeft(result)) {
   console.log('failed...', result);
