@@ -80,3 +80,19 @@ export const hasFunctionProperty = <T extends Record<string, any>, P extends Pro
   obj: T,
   property: P,
 ): obj is T & { [index in P]: Record<string, any> } => hasProperty(obj, property) && typeof obj[property] === 'function';
+
+/**
+ * @description
+ * Type guard for determining if a value is a string
+ *
+ * @param input
+ */
+export const isString = (input: unknown): input is string => typeof input === 'string';
+
+/**
+ * @description
+ * Type guard for determining if a value is a number
+ *
+ * @param input
+ */
+export const isNumber = (input: unknown): input is number => typeof input === 'number';
