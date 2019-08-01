@@ -15,6 +15,11 @@ export interface UserEntityAttributes {
   status: AValueOf<USER_STATUS>;
 }
 
+// const userValidator = ioTs.type({
+//   first_name: createStringValidator({ min: 3, max: 15 }, { isString: () => '' }),
+//   last_name: createStringValidator({ min: 3, max: 20 }, { isString: () => '' }),
+// });
+
 export class UserEntity implements UserEntityAttributes {
   public primaryKey = 'id' as const;
 
