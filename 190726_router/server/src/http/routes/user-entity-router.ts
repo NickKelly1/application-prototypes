@@ -74,12 +74,14 @@ export class UserEntityRouter {
    * @param next
    */
   private post = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const createRequest = new CreateUserEntityRequest();
+    const createRequest = CreateUserEntityRequest.validate(req.body);
 
-    const response = await this.controller.create(createRequest);
+    console.log('qwe!!!', createRequest);
 
-    res.status(HTTP_STATUS.CREATED).json(response);
-    next();
+    // const response = await this.controller.create(createRequest);
+
+    // res.status(HTTP_STATUS.CREATED).json(response);
+    // next();
   };
 
   /**

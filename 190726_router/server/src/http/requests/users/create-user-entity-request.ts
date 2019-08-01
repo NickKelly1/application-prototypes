@@ -1,25 +1,36 @@
 // import { v } from '../../../validation/validator';
-import { UserEntityAttributes, UserEntity } from '../../../data/entities/user-entity';
 import { UnsanitisedObject } from '../../../../@types/helpers/helper-types';
+import ioTs from 'io-ts';
+import { createStringValidator } from '../../../validation/validators/string-validator';
+import { isRight, Either, right } from 'fp-ts/lib/Either';
 
 // // @see https://dev.to/gcanti/getting-started-with-fp-ts-either-vs-validation-5eja
 
+const CreateUserEntityRequestBodyCodec = ioTs.type({
+  name: createStringValidator({ min: 3, max: 10 }),
+  password: createStringValidator({ min: 5, max: 10 }),
+});
+
+type CreateUserEntityRequestBody = ioTs.TypeOf<typeof CreateUserEntityRequestBodyCodec>;
+
 export class CreateUserEntityRequest {
-  public static validate = (requestBody: UnsanitisedObject<UserEntityAttributes, UserEntity['primaryKey']>) => {
-    // return pipe(
-    //   sequenceT(getValidation(getSemigroup<string>()))(
-    //     v.validate(requestBody.name, true, isStringRule()),
-    //     v.validate(requestBody.password, true, isStringRule()),
-    //   ),
-    //   // name
-    //   // password
-    //   map(),
-    // );
+  public static codec = CreateUserEntityRequestBodyCodec;
+
+  public static validate = (
+    requestBody: UnsanitisedObject<CreateUserEntityRequestBody>,
+  ): Either<ioTs.Errors, CreateUserEntityRequest> => {
+    const result = CreateUserEntityRequestBodyCodec.decode(requestBody);
+
+    if (isRight(result)) {
+      return right(new CreateUserEntityRequest(result.right));
+    }
+
+    return result;
   };
 
-  public body: Omit<UserEntityAttributes, UserEntity['primaryKey']>;
+  public body: CreateUserEntityRequestBody;
 
-  public constructor(body: Omit<UserEntityAttributes, UserEntity['primaryKey']>) {
+  public constructor(body: CreateUserEntityRequestBody) {
     this.body = body;
   }
 }

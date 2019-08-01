@@ -1,39 +1,64 @@
-import { none, Maybe } from '../../helpers/maybe';
-import { AValueOf } from '../../../@types/helpers/helper-types';
+import * as ioTs from 'io-ts';
+import { Entity } from '../Entity';
+import { createStringValidator } from '../../validation/validators/string-validator';
 
+// https://github.com/gcanti/io-ts
+
+/**
+ * User Status
+ */
 export const USER_STATUS = {
   PRE_ACTIVATION: 'PRE_ACTIVATION',
   ACTIVATED: 'ACTIVATED',
-  DEACTIVATED: 'DEACTIVATED",',
+  DEACTIVATED: 'DEACTIVATED',
 } as const;
-export type USER_STATUS = typeof USER_STATUS;
 
-export interface UserEntityAttributes {
-  id: Maybe<number>;
-  name: string;
-  password: string;
-  status: AValueOf<USER_STATUS>;
-}
+export const USER_STATUS_CODEC = ioTs.union([
+  ioTs.literal(USER_STATUS.PRE_ACTIVATION),
+  ioTs.literal(USER_STATUS.ACTIVATED),
+  ioTs.literal(USER_STATUS.DEACTIVATED),
+]);
 
-// const userValidator = ioTs.type({
-//   first_name: createStringValidator({ min: 3, max: 15 }, { isString: () => '' }),
-//   last_name: createStringValidator({ min: 3, max: 20 }, { isString: () => '' }),
-// });
+export type USER_STATUS = ioTs.TypeOf<typeof USER_STATUS_CODEC>;
 
-export class UserEntity implements UserEntityAttributes {
-  public primaryKey = 'id' as const;
+// export const USER_ENTITY_ATTRIBUTE_RUNTIME_TYPES = {
+//   ID: ioTs.number,
+//   NAME: ioTs.string,
+//   PASSWORD: ioTs.string,
+//   STATUS: USER_STATUS_CODEC,
+// } as const;
 
-  public id: Maybe<number> = none();
+/**
+ * User Attributes
+ */
+export const OptionalUserEntityAttributesCodec = ioTs.partial({
+  id: ioTs.number,
+});
 
-  public name: UserEntityAttributes['name'];
+export const RequiredUserEntityAttributesCodec = ioTs.type({
+  name: createStringValidator({ min: 3, max: 10 }),
+  password: createStringValidator({ min: 10, max: 30 }),
+  status: USER_STATUS_CODEC,
+});
 
-  public password: UserEntityAttributes['password'];
+export const UserEntityAttributesCodec = ioTs.intersection([
+  OptionalUserEntityAttributesCodec,
+  RequiredUserEntityAttributesCodec,
+]);
 
-  public status: UserEntityAttributes['status'];
+type UserEntityAttributes = ioTs.TypeOf<typeof UserEntityAttributesCodec>;
+
+/**
+ * User Class
+ */
+export class UserEntity implements Entity<UserEntityAttributes, 'id'> {
+  public readonly primaryKey = 'id';
+
+  public attributes: UserEntityAttributes;
+
+  public static codec = UserEntityAttributesCodec;
 
   public constructor(attributes: UserEntityAttributes) {
-    this.name = attributes.name;
-    this.password = attributes.password;
-    this.status = attributes.status;
+    this.attributes = attributes;
   }
 }
