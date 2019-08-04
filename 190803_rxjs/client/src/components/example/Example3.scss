@@ -1,0 +1,18 @@
+.subscription-list {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+
+.feed-item {
+  &.next {
+    background-color: blue;
+  }
+
+  &.complete {
+    background-color: green;
+  }
+
+  &.error {
+    background-color: red;
+  }
+}

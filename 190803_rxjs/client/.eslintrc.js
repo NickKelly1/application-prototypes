@@ -10,6 +10,7 @@ module.exports = {
   ],
   plugins: ['react', '@typescript-eslint', 'prettier'],
   env: {
+    es6: true,
     browser: true,
     jasmine: true,
     jest: true,
@@ -18,6 +19,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 0,
     'prettier/prettier': ['error', { singleQuote: true }],
     '@typescript-eslint/camelcase': 0,
+    'no-console': 0,
   },
   settings: {
     react: {
