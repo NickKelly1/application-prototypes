@@ -13,7 +13,7 @@ import { Either, isLeft, left, isRight } from 'fp-ts/lib/Either';
  * @param acc
  * @param nextError
  */
-const accumulateMessages = <A>(acc: Either<string, A>, nextError: Either<string, A>) => {
+const accumulateMessagesAsString = <A>(acc: Either<string, A>, nextError: Either<string, A>) => {
   if (isRight(acc) && isRight(nextError)) return acc;
 
   const accLeft = isLeft(acc) ? acc.left : '';
@@ -25,8 +25,34 @@ const accumulateMessages = <A>(acc: Either<string, A>, nextError: Either<string,
 };
 
 /**
+ * @note: can't be used since ioTs failures are only allowed to be string...
+ *
  * @description
- * Accumulate validation checks - join together error messages and fail on the first error message
+ * Join together error messages
+ *  - One left -> return left
+ *  - All right -> return right
+ *  - Joins with `\n`
+ *
+ * Ignores empty strings
+ *
+ * @param acc
+ * @param nextError
+ */
+const accumulateMessagesAsArray = <A>(acc: Either<string[], A>, nextError: Either<string[], A>) => {
+  // one is left -> return it
+  if (isRight(acc) && isLeft(nextError)) return nextError;
+  else if (isLeft(acc) && isRight(nextError)) return acc;
+  // both are left -> join
+  else if (isLeft(acc) && isLeft(nextError)) return left([...acc.left, nextError.left]);
+
+  // no left
+  return acc;
+};
+
+/**
+ * @description
+ * Accumulate validation checks - join together validators (either
+ * error messages or successes) and fail on the first error message
  *
  * @param u
  * @param c
@@ -40,7 +66,7 @@ export const accumulateChecks = <A>(
   const checks = predicates.map(predicate => predicate(u));
   // group failures
   const [firstCheck, ...otherChecks] = checks;
-  const accumulatedChecks = otherChecks.reduce((acc, next) => accumulateMessages(acc, next), firstCheck);
+  const accumulatedChecks = otherChecks.reduce((acc, next) => accumulateMessagesAsString(acc, next), firstCheck);
   if (isLeft(accumulatedChecks)) return ioTs.failure(u, c, accumulatedChecks.left);
   return ioTs.success(accumulatedChecks.right);
 };

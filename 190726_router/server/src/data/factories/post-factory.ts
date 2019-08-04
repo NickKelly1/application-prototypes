@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { PostEntityAttributes, PostEntity } from '../entities/post-entity';
+import { PostEntityAttributes, PostEntity } from '../models/post-entity';
 import { none } from '../../helpers/maybe';
 import { randomInt } from '../../helpers/random-int';
 

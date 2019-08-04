@@ -1,5 +1,5 @@
 import { Maybe, none, Some } from '../../helpers/maybe';
-import { UserEntityAttributes } from './user-entity';
+import { UserEntityAttributes } from './users/user-model';
 
 export type MaybeValue<MaybeType> = MaybeType extends Some<infer T> ? T : never;
 

@@ -69,9 +69,9 @@ export const createNumberValidator = <T>(
   );
 };
 
-const userValidator = ioTs.type({
-  name: createNumberValidator({ max: 10, min: 5 }),
-  age: createNumberValidator({ isInteger: true, max: 10, min: 5 }),
-});
+// const userValidator = ioTs.type({
+//   name: createNumberValidator({ max: 10, min: 5 }),
+//   age: createNumberValidator({ isInteger: true, max: 10, min: 5 }),
+// });
 
-console.log(ValidationReporter.report(userValidator.decode({ name: 'hi', age: 1.5 })));
+// console.log(ValidationReporter.report(userValidator.decode(undefined)));

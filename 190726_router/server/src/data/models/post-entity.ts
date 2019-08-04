@@ -1,5 +1,5 @@
 import { Maybe, none } from '../../helpers/maybe';
-import { UserEntityAttributes } from './user-entity';
+import { UserEntityAttributes } from './users/user-model';
 import { MaybeValue, ThreadEntityAttributes } from './thread-entity';
 
 export interface PostEntityAttributes {

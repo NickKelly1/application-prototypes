@@ -1,4 +1,4 @@
-import { UserEntity } from '../../data/entities/user-entity';
+import { UserModel } from '../../data/models/users/user-model';
 import { MaybeValue } from '../../helpers/maybe';
 
 /**
@@ -15,7 +15,7 @@ export type SOCKET_SERVER_MESSAGE_TYPE = typeof SOCKET_SERVER_MESSAGE_TYPE;
  * Broadcast when a User is typing a Chat Message
  */
 export interface SocketServerMessageUserTyping {
-  user_id: MaybeValue<UserEntity['id']>;
+  user_id: MaybeValue<UserModel['id']>;
 }
 
 export type SocketServerMessage = SocketServerMessageUserTyping;

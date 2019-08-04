@@ -2,6 +2,8 @@ import http from 'http';
 import express from 'express';
 import socketIo from 'socket.io';
 import { SocketWrapper } from '../web-sockets/wrappers/socket-wrapper';
+import { createUserRouter } from '../http/routes/user-router';
+import bodyParser = require('body-parser');
 
 export const SOCKET_SERVER_EVENT = {
   CONNECTION: 'connection',
@@ -50,6 +52,7 @@ class DevServer {
 
     // start socket server
     this.socketServer.on('connection', (rawClient: socketIo.Socket) => {
+      console.log('new socket connection');
       const client = new SocketWrapper(rawClient);
       this.socketConnections.add(client);
 
@@ -58,7 +61,11 @@ class DevServer {
       });
     });
 
+    // middleware
+    expressApp.use(bodyParser.json());
+
     // register http routes
+    this.expressApp.use(createUserRouter());
   }
 }
 

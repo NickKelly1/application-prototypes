@@ -1,6 +1,6 @@
 import faker from 'faker';
 
-import { ThreadEntity, ThreadEntityAttributes } from '../entities/thread-entity';
+import { ThreadEntity, ThreadEntityAttributes } from '../models/thread-entity';
 import { none } from '../../helpers/maybe';
 import { randomInt } from '../../helpers/random-int';
 
