@@ -18,13 +18,15 @@ export class UserRepository {
     this.nextId = 1;
   }
 
+  public static Model = UserModel;
+
   /**
    * @description
    * Map UserRecord (from Repository) to UserModel
    *
    * @param record
    */
-  public recordToUser = (record: UserRecord): UserModel => {
+  public toModel = (record: UserRecord): UserModel => {
     const { id, ...attributes } = record;
     const user = new UserModel(id, attributes, this);
     return user;
@@ -36,10 +38,18 @@ export class UserRepository {
    *
    * @param user
    */
-  public userToRecord = (user: UserModel): UserRecord => {
+  public fromModel = (user: UserModel): UserRecord => {
     const { id, attributes } = user;
     const record = { ...attributes, id };
     return record;
+  };
+
+  /**
+   * @description
+   * Get a single record by its id
+   */
+  public get = async (id: UserRecord['id']) => {
+    return this.records.get(id);
   };
 
   /**
@@ -48,7 +58,7 @@ export class UserRepository {
    *
    * @param inputAttributes
    */
-  public create = async (inputAttributes: UserAttributes): Promise<Either<Error, UserModel>> => {
+  public create = async (inputAttributes: UserAttributes): Promise<Either<Error, UserRecord>> => {
     const attributes = this.attributesCodec.decode(inputAttributes);
 
     // attribute validation failed?
@@ -60,7 +70,7 @@ export class UserRepository {
     this.nextId++;
 
     // map record to user
-    return right(this.recordToUser(newRecord));
+    return right(newRecord);
   };
 
   /**
@@ -70,7 +80,7 @@ export class UserRepository {
    * @param id
    * @param inputAttributes
    */
-  public update = async (id: UserRecord['id'], inputAttributes: UserAttributes): Promise<Either<Error, UserModel>> => {
+  public update = async (id: UserRecord['id'], inputAttributes: UserAttributes): Promise<Either<Error, UserRecord>> => {
     const attributes = this.attributesCodec.decode(inputAttributes);
 
     // attribute validation failed?
@@ -84,7 +94,7 @@ export class UserRepository {
     const updatedRecord = { ...record, ...attributes.right, id };
     this.records.set(id, updatedRecord);
 
-    return right(this.recordToUser(updatedRecord));
+    return right(updatedRecord);
   };
 
   /**

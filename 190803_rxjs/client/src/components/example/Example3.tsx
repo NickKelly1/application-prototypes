@@ -5,6 +5,10 @@ import './Example3.scss';
 import { InferPropTypes } from '../../@types/infer-prop-types';
 import uuid from 'uuid';
 
+// @see https://cssgridgarden.com/
+// @see https://flexboxfroggy.com/
+// @see https://css-tricks.com/snippets/css/complete-guide-grid/
+
 const Example3PropTypes = {
   incomingRequiredProp: PropTypes.string.isRequired,
   incomingOptionalProp: PropTypes.string,
@@ -135,7 +139,7 @@ export class Example3 extends React.Component<Example3PropTypes> {
     console.log('rendering...', { subscribers, feeds });
 
     return (
-      <div className="example-2-container">
+      <div className="example-3-container">
         <div>hello</div>
         <div>{incomingRequiredProp}</div>
         <button onClick={this.handleClickSubscribe}>subscribe</button>

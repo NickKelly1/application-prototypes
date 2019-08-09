@@ -1,5 +1,7 @@
 import * as ioTs from 'io-ts';
 import { createStringValidator } from '../../validation/validators/string-validator';
+import { left, Either, right } from 'fp-ts/lib/Either';
+import { accumulateChecks } from '../../validation/helpers/accumulate-checks';
 
 /**
  * User Status
@@ -43,3 +45,21 @@ export type UserRecord = ioTs.TypeOf<typeof UserRecordCodec>;
 
 // export const UserRecordCodec = ioTs.intersection([ioTs.type({ id: ioTs.number }), UserAttributesCodec]);
 // export type UserRecord = ioTs.TypeOf<typeof UserRecordCodec>;
+
+const optionalPredicates: ((u: unknown) => Either<string, string>)[] = [];
+
+// string
+// optionalPredicates.push((u: unknown) => (isString(u) ? right(u) : left(errorMessages.isString(u, options))));
+
+/**
+ * TODO: sanitize
+ */
+
+const que = new ioTs.Type<UserAttributes>(
+  'que?',
+  (u: unknown): u is UserAttributes => true,
+  (u: unknown, c: ioTs.Context): Either<ioTs.Errors, UserAttributes> => {
+    return right(u);
+  },
+  ioTs.identity,
+);
