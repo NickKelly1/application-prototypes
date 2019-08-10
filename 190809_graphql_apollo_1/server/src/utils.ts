@@ -1,4 +1,4 @@
-import { Sequelize, Op, INTEGER, DATE, STRING } from 'sequelize';
+import { Sequelize, Op, INTEGER, DATE, STRING, Model } from 'sequelize';
 
 export function paginateResults({
   after: afterCursor,
@@ -38,6 +38,14 @@ export function createStore() {
     logging: true,
   });
 
+  // https://vivacitylabs.com/setup-typescript-sequelize/
+  // https://michalzalecki.com/using-sequelize-with-typescript/
+  // https://sequelize.org/master/manual/typescript.html
+
+  // https://sequelize.org/master/manual/typescript.html
+  // TypeScript doesn't know how to generate a class definition when we use the sequelize.define
+  // method to define a Model. Therefore, we need to do some manual work and declare an interface
+  // and a type, and eventually cast the result of .define to the static type.
   const users = db.define('user', {
     id: {
       type: INTEGER,
@@ -49,6 +57,12 @@ export function createStore() {
     email: STRING,
     token: STRING,
   });
+
+  // users.findOrCreate({});
+
+  interface Z {
+    a: 'hi';
+  }
 
   const trips = db.define('trip', {
     id: {

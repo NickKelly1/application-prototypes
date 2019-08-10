@@ -1,7 +1,8 @@
 import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import isEmail from 'isemail';
-import sequelize = require('sequelize');
+import sequelize, { Model } from 'sequelize';
 import { Store } from '../utils';
+import { isString } from '../helpers/type-guards';
 
 class UserAPI<T extends { user: Record<PropertyKey, unknown> } = any, S extends Store = Store> extends DataSource<T> {
   private store: S;
@@ -31,9 +32,11 @@ class UserAPI<T extends { user: Record<PropertyKey, unknown> } = any, S extends 
     const email = this.context && this.context.user ? this.context.user.email : emailArg;
 
     // Either<left, right>
-    if (!email || !isEmail.validate(email)) return null;
+    if (!email || !isString(email) || !isEmail.validate(email)) return null;
 
-    const users = await this.store.users.findOrCreate({ where: { email } });
+    const u = this.store.users;
+    const y = u.findOrCreate({ where: { email } });
+    const users = await this.store.users.findOrCreate; //.findOrCreate({ where: { email } });
     return users && users[0] ? users[0] : null;
   };
 
