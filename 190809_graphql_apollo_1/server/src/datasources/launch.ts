@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { RESTDataSource } from 'apollo-datasource-rest';
+import { $TS_FIX_ME } from '../helpers/helper-types';
 
 export class LaunchAPI extends RESTDataSource {
   public constructor() {
@@ -7,7 +8,7 @@ export class LaunchAPI extends RESTDataSource {
     this.baseURL = 'https://api.spacexdata.com/v2';
   }
 
-  private launchReducer = (launch: any) => ({
+  private launchReducer = (launch: $TS_FIX_ME<any>) => ({
     id: launch.flight_number || 0,
     cursor: `${launch.launch_date_unix}`,
     site: launch.launch_site && launch.launch_site.site_name,
@@ -30,6 +31,7 @@ export class LaunchAPI extends RESTDataSource {
 
   public getLaunchById = async ({ launchId }: { launchId: number }) => {
     const res = await this.get('launches', { flight_number: launchId });
+    if (!res) return undefined;
     return this.launchReducer(res[0]);
   };
 

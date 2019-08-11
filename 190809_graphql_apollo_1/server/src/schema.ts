@@ -4,14 +4,39 @@ import { gql } from 'apollo-server';
  * cheat-sheet          @see https://devhints.io/graphql#schema
  * queries              @see https://graphql.org/learn/queries/
  * serving over http    @see https://graphql.org/learn/serving-over-http/
+ *
+ * the comments between """ """ are called "docstrings"
  */
 export const typeDefs = gql`
   type Query {
-    launches: [Launch]!
+    # old launches:
+    # launches: [Launch]!
+    # new launches:
+    launches(
+      """
+      The number of results to show must be >= 1. Default = 20
+      """
+      pageSize: Int
+      """
+      If you add a cursor here, it will only return results _after_ this cursor
+      """
+      after: String
+    ): LaunchConnection!
+
     launch(id: ID!): Launch
 
     # Queries for the current user
     me: User
+  }
+
+  """
+  Simple wrapper around our list of launches that contain a cursor to the last item in the list
+  Pass this cursor to the launches query to fetch results after these
+  """
+  type LaunchConnection {
+    cursor: String!
+    hasMore: Boolean!
+    launches: [Launch]!
   }
 
   type Mutation {
@@ -32,6 +57,7 @@ export const typeDefs = gql`
 
   type Launch {
     id: ID!
+    cursor: String
     site: String
     mission: Mission
     rocket: Rocket

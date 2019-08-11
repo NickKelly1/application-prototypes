@@ -2,9 +2,23 @@ import { DataSource, DataSourceConfig } from 'apollo-datasource';
 import isEmail from 'isemail';
 import sequelize, { Model } from 'sequelize';
 import { Store } from '../utils';
-import { isString } from '../helpers/type-guards';
+import { isString, isNumber, hasNumberProperty } from '../helpers/type-guards';
 
-class UserAPI<T extends { user: Record<PropertyKey, unknown> } = any, S extends Store = Store> extends DataSource<T> {
+/**
+ * @see https://www.apollographql.com/docs/tutorial/data-source/
+ * The initialize method: You'll need to implement this method if you
+ * want to pass in any configuration options to your class. Here, we're
+ * using this method to access our graph API's context.
+ *
+ * this.context: A graph API's context is an object that's shared among
+ * every resolver in a GraphQL request. We're going to explain this in
+ * more detail in the next section. Right now, all you need to know is
+ * that the context is useful for storing user information.
+ */
+export class UserAPI<
+  T extends { user: { id: number } & Record<PropertyKey, unknown> } = any,
+  S extends Store = Store
+> extends DataSource<T> {
   private store: S;
   private context?: T;
 
@@ -34,13 +48,12 @@ class UserAPI<T extends { user: Record<PropertyKey, unknown> } = any, S extends 
     // Either<left, right>
     if (!email || !isString(email) || !isEmail.validate(email)) return null;
 
-    const u = this.store.users;
-    const y = u.findOrCreate({ where: { email } });
-    const users = await this.store.users.findOrCreate; //.findOrCreate({ where: { email } });
-    return users && users[0] ? users[0] : null;
+    const [user] = await this.store.users.findOrCreate({ where: { email } });
+    return user;
   };
 
-  public async bookTrips({ launchIds }) {
+  public async bookTrips({ launchIds }: { launchIds: number[] }) {
+    if (!this.context) throw ReferenceError('invalid state');
     const userId = this.context.user.id;
     if (!userId) return;
 
@@ -56,35 +69,47 @@ class UserAPI<T extends { user: Record<PropertyKey, unknown> } = any, S extends 
     return results;
   }
 
-  public async bookTrip({ launchId }) {
+  public async bookTrip({ launchId }: { launchId: number }) {
+    if (!this.context) throw new ReferenceError('invalid state');
     const userId = this.context.user.id;
-    const res = await this.store.trips.findOrCreate({
-      where: { userId, launchId },
-    });
-    return res && res.length ? res[0].get() : false;
+    const res = await this.store.trips.findOrCreate({ where: { userId, launchId } });
+
+    // fail
+    if (!res || !res.length) return false;
+
+    const attributes = res[0].get();
+    // invalid
+    if (!hasNumberProperty(attributes, 'id')) throw new ReferenceError('Invalid state: no "id" on trip attributes');
+    // success
+    return attributes;
   }
 
-  public async cancelTrip({ launchId }) {
+  public async cancelTrip({ launchId }: { launchId: number }) {
+    if (!this.context) throw new ReferenceError('invalid state');
     const userId = this.context.user.id;
     return !!this.store.trips.destroy({ where: { userId, launchId } });
   }
 
   public async getLaunchIdsByUser() {
+    if (!this.context) throw new ReferenceError('invalid state');
     const userId = this.context.user.id;
-    const found = await this.store.trips.findAll({
-      where: { userId },
-    });
-    return found && found.length ? found.map(l => l.dataValues.launchId).filter(l => !!l) : [];
+    const foundTrips = await this.store.trips.findAll({ where: { userId } });
+    // return trips that have launch ids
+    return foundTrips && foundTrips.length
+      ? foundTrips.map(trip => trip.getDataValue('launchId')).filter(trip => !!trip)
+      : [];
   }
 
-  public async isBookedOnLaunch({ launchId }) {
+  /**
+   * @description
+   * Determine if the user is booked on the given launch
+   *
+   * @param param0
+   */
+  public async isBookedOnLaunch({ launchId }: { launchId: number }) {
     if (!this.context || !this.context.user) return false;
     const userId = this.context.user.id;
-    const found = await this.store.trips.findAll({
-      where: { userId, launchId },
-    });
+    const found = await this.store.trips.findAll({ where: { userId, launchId } });
     return found && found.length > 0;
   }
 }
-
-module.exports = UserAPI;
