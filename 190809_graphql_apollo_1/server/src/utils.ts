@@ -109,9 +109,6 @@ export function createStore() {
     userId: INTEGER,
   }) as TripsModelStatic;
 
-  users.init();
-  trips.init();
-
   return { users, trips };
 }
 
