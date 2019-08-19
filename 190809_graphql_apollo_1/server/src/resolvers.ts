@@ -46,12 +46,12 @@ export const resolvers = {
       };
     },
 
-    launch: (parent: any, { id }: any, { dataSources }: any) => {
+    launch: (parent: any, { id }: any, { dataSources }: { dataSources: DataSources }) => {
       return dataSources.launchAPI.getLaunchById({ launchId: id });
     },
 
-    me: (parent: any, args: any, { dataSources }: any) => {
-      return dataSources.userAPI.findOrCreateUser();
+    me: (parent: any, args: any, { dataSources }: { dataSources: DataSources }) => {
+      return dataSources.userApi.findOrCreateUser();
     },
   },
 

@@ -1,0 +1,7 @@
+.loading-spinner-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // TODO: don't hardcode 70vh here, make naturally fit in center screen
+  height: 70vh;
+}

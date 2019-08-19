@@ -1,0 +1,36 @@
+.launches-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .url-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+
+    .this-that {
+      display: flex;
+      align-items: center;
+
+      button {
+        margin-left: 1em;
+      }
+    }
+
+    .inp {
+      display: flex;
+      align-items: center;
+
+      input {
+        margin-left: 1em;
+      }
+    }
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: auto auto;
+  }
+}

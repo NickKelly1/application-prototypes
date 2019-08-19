@@ -1,0 +1,16 @@
+.layout {
+  min-height: 100vh;
+
+  .heading {
+    //
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 2em;
+    padding-top: 1em;
+  }
+}
