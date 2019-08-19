@@ -15,7 +15,7 @@ import LoadingSpinnerPage from '../LoadingSpinnerPage/LoadingSpinnerPage';
 import LoadingRadarPage from '../LoadingRadarPage/LoadingRadarPage';
 
 
-const GET_LAUNCH_DETAILS = gql`
+export const GET_LAUNCH_DETAILS = gql`
   query LaunchDetails($launchId: ID!) {
     launch(id: $launchId) {
       isInCart @client

@@ -9,6 +9,7 @@ import Header from '../../Header/Header';
 import CartItem from '../../CartItem/CartItem';
 import { $TS_FIX_ME } from '../../../helpers/helper-types';
 import BookTrips from '../../BookTrips/BookTrips';
+import LoadingRadarPage from '../LoadingRadarPage/LoadingRadarPage';
 
 export const GET_CART_ITEMS = gql`
   query GetCartItems {
@@ -33,7 +34,7 @@ type PropTypes = InferPropTypes<typeof propTypes, typeof defaultProps>;
 const CartPage: React.FC<PropTypes> = (props) => {
   const { data, loading, error } = useQuery(GET_CART_ITEMS);
 
-  if (loading) return <LoadingRadar />;
+  if (loading) return <LoadingRadarPage />;
   if (error) return <p>ERROR: {error.message}</p>;
 
   return (

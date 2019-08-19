@@ -27,6 +27,7 @@ const TopBar: React.FC<PropTypes> = (props) => {
         <div className="links">
           <Link to={ROUTES.HOME_PAGE.get()}>Welcome</Link>
           <Link to={ROUTES.PROFILE_PAGE.get()}>Profile</Link>
+          <Link to={ROUTES.CART_PAGE.get()}>Cart</Link>
         </div>
       </div>
       <div className="right"><LogoutButton /></div>

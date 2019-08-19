@@ -12,6 +12,9 @@ export const LOG_COLOURS = {
 } as const;
 
 
+
+const NO_MESSAGE = Symbol('NO_MESSAGE');
+
 /**
  * @description
  * Log to the console with icon and color
@@ -21,7 +24,12 @@ export const LOG_COLOURS = {
  */
 export function logger(
   title: string,
-  { icon = '🍀', colour = LOG_COLOURS.BLACK, message }: { icon?: string; colour?: AValueOf<typeof LOG_COLOURS>; message?: any } = {},
+  { icon = '🍀', colour = LOG_COLOURS.BLACK, message = NO_MESSAGE }: { icon?: string; colour?: AValueOf<typeof LOG_COLOURS>; message?: any } = {},
 ) {
-  console.log(`%c${icon} ${title}`, `color:${colour}`, message);
+  console.log(
+    `%c${icon} ${title}`,
+    `color:${colour}`,
+    // don't log message if not provided
+    ...(message === NO_MESSAGE ? [] : [message])
+  );
 }

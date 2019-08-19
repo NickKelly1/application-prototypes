@@ -16,6 +16,10 @@ type PropTypes = InferPropTypes<typeof propTypes, typeof defaultProps>;
  * @description
  * LogoutButton
  *
+ * When we click the button, we perform a direct cache write by calling
+ * client.writeData and passing in a data object that sets the isLoggedIn
+ * boolean to false.
+ *
  * @param props
  */
 const LogoutButton: React.FC<PropTypes> = (props) => {

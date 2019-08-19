@@ -12,7 +12,7 @@ export const ROUTES = {
     template: () => '/profile',
   },
   CART_PAGE: {
-    get: () => '/profile',
+    get: () => '/cart',
     template: () => '/cart',
   },
   LOGIN_PAGE: {
