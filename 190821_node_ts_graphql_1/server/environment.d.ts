@@ -5,8 +5,6 @@ import * as ts from 'typescript';
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      NODE_SERVER_CONTAINER_NAME: string;
-      NODE_SERVER_PORT: number;
       NODE_SERVER_INTERNAL_PORT: number;
       POSTGRES_PORT: string;
       POSTGRES_USER: string;
