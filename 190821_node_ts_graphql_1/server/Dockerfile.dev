@@ -1,0 +1,11 @@
+FROM node:alpine
+
+# has to match the docker .env file
+WORKDIR /docker-node-server
+
+# @note: rely on volume shared from docker-compose-dev.yml
+# COPY ./package.json ./
+# RUN yarn
+# COPY . .
+
+CMD ["yarn", "dev:docker:win"]

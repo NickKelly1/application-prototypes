@@ -19,4 +19,4 @@ export const ROUTES = {
     get: () => '/login',
     template: () => '/launch/:launchId',
   },
-};
+} as const;

@@ -15,11 +15,12 @@ module.exports = {
     // project: './tsconfig.json', //https://www.npmjs.com/package/@typescript-eslint/eslint-plugin
   },
   rules: {
-    '@typescript-eslint/explicit-function-return-type': 0,
-    '@typescript-eslint/camelcase': 0,
-    'no-console': 0,
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/camelcase': 'off',
+    'no-console': 'off',
     'quotes': ['error', 'single',],
     '@typescript-eslint/indent': ['error', 2],
+    // '@typescript-eslint/explicit-member-accessibility': 1,
     '@typescript-eslint/explicit-member-accessibility': 'off',
     // the eslint node plugin can be used to see which features are/aren't provided in node
     // node version is specified in "engines" in package.json
