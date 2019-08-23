@@ -1,7 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { env } = require('./env');
+import { env } from './env';
 
-module.exports = {
+export const ormConfig = {
   'type': 'postgres',
   'host': 'localhost',
   'port': env.POSTGRES_PORT,
@@ -19,3 +18,5 @@ module.exports = {
     'subscribersDir': 'src/subscribers'
   }
 }
+
+console.log('ormconfig: ', ormConfig);
