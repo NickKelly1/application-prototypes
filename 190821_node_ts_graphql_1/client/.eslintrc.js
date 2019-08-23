@@ -29,6 +29,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/indent': ['error', 2],
     '@typescript-eslint/explicit-member-accessibility': 'off',
+    'no-trailing-spaces': ["error", { "skipBlankLines": true }],
     // https://www.npmjs.com/package/eslint-plugin-react-hooks
     'react-hooks/exhaustive-deps': 'warn',
     'react-hooks/rules-of-hooks': 'error',

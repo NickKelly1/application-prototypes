@@ -30,6 +30,7 @@
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "cSpell.words": [
     "POSTGRES",
+    "dont",
     "esnext",
     "ormconfig",
     "typeorm"

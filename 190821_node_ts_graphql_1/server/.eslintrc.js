@@ -20,6 +20,7 @@ module.exports = {
     'no-console': 'off',
     'quotes': ['error', 'single',],
     '@typescript-eslint/indent': ['error', 2],
+    'no-trailing-spaces': ["error", { "skipBlankLines": true }],
     // '@typescript-eslint/explicit-member-accessibility': 1,
     '@typescript-eslint/explicit-member-accessibility': 'off',
     // the eslint node plugin can be used to see which features are/aren't provided in node

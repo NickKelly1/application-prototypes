@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { logger } from './src/helpers/logger';
+import { logger, L_C } from './src/helpers/logger';
 
 /**
  * @description
@@ -17,12 +17,13 @@ const readEnv = () => ({
 let useEnv = readEnv();
 
 // if environment variables aren't available from the process, read from .env file
-if (Object.values(useEnv).every(v => v === undefined)) {
-  console.log('__READING ENVIRONMENT VARIABLES FROM__ .useEnv __');
+if (Object.values(useEnv).every(v => v === undefined || !isFinite(Number(v)))) {
   dotenv.config();
   useEnv = readEnv();
+  logger('env.ts::__Reading "env" variables from ".env" file...', { v: useEnv, i: '🐱‍👤', c: L_C.GREEN });
 } else {
-  console.log('__READING ENVIRONMENT VARIABLES FROM__ environment __');
+  logger('env.ts::__Reading "env" variables from environment (NOT ".env" file)...', { v: useEnv, i: '🐱‍👤', c: L_C.GREEN }
+  );
 }
 
 // validate environment variables exist
@@ -30,7 +31,5 @@ Object.entries(useEnv).forEach(([k, v]) => {
   if (v === undefined) throw new TypeError(`Missing useEnv variable: "${k}"`);
   if (typeof v === 'number' && !Number.isFinite(v)) throw new Error(`Missing / invalid useEnv variable: "${k}" - "${v}"`);
 });
-
-logger('env.ts::', { icon: '🐱‍👤', message: useEnv, });
 
 export const env = useEnv;
