@@ -15,3 +15,5 @@ export class ProfileEntity extends BaseEntity {
   @OneToOne((type) => ProfileEntity, (user: UserEntity) => user.profile)
   user!: UserEntity;
 }
+
+export interface Profile extends ProfileEntity {}

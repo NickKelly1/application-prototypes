@@ -15,3 +15,6 @@ export class PhotoEntity extends BaseEntity {
   @ManyToOne(type => UserEntity, (user: UserEntity) => user.photos)
   user!: UserEntity;
 }
+
+// export for graphql codegen
+export interface Photo extends PhotoEntity {}

@@ -1,0 +1,14 @@
+diff --git a/node_modules/graphqlgen/dist/introspection/ts-ast.js b/node_modules/graphqlgen/dist/introspection/ts-ast.js
+index 21eac40..0bb7529 100644
+--- a/node_modules/graphqlgen/dist/introspection/ts-ast.js
++++ b/node_modules/graphqlgen/dist/introspection/ts-ast.js
+@@ -144,7 +144,8 @@ function isFieldOptional(node) {
+ }
+ function buildTSTypesMap(fileContent, filePath) {
+     var ast = parser_1.parse(fileContent, {
+-        plugins: ['typescript'],
++        // plugins: ['typescript'],
++        plugins: ['typescript', 'decorators-legacy'],
+         sourceType: 'module',
+     });
+     var typesMap = findTypescriptTypes(ast).reduce(function (acc, type) {

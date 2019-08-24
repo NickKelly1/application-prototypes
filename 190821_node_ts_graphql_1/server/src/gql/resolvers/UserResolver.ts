@@ -5,10 +5,10 @@ export const UserResolver: UserResolvers.Type = {
 
   profile: (parent, args, ctx) => {
     const { profile } = parent;
-    return { profile };
+    return profile;
   },
   photos: (parent, args, ctx) => {
     // const {  } = parent;
-    return user.photos;
+    return parent.photos;
   }
 }

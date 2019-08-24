@@ -25,6 +25,10 @@ module.exports = {
     '@typescript-eslint/no-namespace': ["off", { "allowDeclarations": false, "allowDefinitionFiles": false }],
     // '@typescript-eslint/explicit-member-accessibility': 1,
     '@typescript-eslint/explicit-member-accessibility': 'off',
+    // need to export empty interfaces for typeorm and graphqlgen integration
+    // typeorm works with classes, graphqlgen needs interfaces
+    // for example: export GraphqlgenInterface extends TypeormClass {};
+    '@typescript-eslint/no-empty-interface': 'off',
     // the eslint node plugin can be used to see which features are/aren't provided in node
     // node version is specified in "engines" in package.json
     // https://github.com/mysticatea/eslint-plugin-node/blob/master/docs/rules/no-unsupported-features/es-syntax.md

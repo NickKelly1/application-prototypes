@@ -30,3 +30,10 @@ export class UserEntity extends BaseEntity {
   @OneToMany(type => PhotoEntity, (photo: PhotoEntity) => photo.user, { cascade: true, nullable: true })
   photos!: PhotoEntity[];
 }
+
+// export for graphql codegen
+export interface User extends UserEntity {}
+
+const z: User = {  };
+
+z.id

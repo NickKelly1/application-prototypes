@@ -8,9 +8,10 @@ export interface Context {
 
 // export type User = UserEntity;
 
-export interface User {
-  user: UserEntity;
-}
+
+// export interface User {
+//   user: UserEntity;
+// }
 // export interface User {
 //   // id: UserEntity['id'];
 //   // email: UserEntity['email'];
