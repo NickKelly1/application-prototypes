@@ -20,11 +20,11 @@ let useEnv = readEnv();
 if (Object.values(useEnv).every(v => v === undefined || !isFinite(Number(v)))) {
   dotenv.config();
   useEnv = readEnv();
-  logger('env.ts::__Reading "env" variables from ".env" file...', { v: useEnv, i: '🐱‍👤', c: L_C.GREEN });
+  logger('env.ts::__Reading "env" variables from ".env" file...', { v: useEnv, i: '🐱‍👤' });
 } else {
-  logger('env.ts::__Reading "env" variables from environment (NOT ".env" file)...', { v: useEnv, i: '🐱‍👤', c: L_C.GREEN }
-  );
+  logger('env.ts::__Reading "env" variables from environment (NOT ".env" file)...', { v: useEnv, i: '🐱‍👤' })
 }
+
 
 // validate environment variables exist
 Object.entries(useEnv).forEach(([k, v]) => {

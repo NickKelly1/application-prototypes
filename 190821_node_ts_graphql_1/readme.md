@@ -38,7 +38,8 @@ These clients (as well as an optional Postgres Server) can be downloaded from [E
 The psql executable is located at /c/Program Files/PostgreSQL/<version | 11>/bin
 
 
-- **connect**: winpty psql.exe --username=<username> --dbname=<dbname>
+- **connect (windows)**: winpty psql.exe --username=<username> --dbname=<dbname>
+- **connect (linux)**: psql --username=<username> --dbname=<dbname> -h localhost
 - ...TODO
 
 
