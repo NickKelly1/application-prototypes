@@ -1,9 +1,9 @@
-import { PhotoResolver } from './resolvers/PhotoResolver';
-import { UserResolver } from './resolvers/UserResolver';
-import { ProfileResolver } from './resolvers/ProfileResolver';
-import { Query } from './Query';
-import { Mutation } from './Mutation';
-import { Resolvers } from './generated/graphqlgen';
+import { Resolvers } from "../graphql/generated/graphql.generated";
+import { Query } from "../graphql/Query";
+import { Mutation } from "../graphql/Mutation";
+import { UserResolver } from "../graphql/resolvers/UserResolver";
+import { ProfileResolver } from "../graphql/resolvers/ProfileResolver";
+import { PhotoResolver } from "../graphql/resolvers/PhotoResolver";
 
 export const resolvers: Resolvers = {
   Query: Query,

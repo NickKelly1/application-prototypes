@@ -1,0 +1,20 @@
+overwrite: true
+schema: "./src/graphql/schema.graphql"
+documents: null
+generates:
+  ./src/graphql/generated/graphql.generated.ts:
+    config:
+      useIndexSignature: true
+      showUnusedMappers: true
+      # Map our TypeORM models to the resolvers
+      # https://graphql-code-generator.com/docs/plugins/typescript-resolvers
+      mappers:
+        User: "../../entities/UserEntity#UserEntity"
+        Profile: "../../entities/ProfileEntity#ProfileEntity"
+        Photo: "../../entities/PhotoEntity#PhotoEntity"
+    plugins:
+      - "typescript"
+      - "typescript-resolvers"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

@@ -137,3 +137,43 @@ export type AStringKeyOf<T> = Extract<keyof T, string>;
  * type A_STRING_KEY_OF = AStringKeyOf<typeof movieBusinessSummary> // 'name' | 'owner' | 'movies' | 0 | 1
  */
 export type AStringOrNumberKeyOf<T> = Extract<keyof T, string | number>;
+
+/**
+ * @description
+ * Keys of the object, except those of type R
+ *
+ * Extrapolated from TS documentation
+ *
+ * @see https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
+ */
+type KeysExceptWhere<T, R> = { [K in keyof T]: T[K] extends R ? never : K }[keyof T];
+
+/**
+ * @description
+ * Properties of the object, excet those of type R
+ *
+ * Extrapolated from TS documentation
+ *
+ * @see https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
+ */
+type PropertiesExceptWhere<T, R> = Pick<T, KeysExceptWhere<T, R>>;
+
+/**
+ * @description
+ * Keys of the object where the type is R
+ *
+ * Extrapolated from TS documentation
+ *
+ * @see https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
+ */
+type KeysWhere<T, R> = { [K in keyof T]: T[K] extends R ? K : never }[keyof T];
+
+/**
+ * @description
+ * Properties of the object where the type is R
+ *
+ * Extrapolated from TS documentation
+ *
+ * @see https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html
+ */
+type PropertiesWhere<T, R> = Pick<T, KeysWhere<T, R>>;

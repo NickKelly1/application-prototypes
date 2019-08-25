@@ -1,0 +1,91 @@
+type Query {
+  user(id: Int!): User!
+  users: [User]!
+  profile(id: Int!): Profile!
+  photo(id: Int!): Photo!
+}
+
+type Mutation {
+  createUser(user: CreateUserInput!, profile: CreateProfileInput, photos: [CreatePhotoInput!]): User!
+  updateUser(user: UpdateUserInput!): User!
+  deleteUser(user: DeleteUserInput!): Boolean
+
+  createProfile(profile: CreateProfileInput!): Profile!
+  updateProfile(profile: UpdateProfileInput!): Profile!
+  deleteProfile(profile: DeleteProfileInput!): Boolean
+
+  createPhoto(photo: CreatePhotoInput!): Photo!
+  updatePhoto(photo: UpdatePhotoInput!): Photo!
+  deletePhoto(photo: DeletePhotoInput!): Boolean
+}
+
+#
+# User
+#
+
+type User {
+  id: Int!
+  email: String!
+  profile: Profile
+  photos: [Photo!]
+}
+
+input CreateUserInput {
+  email: String!
+}
+
+input UpdateUserInput {
+  id: Int!
+  email: String!
+}
+
+input DeleteUserInput {
+  id: Int!
+}
+
+#
+# Profile
+#
+
+type Profile {
+  id: Int!
+  favouriteColour: String!
+  userId: Int!
+  user: User!
+}
+
+input CreateProfileInput {
+  favouriteColour: String!
+}
+
+input UpdateProfileInput {
+  id: Int!
+  favouriteColour: String!
+}
+
+input DeleteProfileInput {
+  id: Int!
+}
+
+#
+# Photo
+#
+
+type Photo {
+  url: String!
+  userId: Int!
+  user: User!
+}
+
+input CreatePhotoInput {
+  url: String!
+}
+
+input UpdatePhotoInput {
+  id: Int!
+  url: String!
+}
+
+input DeletePhotoInput {
+  id: Int!
+}

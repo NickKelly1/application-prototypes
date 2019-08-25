@@ -18,7 +18,11 @@ export const L_C = {
 const NO_VALUE = Symbol('NO_VALUE');
 
 let nowCache: undefined | string;
-const unrefTimeout = () => nowCache = undefined;
+
+const unrefTimeout = () => {
+  nowCache = undefined;
+}
+
 function cache() {
   const d = new Date();
   const YYYY = d.getFullYear();

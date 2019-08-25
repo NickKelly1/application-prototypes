@@ -6,6 +6,10 @@
   "license": "ISC",
   "description": "DESCRIPTION GOES HERE",
   "devDependencies": {
+    "@graphql-codegen/cli": "^1.6.1",
+    "@graphql-codegen/introspection": "1.6.1",
+    "@graphql-codegen/typescript": "1.6.1",
+    "@graphql-codegen/typescript-resolvers": "1.6.1",
     "@types/dotenv": "^6.1.1",
     "@types/jest": "^24.0.15",
     "@types/node": "^12.0.12",
@@ -15,7 +19,6 @@
     "eslint": "^6.0.1",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-node": "^9.1.0",
-    "graphqlgen": "^0.6.0-rc9",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
     "ts-node-dev": "^1.0.0-pre.40"
@@ -24,7 +27,6 @@
     "dotenv": "^8.1.0",
     "eslint-plugin-jest": "^22.15.1",
     "graphql-yoga": "^1.18.2",
-    "patch-package": "^6.1.2",
     "pg": "^7.12.1",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^8.3.0",
@@ -40,12 +42,11 @@
     "dev:docker:win": "ts-node-dev --poll --interval 1000 --inspect --notify false --debug --respawn --prefer-ts src/app.ts",
     "dev:inspect": "ts-node-dev --inspect --notify false --prefer-ts --debug --respawn src/app.ts",
     "dev:inspect-break": "ts-node-dev --inspect-brk --notify false --prefer-ts --debug --respawn src/app.ts",
-    "generate": "graphqlgen",
-    "postinstall": "patch-package",
     "test": "jest",
     "test:watch": "jest --watch",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",
     "migration:generate": "npm run typeorm -- migration:generate --config src/config/ormconfig.json --connection  --name ",
-    "migration:run": "npm run typeorm -- migration:run"
+    "migration:run": "npm run typeorm -- migration:run",
+    "generate": "graphql-codegen --config .codegen.yml"
   }
 }

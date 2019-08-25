@@ -4,15 +4,15 @@ import { logger, L_C } from './helpers/logger';
 import { createConnection, getConnection } from 'typeorm';
 import { env } from '../env';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { resolvers } from './gql/resolvers';
+import { resolvers } from './graphql/resolvers';
+import { IResolvers } from 'graphql-middleware/dist/types';
 
 // dataContext is the talks replacement for a database
 const dataContext = {};
 
-
 const server = new GraphQLServer({
-  typeDefs: './src/gql/schema.graphql',
-  resolvers: resolvers,
+  typeDefs: './src/graphql/schema.graphql',
+  resolvers: resolvers as IResolvers,
   context: { data: dataContext },
 })
 

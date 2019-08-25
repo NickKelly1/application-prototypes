@@ -1,12 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToOne, JoinColumn, OneToMany, RelationId } from 'typeorm';
 import { ProfileEntity } from './ProfileEntity';
 import { PhotoEntity } from './PhotoEntity';
+import { User, Maybe } from '../graphql/generated/graphql.generated';
 
 export const USERS_TABLE = 'users';
 
 @Entity({ name: USERS_TABLE })
-export class UserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
+export class UserEntity extends BaseEntity implements User {
+  @PrimaryGeneratedColumn('increment')
   id!: number;
 
   @Column({ type: 'text', unique: true })
@@ -16,24 +17,37 @@ export class UserEntity extends BaseEntity {
    * @relation ProfileEntity
    * @OneToOne
    */
-  @Column({ nullable: true })
-  profileId!: number;
+  @OneToOne(() => ProfileEntity, profile => profile.user, { nullable: true, cascade: true })
+  profile?: ProfileEntity;
 
-  @OneToOne(type => ProfileEntity, { cascade: true, nullable: true })
-  @JoinColumn()
-  profile!: ProfileEntity
+  /**
+   * @description
+   * Lazy load relationship
+   */
+  getProfile = async () => {
+    if (this.profile) return this.profile;
+
+    const profile = await ProfileEntity.findOne({ userId: this.id });
+    this.profile = profile;
+    return profile;
+  }
 
   /**
    * @relation Photos
    * @OneToMany
    */
-  @OneToMany(type => PhotoEntity, (photo: PhotoEntity) => photo.user, { cascade: true, nullable: true })
-  photos!: PhotoEntity[];
+  @OneToMany(() => PhotoEntity, photo => photo.user, { nullable: true, cascade: true })
+  photos?: PhotoEntity[];
+
+  /**
+   * @description
+   * Lazy load relationship
+   */
+  getPhotos = async () => {
+    if (this.photos) return this.photos;
+
+    const photos = await PhotoEntity.find({ userId: this.id });
+    this.photos = photos;
+    return photos;
+  }
 }
-
-// export for graphql codegen
-export interface User extends UserEntity {}
-
-const z: User = {  };
-
-z.id
