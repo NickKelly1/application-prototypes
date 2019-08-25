@@ -1,0 +1,126 @@
+# # Write your query or mutation here
+query GetUsers{
+  users{
+    id
+    email
+    profile{
+      id
+      userId
+      user{
+        email
+        profile{
+          favouriteColour
+          userId
+        }
+        photos{
+          userId
+          url
+        }
+      }
+      favouriteColour
+    }
+    photos{
+      url
+      userId
+      user{
+        id
+        email
+      }
+    }
+  }
+}
+
+# Write your query or mutation here
+query GetUser{
+  user(id:9){
+    id
+    email
+    profile{
+      id
+      favouriteColour
+      userId
+      user{
+        email
+      }
+    }
+    photos{
+      url
+      userId
+      user{
+        id
+        email
+      }
+    }
+  }
+}
+
+
+mutation CreateUser{
+  createUser(
+    user:{
+      email:"bobby5@bobby.com"
+    }
+    profile:{
+      favouriteColour:"VERY red"
+    }
+    photos:[
+      {
+        url: "photo_1_url"
+      }
+      {
+        url: "photo_2_url"
+      }
+      {
+        url: "photo_3_url"
+      }
+    ]
+  ){
+    id
+    email
+    photos{
+      id
+      url
+      userId
+    }
+    profile{
+      id
+      favouriteColour
+      userId
+    }
+  }
+}
+
+mutation UpdateUser{
+  updateUser(user:{
+    id:11
+    email:"race condition solved"
+  }) {
+    id
+    email
+    profile{
+      id
+      favouriteColour
+      userId
+    }
+    photos{
+      id
+      url
+      userId
+    }
+  }
+}
+
+mutation UpdateProfile{
+  updateProfile(profile:{
+    id:7
+    favouriteColour:"pink"
+  }){
+    id
+    favouriteColour
+    userId
+    user{
+      id
+      email
+    }
+  }
+}

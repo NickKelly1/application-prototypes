@@ -72,6 +72,7 @@ input DeleteProfileInput {
 #
 
 type Photo {
+  id: Int!
   url: String!
   userId: Int!
   user: User!

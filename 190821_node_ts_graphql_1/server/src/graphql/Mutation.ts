@@ -28,7 +28,7 @@ export const Mutation: MutationResolvers = {
   },
   updateUser: async (parent, args) => {
     const { id, ...userArgs } = args.user;
-    UserEntity.update(args.user.id, userArgs);
+    await UserEntity.update(args.user.id, userArgs);
     const user = await UserEntity.findOneOrFail(id);
     return user;
   },
@@ -44,7 +44,7 @@ export const Mutation: MutationResolvers = {
 
   updateProfile: async (parent, args) => {
     const { id, ...profileArgs } = args.profile;
-    ProfileEntity.update(args.profile.id, profileArgs);
+    await ProfileEntity.update(args.profile.id, profileArgs);
     const profile = await ProfileEntity.findOneOrFail(id);
     return profile;
   },
@@ -61,7 +61,7 @@ export const Mutation: MutationResolvers = {
 
   updatePhoto: async (parent, args) => {
     const { id, ...photoArgs } = args.photo;
-    PhotoEntity.update(args.photo.id, photoArgs);
+    await PhotoEntity.update(args.photo.id, photoArgs);
     const photo = await PhotoEntity.findOneOrFail(id);
     return photo;
   },

@@ -1,11 +1,14 @@
 import 'reflect-metadata';
 import { GraphQLServer } from 'graphql-yoga'
+import express from 'express';
 import { logger, L_C } from './helpers/logger';
 import { createConnection, getConnection } from 'typeorm';
 import { env } from '../env';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { resolvers } from './graphql/resolvers';
 import { IResolvers } from 'graphql-middleware/dist/types';
+
+
 
 // dataContext is the talks replacement for a database
 const dataContext = {};

@@ -99,6 +99,7 @@ export type MutationDeletePhotoArgs = {
 
 export type Photo = {
   __typename?: 'Photo',
+  id: Scalars['Int'],
   url: Scalars['String'],
   userId: Scalars['Int'],
   user: User,
@@ -282,6 +283,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type PhotoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Photo'] = ResolversParentTypes['Photo']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   userId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   user?: Resolver<ResolversTypes['User'], ParentType, ContextType>,
