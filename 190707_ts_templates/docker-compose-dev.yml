@@ -1,0 +1,119 @@
+version: '3.1'
+services:
+
+  ## ****************************************************************
+  #  ************************* NGINX ********************************
+  ## ****************************************************************
+  # host name (to be accessed by other containers): nginx
+  # nginx:
+  #   container_name: ${NGINX_CONTAINER_NAME}
+  #   restart: always
+  #   build:
+  #     dockerfile: Dockerfile.dev
+  #     context: ./nginx
+  #   ports:
+  #     - '${NGINX_PORT_FORWARD}:${NGINX_PORT}'
+  #   depends_on:
+  #     - react-client
+  #     - node-auth-api
+  #     - node-rest-api
+  #     - postgres
+  #     - redis
+  #     - mongo
+
+
+  # ## ****************************************************************
+  # #  *********************** REACT CLIENT ***************************
+  # ## ****************************************************************
+  # react-client:
+  #   container_name: ${REACT_CLIENT_CONTAINER_NAME}
+  #   build:
+  #     dockerfile: Dockerfile.dev
+  #     context: ./react-client
+  #   ports:
+  #     - '${REACT_CLIENT_DEV_PORT_FORWARD}:${REACT_CLIENT_DEV_PORT}'
+  #   volumes:
+  #     # do not touch/share the node_modules folder
+  #     # @NOTE TEMPORARILY DISABLE FOR FASTER DEVELOPMENT
+  #     #   - CAN'T QUICKLY INSTALL NEW NODE MODULES
+  #     # - /${REACT_CLIENT_CONTAINER_FOLDER_LOCATION}/node_modules
+  #     # share the other (non node_modules_ folder)
+  #     - ./react-client:${REACT_CLIENT_CONTAINER_FOLDER_LOCATION}
+  #   depends_on:
+  #     - node-auth-api
+  #     - node-rest-api
+
+
+
+  # # ## **************************************************************
+  # # #  ********************** NODE SERVER ***************************
+  # # ## **************************************************************
+  # # host name (to be accessed by other containers): node-server
+  # node-server:
+  #   container_name: ${NODE_SERVER_CONTAINER_NAME}
+  #   # restart: always
+  #   build:
+  #     dockerfile: Dockerfile.dev
+  #     context: ./server
+  #   ports:
+  #     - ${NODE_SERVER_PORT}:${NODE_SERVER_INTERNAL_PORT}
+  #   # add bind mount
+  #   volumes:
+  #     # do not touch/share the node_modules folder
+  #     # @NOTE TEMPORARILY DISABLE FOR FASTER DEVELOPMENT
+  #     #   - CAN'T QUICKLY INSTALL NEW NODE MODULES
+  #     # - /${NODE_SERVER_CONTAINER_FOLDER_LOCATION}/node_modules
+  #     # share the other (non node_modules_ folder)
+  #     - ./server:${NODE_SERVER_CONTAINER_FOLDER_LOCATION}
+  #   # TODO: verify "links" works
+  #   # TODO: verify https://docs.docker.com/network/bridge/
+  #   # https://docs.docker.com/compose/networking/
+  #   # https://docs.docker.com/compose/compose-file/compose-file-v2/#links
+  #   # TODO: get this working
+  #   links:
+  #     - "postgres:ntg_postgres_db"
+  #   #   - redis
+  #   environment:
+  #     - NODE_SERVER_CONTAINER_NAME=${NODE_SERVER_CONTAINER_NAME}
+  #     # - NODE_SERVER_PORT=${NODE_SERVER_PORT}
+  #     - NODE_SERVER_INTERNAL_PORT=${NODE_SERVER_INTERNAL_PORT}
+  #     - POSTGRES_PORT=${POSTGRES_PORT}
+  #     - POSTGRES_USER=${POSTGRES_USER}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #     - POSTGRES_DB_NAME=${POSTGRES_DB_NAME}
+  #   depends_on:
+  #     - postgres
+  #   # depends_on:
+  #   #   - mongo
+  #   #   - redis
+
+
+
+  ## ****************************************************************
+  #  ************************** POSTGRES ****************************
+  ## ****************************************************************
+  # host name (to be accessed by other containers): postgres
+  postgres:
+    container_name: ${POSTGRES_CONTAINER_NAME}
+    image: 'postgres:latest'
+    restart: always
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT_INTERNAL}
+    expose:
+      - 5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB_NAME}
+
+
+
+  # ## ****************************************************************
+  # #  **************************** REDIS *****************************
+  # ## ****************************************************************
+  # # host name (to be accessed by other containers): redis
+  # redis:
+  #   container_name: ${REDIS_NODE_REST_API_CONTAINER_NAME}
+  #   image: redis:alpine
+  #   ports:
+  #     - ${REDIS_NODE_REST_API_PORT_FORWARD}:${REDIS_NODE_REST_API_PORT}
