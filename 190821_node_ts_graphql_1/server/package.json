@@ -38,7 +38,7 @@
   },
   "scripts": {
     "start": "ts-node src/app.ts",
-    "dev": "ts-node-dev --inspect --notify false --prefer-ts --debug --respawn src/app.ts",
+    "dev": "ts-node-dev --notify false --prefer-ts --debug --respawn src/app.ts",
     "dev:docker:win": "ts-node-dev --poll --interval 1000 --inspect --notify false --debug --respawn --prefer-ts src/app.ts",
     "dev:inspect": "ts-node-dev --inspect --notify false --prefer-ts --debug --respawn src/app.ts",
     "dev:inspect-break": "ts-node-dev --inspect-brk --notify false --prefer-ts --debug --respawn src/app.ts",
