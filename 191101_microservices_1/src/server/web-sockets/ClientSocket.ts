@@ -3,37 +3,11 @@ import { PathReporter } from 'io-ts/lib/PathReporter';
 import { Socket } from 'socket.io';
 import { TypedEvent, hasStringProperty, hasObjectProperty, AValueOf } from '@syntaxfanatics/peon';
 import { ORDER_COMMANDS, ORDER_COMMAND } from '../../shared/domains/orders/ORDER_COMMANDS';
-// import * as tEither from 'fp-ts/lib/TaskEither';
 import { isLeft, Either, right, isRight, left, Left, Right, chain, map, mapLeft, flatten } from 'fp-ts/lib/Either';
 import { pipe } from 'fp-ts/lib/pipeable';
+import { ifRight, mapBoth } from '../../shared/helpers/either-helpers';
 
 type RawMessageShape = { type: string; payload: Record<string, any> };
-
-function ifRight<L, R>(data: Either<L, R>) {
-  return function onThis<O>(applyFn: (inp: R) => O): Either<L, O> {
-    if (isRight(data)) return right(applyFn(data.right));
-    return data;
-  }
-}
-
-function ifLeft<L, R>(data: Either<L, R>) {
-  return function onThis<O>(applyFn: (inp: L) => O): Either<O, R> {
-    if (isLeft(data)) return left(applyFn(data.left));
-    return data;
-  }
-}
-
-/**
- * Map the left and right paths separately
- *
- * @param data
- */
-function mapBoth<L, R>(data: Either<L, R>) {
-  return function <L2, R2>(onLeft: (l: L) => L2, onRight: (r: R) => R2): L2 | R2 {
-    if (isLeft(data)) return onLeft(data.left);
-    return onRight(data.right);
-  }
-}
 
 /**
  * Map the type and payload back to a message to be consumed in the application
@@ -45,6 +19,8 @@ function remapMessage<T>(type: T) {
     return { type, payload };
   }
 }
+
+
 
 /**
  * Verify a message fits the desired shape
@@ -58,9 +34,13 @@ function verify<A>(decoder: ioTs.Decode<unknown, A>) {
   }
 }
 
+
+
 function leftPathReport(errors: ioTs.Errors) {
   return PathReporter.report(left(errors));
 }
+
+
 
 /**
  * Is the message of the correct shape
@@ -71,77 +51,100 @@ function hasRawMessageShape(message: unknown) {
   if (!(message instanceof Object
     && hasStringProperty(message, 'type')
     && hasObjectProperty(message, 'payload')
-  )) return left(false);
+  )) return left(undefined);
 
   return right(message as RawMessageShape);
 }
 
 
-/**
- * Wrap the return of a function in a right
- *
- * @param fn
- */
-function leftify<T extends (...args: any[]) => any>(applier: T) {
-  return function applyRightify(...args: Parameters<T>) {
-    return left(applier(...args)) as Left<ReturnType<T>>;
-  }
-}
-
-/**
- * Wrap the return of a function in a right
- *
- * @param fn
- */
-function rightify<T extends (...args: any[]) => any>(fn: T) {
-  return function applyRightify(...args: Parameters<T>) {
-    return right(fn(...args)) as Right<ReturnType<T>>;
-  }
-}
-
-/**
- * Transform a bolean returning function into an either returning function
- *
- * @param fn
- */
-function boolToEither<F extends (...args: any[]) => false | R, R>(fn: F) {
-  return function doBoolToEither(...args: Parameters<F>): Either<false, R> {
-    const res = fn(...args);
-    return res
-      ? (right(res) as Right<R>)
-      : (left(res) as Left<false>);
-  }
+const commandValidatorMap = {
+  [ORDER_COMMANDS.NAMES.CREATE_ORDER]: (payload: Record<string, any>) => ifRight(verify(ORDER_COMMANDS.CODECS.CREATE_ORDER.decode)(payload))(remapMessage(ORDER_COMMANDS.NAMES.CREATE_ORDER)),
+  [ORDER_COMMANDS.NAMES.UPDATE_ORDER]: (payload: Record<string, any>) => ifRight(verify(ORDER_COMMANDS.CODECS.UPDATE_ORDER.decode)(payload))(remapMessage(ORDER_COMMANDS.NAMES.UPDATE_ORDER)),
+  [ORDER_COMMANDS.NAMES.DELETE_ORDER]: (payload: Record<string, any>) => ifRight(verify(ORDER_COMMANDS.CODECS.DELETE_ORDER.decode)(payload))(remapMessage(ORDER_COMMANDS.NAMES.DELETE_ORDER)),
 }
 
 
+type Command = RightValue<ReturnType<AValueOf<typeof commandValidatorMap>>>;
+
+
+
+type RightValue<T> = T extends Right<infer R> ? R : never;
+type LeftValue<T> = T extends Left<infer L> ? L : never;
+
+
+
 /**
- * Handle a socket message
+ * Apply a validator to a raw message
  *
  * @param message
  */
-function validateRawMessage(message: RawMessageShape) {
-  const { type, payload } = message;
-
-  switch (type) {
-    case ORDER_COMMANDS.NAMES.CREATE_ORDER: return right(ifRight(verify(ORDER_COMMANDS.CODECS.CREATE_ORDER.decode)(payload))(remapMessage(type)));
-    case ORDER_COMMANDS.NAMES.UPDATE_ORDER: return right(ifRight(verify(ORDER_COMMANDS.CODECS.UPDATE_ORDER.decode)(payload))(remapMessage(type)));
-    case ORDER_COMMANDS.NAMES.DELETE_ORDER: return right(ifRight(verify(ORDER_COMMANDS.CODECS.DELETE_ORDER.decode)(payload))(remapMessage(type)));
+function applyMessageValidator(message: RawMessageShape) {
+  return function doApplyMessageValidator<V extends AValueOf<typeof commandValidatorMap>>(validator: V) {
+    // "as" is required to map the union of rights into a right of unions (required for either processing)
+    return validator(message.payload) as Either<LeftValue<ReturnType<V>>, RightValue<ReturnType<V>>>;
   }
+}
 
-  return left(`[ClientSocket::validateRawMessage] unhandled message type ${type}`);
+/**
+ * Find
+ *
+ * @param message
+ */
+function findMessageValidator(message: RawMessageShape) {
+  const validator = (commandValidatorMap as Record<string, AValueOf<typeof commandValidatorMap>>)[message.type];
+  if (!validator) return left(undefined);
+  return right(validator);
 }
 
 
 
-function flip2<A1, A2, F extends (a1: A1) => (a2: A2) => any>(fn: F) {
-  return function (f2: A2) {
-    return function (f1: A1) {
-      return fn(f1)(f2);
-    }
-  }
+const MESSAGE_FAILURE_REASON = {
+  BAD_MESSAGE_SHAPE: 'bad shape',
+  UNHANDLED_COMMAND_TYPE: 'unhandled command type',
+  BAD_COMMAND_SHAPE: 'bad command shape',
+} as const
+type MESSAGE_FAILURE_REASON = typeof MESSAGE_FAILURE_REASON;
+
+
+
+type MessageFailure =
+  { reason: MESSAGE_FAILURE_REASON['BAD_COMMAND_SHAPE']; description: string }
+  | { reason: MESSAGE_FAILURE_REASON['UNHANDLED_COMMAND_TYPE']; description: string }
+  | { reason: MESSAGE_FAILURE_REASON['BAD_COMMAND_SHAPE']; description: string }
+
+
+
+/**
+ * Preprocess a message, verifying its shape
+ *
+ * @param unknownMessage
+ */
+function preprocessMessage(unknownMessage: unknown): Either<MessageFailure, Command> {
+  const preprocessed = pipe(
+    hasRawMessageShape(unknownMessage),
+    mapLeft(() => ({ reason: MESSAGE_FAILURE_REASON.BAD_COMMAND_SHAPE, description: '[ClientSocket::handleSocketMessage] bad message shape' }) as MessageFailure),
+    map(rawMessage => pipe(
+      findMessageValidator(rawMessage),
+      mapLeft(() => ({ reason: MESSAGE_FAILURE_REASON.UNHANDLED_COMMAND_TYPE, description: `[ClientSocket::applyMessageValidator] unhandled message type "${rawMessage.type}"`}) as MessageFailure),
+      map(applyMessageValidator(rawMessage)),
+      map(validatorResult => pipe(
+        mapLeft(leftPathReport)(validatorResult),
+        // stringify report
+        mapLeft((errors) => ({ reason: MESSAGE_FAILURE_REASON.BAD_COMMAND_SHAPE, description: errors.reduce((acc, n) => `${acc && '\n'}${n}`, '') }) as MessageFailure),
+      )),
+      flatten,
+    )),
+    flatten,
+  );
+
+  return preprocessed;
 }
 
-export class ClientSocket extends TypedEvent<ORDER_COMMAND> {
+
+/**
+ * Client Socket wrapper
+ */
+export class ClientSocket extends TypedEvent<Command> {
   socket: Socket;
 
   constructor(socket: Socket) {
@@ -150,22 +153,38 @@ export class ClientSocket extends TypedEvent<ORDER_COMMAND> {
     socket.on('message', this.handleSocketMessage);
   }
 
-  handleValidMessage(message: any) {
-    //
+  /**
+   * Handle receipt of a valid command
+   *
+   * @param command
+   */
+  handleCommand(command: Command) {
+    this.emit(command);
   }
 
-  handleSocketMessage(message: unknown) {
-    // const result = validateRawMessage(message);
+  /**
+   * Handle a failed message
+   *
+   * @param fail
+   */
+  handleFailedMessage(fail: MessageFailure) {
+    const description = `[Reason]: ${fail.reason}\n[Description]: ${fail.description}`;
+    console.log(description);
+  }
 
-    // TODO: flatten union...
-    const z = pipe(
-      hasRawMessageShape(message),
-      map(validateRawMessage),
-      map(flip2(ifLeft)(leftPathReport))
-      // map(validationResult => pipe(
-      //   validationResult,
-      //   mapLeft((errors) => PathReporter.report(errors))
-      // )),
+
+  /**
+   * Handle receipt of a socket message
+   *
+   * @param unknownMessage
+   */
+  handleSocketMessage(unknownMessage: unknown) {
+    pipe(
+      preprocessMessage(unknownMessage),
+      mapBoth(
+        this.handleFailedMessage,
+        this.handleCommand,
+      )
     );
   }
 }

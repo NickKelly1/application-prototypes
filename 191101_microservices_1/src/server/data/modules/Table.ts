@@ -2,6 +2,11 @@ import { uuidv4 } from '../../../shared/helpers/uuidv4';
 
 export class Table<T extends { id?: string }> {
   rows: Map<string, T> = new Map();
+
+  /**
+   * @description
+   * Retrieve records
+   */
   select() { return this.rows; }
 
   /**
