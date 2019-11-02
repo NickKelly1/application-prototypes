@@ -1,11 +1,11 @@
 import http from 'http';
 import express from 'express';
+import cors from 'cors';
 import socketIo, { Client } from 'socket.io';
 // import { ORDER_ROUTES } from '../shared/domains/orders/ORDER_ROUTES';
 import { ServerClientSocket } from './web-sockets/ServerClientSocket';
 import { mapBoth } from '../shared/helpers/either-helpers';
-import { handleClientMessageFail, handleClientMessageSuccess } from './web-sockets/message-handlers';
-import cors from 'cors';
+import { serverClientMessageFailHandler, serverClientMessageHandler } from './web-sockets/server-message-handlers';
 import { SERVER_MESSAGES } from '../shared/messages/SERVER_SOCKET_MESSAGES';
 
 // const app = express();
@@ -35,19 +35,17 @@ const clients = [];
 io.on('connection', (socket) => {
   clientCount += 1;
   console.log(`[app::io::on] client ${clientCount} connected`);
-  // console.log('[app::connection]');
   const client = new ServerClientSocket(socket);
+  client.on(mapBoth(serverClientMessageFailHandler(io, client), serverClientMessageHandler(io, client)));
 
-  client.on(mapBoth(handleClientMessageFail(client), handleClientMessageSuccess(client)));
+  // const interval = setInterval(() => {
+  //   console.log('[app::io::on::setInterval] pinging client...');
+  //   return void client.send({ type: SERVER_MESSAGES.TYPE.PING, payload: {}});
+  // }, 3000);
 
-  const interval = setInterval(() => {
-    console.log('[app::io::on::setInterval] pinging client...');
-    return void client.send({ type: SERVER_MESSAGES.TYPE.PING, payload: {}});
-  }, 3000);
-
-  client.onDisconnect(() => {
-    clearInterval(interval);
-  })
+  // client.onDisconnect(() => {
+  //   clearInterval(interval);
+  // })
 });
 
 

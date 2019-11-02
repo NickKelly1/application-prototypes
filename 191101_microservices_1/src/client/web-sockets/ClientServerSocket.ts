@@ -5,6 +5,7 @@ import { TypedEvent } from '@syntaxfanatics/peon';
 import { mapBoth } from '../../shared/helpers/either-helpers';
 import { pipe } from 'fp-ts/lib/pipeable';
 import { CLIENT_MESSAGE } from '../../shared/messages/CLIENT_SOCKET_MESSAGES';
+import { AnyFunc } from '../../shared/helpers/type-helpers';
 
 const preprocessServerMessage = messagePreprocessorFactory(SERVER_MESSAGE_VALIDATOR_MAP);
 
@@ -15,6 +16,7 @@ const preprocessServerMessage = messagePreprocessorFactory(SERVER_MESSAGE_VALIDA
  */
 export class ClientServerSocket extends TypedEvent<Either<MESSAGE_FAILURE, SERVER_MESSAGE>> {
   socket: SocketIOClient.Socket;
+  disconnectListeners: AnyFunc[] = []
 
   constructor(socket: SocketIOClient.Socket) {
     super();
@@ -22,6 +24,8 @@ export class ClientServerSocket extends TypedEvent<Either<MESSAGE_FAILURE, SERVE
     this.handleMessage = this.handleMessage.bind(this);
     this.handleFailedMessage = this.handleFailedMessage.bind(this);
     this.handleUnknownMessage = this.handleUnknownMessage.bind(this);
+    this.disconnect = this.disconnect.bind(this);
+    this.onDisconnect = this.onDisconnect.bind(this);
     socket.on('message', this.handleUnknownMessage);
   }
 
@@ -34,6 +38,30 @@ export class ClientServerSocket extends TypedEvent<Either<MESSAGE_FAILURE, SERVE
    */
   send(message: CLIENT_MESSAGE) {
     this.socket.send(message);
+  }
+
+
+
+  /**
+   * Disconnect the socket
+   */
+  disconnect() {
+    console.log('[ClientServerSocket::disconnect]');
+    this.disconnectListeners.forEach(fn => fn());
+    this.socket.disconnect();
+    this.destroy();
+  }
+
+
+
+  /**
+   * Fired when the socket is disconnected
+   *
+   * @param cb
+   */
+  onDisconnect(cb: AnyFunc) {
+    this.disconnectListeners.push(cb);
+    return { dispose: () => void (this.disconnectListeners = this.disconnectListeners.filter(listener => listener !== cb)) }
   }
 
 

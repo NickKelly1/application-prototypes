@@ -26,9 +26,9 @@ export class ServerClientSocket extends TypedEvent<Either<MESSAGE_FAILURE, CLIEN
     this.handleMessage = this.handleMessage.bind(this);
     this.handleFailedMessage = this.handleFailedMessage.bind(this);
     this.handleUnknownMessage = this.handleUnknownMessage.bind(this);
-    this.handleDisconnect = this.handleDisconnect.bind(this);
+    this.disconnect = this.disconnect.bind(this);
     this.onDisconnect = this.onDisconnect.bind(this);
-    socket.on('disconnect', this.handleDisconnect);
+    socket.on('disconnect', this.disconnect);
     socket.on('message', this.handleUnknownMessage);
   }
 
@@ -47,11 +47,12 @@ export class ServerClientSocket extends TypedEvent<Either<MESSAGE_FAILURE, CLIEN
 
 
   /**
-   * Handle the socket disconnecting
+   * Disconnect the socket
    */
-  handleDisconnect() {
-    console.log('[ServerClientSocket::handleDisconnect]');
+  disconnect() {
+    console.log('[ServerClientSocket::disconnect]');
     this.disconnectListeners.forEach(fn => fn());
+    this.socket.disconnect();
     this.destroy();
   }
 
