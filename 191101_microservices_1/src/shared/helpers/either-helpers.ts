@@ -1,4 +1,11 @@
+import * as ioTs from 'io-ts';
 import { left, Left, Right, right, Either, isRight, isLeft } from 'fp-ts/lib/Either';
+import { PathReporter } from 'io-ts/lib/PathReporter';
+
+export type RightValue<T> = T extends Right<infer R> ? R : never;
+export type LeftValue<T> = T extends Left<infer L> ? L : never;
+
+
 
 /**
  * Wrap the return of a function in a right
@@ -55,3 +62,32 @@ export function mapBoth<L, R, L2, R2>(onLeft: (l: L) => L2, onRight: (r: R) => R
     return onRight(data.right);
   }
 }
+
+
+
+/**
+ * Verify a message fits the desired shape
+ *
+ * @param decoder
+ */
+export function useDecoder<A>(decoder: ioTs.Decode<unknown, A>) {
+  return function<T extends string>(payload: unknown) {
+    const result = decoder(payload);
+    return result;
+  }
+}
+
+
+/**
+ * Report on the errors from a left validation
+ *
+ * @param errors
+ */
+export function leftPathReport(errors: ioTs.Errors) {
+  return PathReporter.report(left(errors));
+}
+
+/**
+ * Transform a map of codecs into a union of their type values
+ */
+export type UnionFromCodecMap<T extends Record<string, any>> = {[K in keyof T]: ioTs.TypeOf<T[K]>}
