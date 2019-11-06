@@ -13,7 +13,7 @@ export * from './src/lib/SocketWrapper';
  *
  * @param socket
  */
-export function wrapSocketOnServer(socket: SocketIOClient.Socket) {
+export function wrapSocketOnServer(socket: SocketIO.Socket) {
   const preprocessClientMessage = messagePreprocessorFactory(CLIENT_MESSAGE_VALIDATOR_MAP);
   const client = new SocketWrapper<CLIENT_MESSAGE, SERVER_MESSAGE>(socket, preprocessClientMessage);
   return client;
@@ -26,7 +26,7 @@ export function wrapSocketOnServer(socket: SocketIOClient.Socket) {
  *
  * @param socket
  */
-export function wrapSocketOnClient(socket: SocketIO.Socket) {
+export function wrapSocketOnClient(socket: SocketIOClient.Socket) {
   const preprocessServerMessage = messagePreprocessorFactory(SERVER_MESSAGE_VALIDATOR_MAP);
   const server = new SocketWrapper<SERVER_MESSAGE, CLIENT_MESSAGE>(socket, preprocessServerMessage);
   return server;
