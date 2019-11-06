@@ -1,7 +1,4 @@
-import { ServerClientSocket } from './ServerClientSocket';
-import { CLIENT_MESSAGE, CLIENT_MESSAGES } from '../../../shared/messages/CLIENT_SOCKET_MESSAGES';
-import { MESSAGE_FAILURE } from '../../../shared/messages/SOCKET_MESSAGES';
-import { SERVER_MESSAGES } from '../../../shared/messages/SERVER_SOCKET_MESSAGES';
+import { CLIENT_MESSAGES, CLIENT_MESSAGE, SocketWrapper, SERVER_MESSAGE, MESSAGE_FAILURE_REASON, SERVER_MESSAGES, MESSAGE_FAILURE } from '@nick-kelly/microservices-prototype-messages';
 
 
 
@@ -10,7 +7,7 @@ import { SERVER_MESSAGES } from '../../../shared/messages/SERVER_SOCKET_MESSAGES
  *
  * @param client
  */
-export function serverClientMessageHandler(io: SocketIO.Server, client: ServerClientSocket) {
+export function serverClientMessageHandler(io: SocketIO.Server, client: SocketWrapper<CLIENT_MESSAGE, SERVER_MESSAGE>) {
   return function handleMessage(message: CLIENT_MESSAGE) {
     console.log('[serverClientMessageHandler] received successful message', message);
     switch (message.type) {
@@ -29,7 +26,7 @@ export function serverClientMessageHandler(io: SocketIO.Server, client: ServerCl
  *
  * @param client
  */
-export function serverClientMessageFailHandler(io: SocketIO.Server, client: ServerClientSocket) {
+export function serverClientMessageFailHandler(io: SocketIO.Server, client: SocketWrapper<CLIENT_MESSAGE, SERVER_MESSAGE>) {
   return function handleMessageFail(fail: MESSAGE_FAILURE) {
     console.log('received failed message', fail);
   }

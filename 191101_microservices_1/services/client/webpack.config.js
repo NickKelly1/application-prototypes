@@ -13,14 +13,14 @@ const config = {
       '.tsx',
     ]
   },
-  entry: path.resolve(__dirname, `src/client/index.ts`),
+  entry: path.resolve(__dirname, `src/index.ts`),
   output: {
     filename: `$client.dist.js`,
-    path: path.resolve(__dirname, 'dist/client'),
+    path: path.resolve(__dirname, 'dist/'),
   },
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: path.resolve(__dirname, 'dist/client'),
+    contentBase: path.resolve(__dirname, 'dist/'),
   },
   module: {
     rules: [{
@@ -30,7 +30,7 @@ const config = {
     }],
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: path.resolve(__dirname, `src/client/index.html`) }),
+    new HtmlWebpackPlugin({ template: path.resolve(__dirname, `src/index.html`) }),
     new CleanWebpackPlugin(),
   ]
 }

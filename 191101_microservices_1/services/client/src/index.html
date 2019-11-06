@@ -5,9 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Microservices 1</title>
+  <style>
+    body {
+      background-color: #1C1E23;
+      filter: invert(100%);
+    }
+  </style>
 </head>
 <body>
   <h1>Microservices 1</h1>
   <div id="root"></div>
+
+  <h2>Users</h2>
+  <section>
+    <h3>List</h3>
+    <div>
+      <ul id="ul-user-list">
+      </ul>
+    </div>
+    <h3>Add user</h3>
+    <div>
+      <button id="btn-add-user">add user</button>
+      <input id="inpt-new-user-name">
+      <input id="inpt-new-user-password">
+    </div>
+    <div>
+      <h4>Ping server?</h4>
+      <button id="btn-ping"> - ping - </button>
+      <h4>Server pongs</h4>
+      <ul id="ul-server-pongs"></ul>
+    </div>
+    <div>
+      <h4>Server Pings</h4>
+      <ul id="ul-server-pings"></ul>
+      <h4>Our Pongs</h4>
+      <ul id="ul-client-pongs"></ul>
+    </div>
+  </section>
+  <section>
+    <h2>Message Log</h2>
+    <div>
+      <ul id="ul-message-log"></ul>
+    </div>
+  </section>
 </body>
 </html>

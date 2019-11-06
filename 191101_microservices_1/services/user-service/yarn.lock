@@ -2215,7 +2215,7 @@ forwarded@~0.1.2:
 
 fp-ts-helpers@^0.0.3:
   version "0.0.3"
-  resolved "https://registry.npmjs.org/fp-ts-helpers/-/fp-ts-helpers-0.0.3.tgz#165aae155b2830ec6ce31c7dcfc5cca197a2a629"
+  resolved "https://npm.ciportal.net/fp-ts-helpers/-/fp-ts-helpers-0.0.3.tgz#165aae155b2830ec6ce31c7dcfc5cca197a2a629"
   integrity sha512-oIz8bfVzeVV6LB10uzJbIX1cpHpMn029f3B9ljAC53bhxMQrO7DHES+0U8IyvmkRgNZJ6IYtXOz6+PTZw2wUEw==
   dependencies:
     fp-ts "^2.1.1"
@@ -3104,6 +3104,13 @@ json5@^1.0.1:
   dependencies:
     minimist "^1.2.0"
 
+kafkajs@^1.11.0:
+  version "1.11.0"
+  resolved "https://npm.ciportal.net/kafkajs/-/kafkajs-1.11.0.tgz#d9599b02ada63ec7c63948b6ddfe0bc3a02c6dcc"
+  integrity sha512-dLRCcFIBygZucR+e8U2ZqH2wgMrAu114K0szUyUseJoeOii3cG5bHZPIdqKecXxI6begPVCfGS3R0nJY4zHW2A==
+  dependencies:
+    long "^4.0.0"
+
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
@@ -3205,6 +3212,11 @@ loglevel@^1.6.4:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.4.tgz#f408f4f006db8354d0577dcf6d33485b3cb90d56"
   integrity sha512-p0b6mOGKcGa+7nnmKbpzR6qloPbrgLcnio++E+14Vo/XffOGwZtRpUhr8dTH/x2oCMmEoIU0Zwm3ZauhvYD17g==
+
+long@^4.0.0:
+  version "4.0.0"
+  resolved "https://npm.ciportal.net/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
+  integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
 loud-rejection@^1.0.0:
   version "1.6.0"

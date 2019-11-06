@@ -1,30 +1,52 @@
-import { ClientServerSocket } from './ClientServerSocket';
-import { SERVER_MESSAGE, SERVER_MESSAGES } from '../../../shared/messages/SERVER_SOCKET_MESSAGES';
-import { MESSAGE_FAILURE } from '../../../shared/messages/SOCKET_MESSAGES';
-import { CLIENT_MESSAGES } from '../../../shared/messages/CLIENT_SOCKET_MESSAGES';
-
-
-
+import { SERVER_MESSAGE, SERVER_MESSAGES, CLIENT_MESSAGES, MESSAGE_FAILURE, SocketWrapper, CLIENT_MESSAGE } from '@nick-kelly/microservices-prototype-messages'
+import { ELEMENTS } from '..';
 
 /**
  * Handle successful messages from the client
  *
  * @param server
  */
-export function clientServerMessageHandler(server: ClientServerSocket) {
+export function clientServerMessageHandler(server: SocketWrapper<SERVER_MESSAGE, CLIENT_MESSAGE>) {
   return function handleMessage(message: SERVER_MESSAGE) {
-    console.log('[clientServerMessageHandler] received successful message', message);
+    console.log(`__handleMessage__ (${message.type})`);
+    const log = document.createElement('li');
+    let logContent = `[SERVER] [${message.type}]`
+    let cb: undefined | Function;
+
     switch (message.type) {
-      case SERVER_MESSAGES.TYPE.INIT: return void console.log('[clientSocketHandler::on::eMessage::SUCCESS::INIT]', message);
-      case SERVER_MESSAGES.TYPE.ORDER_CREATED: return void console.log('[clientSocketHandler::on::eMessage::SUCCESS::ORDER_CREATED]', message);
-      case SERVER_MESSAGES.TYPE.ORDER_UPDATED: return void console.log('[clientSocketHandler::on::eMessage::SUCCESS::ORDER_UPDATED]', message);
-      case SERVER_MESSAGES.TYPE.ORDER_DELETED: return void console.log('[clientSocketHandler::on::eMessage::SUCCESS::ORDER_DELETED]', message);
-      case SERVER_MESSAGES.TYPE.PING: {
-        console.log('[clientSocketHandler::on::eMessage::SUCCESS::PING]', message);
-        return void server.send({ type: CLIENT_MESSAGES.TYPE.PONG, payload: {} });
+      case SERVER_MESSAGES.TYPE.INIT: {
+        logContent += `\n\t${message.payload.hello}`;
+        break;
       }
-      default: return void console.log('[clientSocketHandler::on::eMessage::SUCCESS::UNHANDLED]', `unhandled message type "${(message as any).type}"`, message);
+      case SERVER_MESSAGES.TYPE.ORDER_CREATED: {
+        logContent += `\n\t${message.payload.id}`;
+        break;
+      }
+      case SERVER_MESSAGES.TYPE.ORDER_UPDATED: {
+        logContent += `\n\t${message.payload.id}`;
+        break;
+      }
+      case SERVER_MESSAGES.TYPE.ORDER_DELETED: {
+        logContent += `\n\t${message.payload.id}`;
+        break;
+      }
+      case SERVER_MESSAGES.TYPE.PING: {
+        cb = () => server.send({ type: CLIENT_MESSAGES.TYPE.PONG, payload: {} });
+        break;
+      }
+      case SERVER_MESSAGES.TYPE.PONG: {
+        break;
+      }
+
+      default: {
+        logContent += `\n\t[UNHANDLED_MESSAGE_TYPE::${(message as any).type}]`;
+        break;
+      }
     }
+
+    log.textContent = logContent;
+    ELEMENTS.ulMessageLog.appendChild(log);
+    if (cb) cb();
   }
 }
 
@@ -35,8 +57,14 @@ export function clientServerMessageHandler(server: ClientServerSocket) {
  *
  * @param server
  */
-export function clientServerMessageFailHandler(server: ClientServerSocket) {
+export function clientServerMessageFailHandler(server: SocketWrapper<SERVER_MESSAGE, CLIENT_MESSAGE>) {
   return function handleMessageFail(fail: MESSAGE_FAILURE) {
-    console.log('received failed message', fail);
+    console.log('[clientServerMessageFailHandler::handleFailMessage] received failed message', fail);
+
+    const log = document.createElement('li');
+    const logContent = `[SERVER] [MESSAGE_FAILURE]\n\tReason: ${fail.reason}\n\tDescription: ${fail.description}`;
+
+    log.textContent = logContent;
+    ELEMENTS.ulMessageLog.appendChild(log);
   }
 }

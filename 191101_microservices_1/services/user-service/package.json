@@ -1,5 +1,5 @@
 {
-  "name": "async-programming-in-java-script-with-obervables",
+  "name": "user-service",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -14,9 +14,8 @@
     "eslint": "^6.6.0",
     "express": "^4.17.1",
     "fp-ts": "^2.1.1",
-    "fp-ts-helpers": "^0.0.3",
     "io-ts": "^2.0.1",
-    "io-ts-helpers": "^0.0.4",
+    "kafkajs": "^1.11.0",
     "rxjs": "^6.5.3",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
