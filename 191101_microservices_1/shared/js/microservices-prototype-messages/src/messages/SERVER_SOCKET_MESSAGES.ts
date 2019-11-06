@@ -1,7 +1,6 @@
 import * as ioTs from 'io-ts';
 import { useDecoder, UnionFromCodecMap } from 'io-ts-helpers';
 import { ifRight } from 'fp-ts-helpers';
-import { SERVER_MESSAGE_TYPE } from './SERVER_SOCKET_MESSAGES';
 import { remapMessage, MessageValidatorMap } from './SOCKET_MESSAGES';
 
 
