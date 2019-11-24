@@ -1,0 +1,23 @@
+branch-defaults:
+  master:
+    environment: ms2-user-service-production
+    group_suffix: null
+environment-defaults:
+  ci-flux:
+    branch: null
+    repository: null
+global:
+  application_name: ms2-user-service
+  branch: null
+  # TODO
+  # default_ec2_keyname: ciportal.net servers
+  default_platform: Docker 18.06.1-ce
+  default_region: ap-southeast-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  repository: null
+  sc: git
+  workspace_type: Application

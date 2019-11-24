@@ -1,0 +1,30 @@
+version: "3.6"
+services:
+  ms2_user_service_mongodb:
+    tty: true
+    image: mongo:3.6.15-xenial
+    restart: "no"
+    ports:
+      - "${USER_SERVICE_MONGODB_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${USER_SERVICE_MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${USER_SERVICE_MONGODB_PASSWORD}
+  ms2_user_service_api:
+    image: ms2_user_service_api
+    container_name: ms2_user_service_api
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - ${USER_SERVICE_INTERNAL_PORT}:${USER_SERVICE_INTERNAL_PORT}
+    tty: true
+    restart: "no" # unless-stopped
+    volumes:
+      # Put the containers node modules in its own volume to avoid linking it to our own
+      - /app/node_modules
+      # Link everything else (except node_modules) into the container (if using cli, use $(pwd):/app)
+      - .:/app
+    command: ["yarn", "dev"]
+    depends_on:
+      - ms2_user_service_mongodb
+

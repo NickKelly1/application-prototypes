@@ -1,0 +1,5 @@
+# http://blog.shippable.com/how-to-deploy-to-elastic-beanstalk-part-2
+*
+!Dockerrun.aws.json
+!public/*
+!.ebextensions/*

@@ -1,0 +1,24 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Name": "ci-flux-app",
+  "Image": {
+    "Name": "160294630680.dkr.ecr.ap-southeast-2.amazonaws.com/ci-flux",
+    "Update": "true"
+  },
+  "Essential": "true",
+  "Memory": 900,
+  "MountPoints": [],
+  "Ports": [
+    {
+      "HostPort": 80,
+      "ContainerPort": 80
+    }
+  ],
+  "Volumes": {
+    "Name": "ci-flux-logs",
+    "Host": {
+      "SourcePath": "/app/logs"
+    }
+  },
+  "Logging": "/app/logs"
+}

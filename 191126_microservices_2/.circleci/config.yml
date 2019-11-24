@@ -1,0 +1,124 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  # build-and-test:
+  #   docker:
+  #     - image: node:12.11.1-alpine
+
+  #   working_directory: ~/repo
+
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "Set NPM registry"
+  #         command: npm set registry "https://${NPM_REGISTRY}"
+  #     - run:
+  #         name: "Set token"
+  #         command: npm set //${NPM_REGISTRY}/:_authToken ${NPM_TOKEN}
+  #     - run: yarn install
+  #     - run:
+  #         name: "Run tests"
+  #         command: yarn test
+
+  # https://kevingoedecke.me/2018/03/12/circleci-2-0-beanstalk-example-tutorial/
+  # https://circleci.com/docs/2.0/deployment-integrations/#aws
+  # build job omitted for brevity
+  build-image-and-deploy:
+    docker:
+      # image has Docker installed
+      - image: circleci/python:3.7-stretch
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      # can't set up docker daemon locally, must set up remotely
+      # @see https://support.circleci.com/hc/en-us/articles/115015849028-Docker-Daemon-Not-Available
+      # @see https://circleci.com/blog/how-to-build-a-docker-image-on-circleci-2-0/
+      - setup_remote_docker
+
+      # Install and log into awsebcli (ELASTIC BEANSTALK CLI)
+      # https://docs.aws.amazon.com/cli/latest/userguide/install-linux.html#install-linux-path
+      - run:
+          name: Install awsebcli
+          command: sudo pip install awsebcli --upgrade
+
+      # Install and log into awsebcli (GENERAL AWS CLI)
+      # https://docs.aws.amazon.com/cli/latest/userguide/install-linux.html#install-linux-path
+      - run:
+          name: Install awscli
+          command: sudo pip install awscli --upgrade
+
+      - run:
+          name: Create AWS credentials manually
+          command: |
+            mkdir ~/.aws
+            touch ~/.aws/config
+            chmod 600 ~/.aws/config
+            echo "[profile eb-cli]" > ~/.aws/config
+            echo "aws_access_key_id = ${AWS_ACCESS_KEY_ID}" >> ~/.aws/config
+            echo "aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/config
+
+      - run:
+          name: "Authenticate with ECR"
+          command: $(aws ecr get-login --no-include-email --region ap-southeast-2)
+      - run:
+          name: Build production docker image
+          command: docker build
+            --build-arg NPM_REGISTRY=${NPM_REGISTRY}
+            --build-arg NPM_TOKEN=${NPM_TOKEN}
+            --tag ms2-user-service 
+            -f Dockerfile .
+
+      - run:
+          name: Tag the docker image with the ECR details
+          command: docker tag  ms2-user-service 160294630680.dkr.ecr.ap-southeast-2.amazonaws.com/:ms2-user-service latest
+
+      - run:
+          name: Push docker image to ECR
+          command: docker push 160294630680.dkr.ecr.ap-southeast-2.amazonaws.com/:ms2-user-service latest
+
+      # Push the Dockerrun.aws.json file to EB (everything else should be in the .ebignore file
+      # Dockerrun.aws.json will tell EB to pull the image from ECR
+
+      # Deploy
+      - run:
+          name: Deploy to EB
+          command: |
+            eb use -ms2-user-service production &&
+            eb deploy --profile eb-cli
+
+workflows:
+  version: 2
+  circle-ci-jobs:
+    jobs:
+      # - build-and-test
+      - build-image-and-deploy:
+          # requires:
+          #   - build-and-test
+          filters:
+            branches:
+              only:
+                - master
+  # TODO?:
+  # nightly:
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 14 * * 1-5"
+  #         filters:
+  #           branches:
+  #             only:
+  #               - uat
+  #               # - master
+  #   jobs:
+  #     - build-and-test
+  #     - deploy:
+  #         requires:
+  #           - build-and-test
+  #         filters:
+  #           branches:
+  #             only:
+  #               - uat
+  #               # - master
