@@ -100,13 +100,12 @@ async function start() {
 
     if (!env.SLEEP) {
       await retryEvery({ millisBetween: 5000, maxAttempts: Number.POSITIVE_INFINITY })(
-        () => {},
-        // function connectToMongo() {
-        //   return mongoose.connect(env.USER_SERVICE_MONGODB_URI, {
-        //     useNewUrlParser: true,
-        //     user: env.USER_SERVICE_MONGODB_USER,
-        //     pass: env.USER_SERVICE_MONGODB_PASSWORD
-        //   })}
+        function connectToMongo() {
+          return mongoose.connect(env.USER_SERVICE_MONGODB_URI, {
+            useNewUrlParser: true,
+            user: env.USER_SERVICE_MONGODB_USER,
+            pass: env.USER_SERVICE_MONGODB_PASSWORD
+          })}
       )();
 
       console.log(`[www] Connected to mongoDB on ${env.USER_SERVICE_MONGODB_URI}`);

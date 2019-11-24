@@ -6,6 +6,9 @@ import { AppExpressRequest } from './AppExpressRequest';
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+      USER_SERVICE_ADMIN_USERNAME: string;
+      USER_SERVICE_ADMIN_PASSWORD: string;
+
       USER_SERVICE_INTERNAL_PORT: string;
 
       NODE_ENV: string;

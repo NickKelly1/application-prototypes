@@ -1,8 +1,9 @@
 version: "3.6"
 services:
   ms2_user_service_mongodb:
-    tty: true
     image: mongo:3.6.15-xenial
+    container_name: ms2_user_service_mongodb
+    tty: true
     restart: "no"
     ports:
       - "${USER_SERVICE_MONGODB_PORT}:27017"
@@ -12,19 +13,20 @@ services:
   ms2_user_service_api:
     image: ms2_user_service_api
     container_name: ms2_user_service_api
+    tty: true
+    restart: "no"
     build:
-      context: ./services/user-service/.
+      context: ./services/user-service
       dockerfile: Dockerfile.dev
     ports:
       - ${USER_SERVICE_INTERNAL_PORT}:${USER_SERVICE_INTERNAL_PORT}
-    tty: true
-    restart: "no" # unless-stopped
     volumes:
-      # Put the containers node modules in its own volume to avoid linking it to our own
-      - /app/node_modules
-      # Link everything else (except node_modules) into the container (if using cli, use $(pwd):/app)
-      - ./services/user-service:/app
-    command: ["yarn", "dev"]
+      # mode modules (not shared)
+      - /ms2/services/user-service/node_modules
+      # app code (shared)
+      - ./services/user-service:/ms2/services/user-service
+      # code shared between services
+      - ./shared:/ms2/shared
     depends_on:
       - ms2_user_service_mongodb
 

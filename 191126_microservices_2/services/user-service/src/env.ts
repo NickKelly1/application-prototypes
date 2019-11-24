@@ -8,9 +8,12 @@ dotenv.config();
  * Read environment variables from the process
  */
 const readEnv = () => ({
-  USER_SERVICE_INTERNAL_PORT: Number(process.env.USER_SERVICE_INTERNAL_PORT),
-
   NODE_ENV: process.env.NODE_ENV,
+
+  USER_SERVICE_ADMIN_USERNAME: process.env.USER_SERVICE_ADMIN_USERNAME,
+  USER_SERVICE_ADMIN_PASSWORD: process.env.USER_SERVICE_ADMIN_PASSWORD,
+
+  USER_SERVICE_INTERNAL_PORT: Number(process.env.USER_SERVICE_INTERNAL_PORT),
 
   USER_SERVICE_MONGODB_HOST: process.env.USER_SERVICE_MONGODB_HOST,
   USER_SERVICE_MONGODB_PORT: process.env.USER_SERVICE_MONGODB_PORT,

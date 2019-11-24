@@ -12,6 +12,9 @@ import { pipe } from 'fp-ts/lib/pipeable';
 import { AsyncParser } from 'json2csv';
 import { HTTP_METHOD } from './shared/ts/constants/HTTP_METHOD.constant';
 import { HTTP_STATUS } from './shared/ts/constants/HTTP_STATUS.constant';
+import { reqLog } from './shared/ts/helpers/req-log.helper';
+import { UserModel } from './resources/user/user.model';
+import { apiRoutes } from './middleware/api-routes';
 
 export const app = express();
 
@@ -19,16 +22,8 @@ export const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// log start & end
-app.use((req, res, next) => {
-  const start = Date.now();
-  res.on('close', () => {
-    const end = Date.now();
-    const duration = ( end - start );
-    console.log(`[app] ${req.method} ${req.path} \t->\t ${res.statusCode} ${res.statusMessage} \t-\t ${duration}ms`)
-  });
-  next();
-});
+// log request
+app.use(reqLog());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -72,11 +67,26 @@ if (env.SLEEP) {
   });
 }
 
+// app.use('/api', () => {})
+app.use('/api', apiRoutes);
+
+
+app.use(
+  '/users',
+  (req, res, next) => (async () => {
+    const users = await UserModel.find().exec();
+
+    res.render('users-view', {
+      title: 'Users',
+      users:  users,
+    });
+  })().catch(next)
+);
 
 
 app.use('/', (req, res, next) => {
   // send to the index if exactly matching home route
-  if (req.originalUrl.length <= 1) res.render('index', { title: 'Micro Services 2 - User Service' });
+  if (req.originalUrl.length <= 1) res.render('index-view', { title: 'Micro Services 2 - User Service' });
 
   // otherwise pass to 404
   else next();
@@ -93,13 +103,14 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  console.log('[app] --- EXPRESS HANDLING ERROR ---');
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
-  console.error(err);
+  res.render('error-view');
+  if (!(err instanceof createHttpError.HttpError)) {
+    console.error('[app] error:', err);
+  }
 } as ErrorRequestHandler<any>);

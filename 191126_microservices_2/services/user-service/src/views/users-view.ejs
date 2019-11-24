@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <div>Create User</div>
+    <div id="divCreateUserForm">
+      <div>First name: <input id="inpFirstName" type="text" placeholder="first name..."></div>
+      <div>Last name: <input id="inpLastName" type="text" placeholder="last name..."></div>
+      <div>Password: <input id="inpPassword" type="password" placeholder="password..."></div>
+      <button onclick="
+        /** @type {HTMLDivElement} */
+        const divCreateUserForm = document.getElementById('divCreateUserForm');
+        /** @type {HTMLInputElement} */
+        const inpFirstName = document.getElementById('inpFirstName');
+        /** @type {HTMLInputElement} */
+        const inpLastName = document.getElementById('inpLastName');
+        /** @type {HTMLInputElement} */
+        const inpPassword = document.getElementById('inpPassword');
+        /** @type {HTMLDivElement} */
+        const divFormError = document.getElementById('divFormError');
+        /** @type {HTMLDivElement} */
+        const divFormSuccess = document.getElementById('divFormSuccess');
+
+        if (
+          !divCreateUserForm
+          || !inpFirstName
+          || !inpLastName
+          || !inpPassword
+          || !divFormError
+          || !divFormSuccess
+        ) throw new ReferenceError();
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+          divCreateUserForm.style = { opacity: 1 };
+
+          if (this.readyState === 4 && this.status >= 200 && this.status < 400) {
+            // success
+            divFormSuccess.innerHTML = 'successfully submitted';
+          } else {
+            // fail
+            divFormError.innerHTML = 'failed to submit';
+          }
+
+          // fetch users
+        }
+
+        xhr.open('post', '/api/users');
+
+        divCreateUserForm.style = { opacity: 0.5 };
+
+        xhr.send({
+          firstName: inpFirstName.value,
+          lastName: inpLastName.value,
+          password: inpPassword.value,
+        });
+
+      ">Submit</button>
+      <div id="divFormError"></div>
+      <div id="divFormSuccses"></div>
+    </div>
+    <ul>
+      <% for (const i = 0; i < users.length; i++) { %>
+        <li>
+          <div><em>id:</em> users[i].id</div>
+          <div><em>email:</em> users[i].email</div>
+          <div><em>firstName:</em> users[i].firstName</div>
+          <div><em>lastName:</em> users[i].lastName</div>
+          <div><em>password:</em> users[i].password</div>
+        </li>
+      <% } %>
+    </ul>
+  </body>
+</html>
