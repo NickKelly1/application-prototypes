@@ -13,7 +13,7 @@ services:
     image: ms2_user_service_api
     container_name: ms2_user_service_api
     build:
-      context: ./services/user-service
+      context: ./services/user-service/.
       dockerfile: Dockerfile.dev
     ports:
       - ${USER_SERVICE_INTERNAL_PORT}:${USER_SERVICE_INTERNAL_PORT}
