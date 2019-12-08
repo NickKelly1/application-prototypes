@@ -26,7 +26,10 @@ export function expressMiddleware(
     console.log('/')
   })().catch(next));
 
-  expressApp.use(function handleError(err, res, req, next)  {
-    console.log('--- error ----');
+  expressApp.use(function handleError(err, req, res, next)  {
+    console.log('---- error ----');
+    if (!res.finished) {
+      res.status(500).json({ message: 'Internal server error', details: err });
+    }
   } as ErrorRequestHandler<any>);
 }

@@ -31,7 +31,14 @@ export const masterReducer: Reducer<MasterState, MasterAction> = (state = initia
         players: state.players.add(action.payload.player),
       }
     }
-    case MASTER_ACTION_TYPE.NOOP: return state;
-    default: return state;
+    case MASTER_ACTION_TYPE.REGISTRATION_FAILED: {
+      return state;
+    }
+    case MASTER_ACTION_TYPE.NOOP: {
+      return state;
+    }
+    default: {
+      return state;
+    }
   }
 }

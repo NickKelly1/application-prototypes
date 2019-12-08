@@ -8,6 +8,6 @@ import { epicMiddleware, createMasterStoreEpic } from './store.epic';
  */
 export function createMasterStore(socketServer: SocketIO.Server) {
   const store = createStore(masterReducer, applyMiddleware(epicMiddleware));
-  epicMiddleware.run(createMasterStoreEpic(store, socketServer));
+  epicMiddleware.run(createMasterStoreEpic(socketServer, store));
   return store;
 }

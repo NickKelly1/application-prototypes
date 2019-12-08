@@ -44,3 +44,5 @@ export function createMasterProcess() {
   // start other processes
   return httpServer;
 }
+
+createMasterProcess();

@@ -26,7 +26,7 @@ function getSocketType(socket: SocketIO.Socket): A_SOCKET_TYPE {
  */
 export function socketIOMiddleware(socketServer: SocketIO.Server, store: MasterStore) {
   // listen for connections -> dispatch events
-  new Observable<SocketIO.Socket>(function subscribe(observer) {
+  const connection$ = new Observable<SocketIO.Socket>(function subscribe(observer) {
     function handler(socket: SocketIO.Socket) { observer.next(socket); }
     socketServer.on('connection', handler);
     // close the socket server when un-subscribing

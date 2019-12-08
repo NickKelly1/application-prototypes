@@ -1,8 +1,12 @@
 import * as op from 'rxjs/operators';
 import { Epic, combineEpics, createEpicMiddleware } from 'redux-observable';
-import { MasterAction, A_MASTER_ACTION_TYPE, MasterActionMap, MASTER_ACTION_TYPE } from "./store.actions";
+import { MasterAction, A_MASTER_ACTION_TYPE, MasterActionMap, MASTER_ACTION_TYPE, NOOP } from "./store.actions";
 import { MasterState, MasterStore } from './store.state';
 import { fromEvent } from 'rxjs';
+import { SOCKET_TYPE } from '../constants/socket-type.constant';
+import { MASTER_MESSAGE } from '../shared/master.messages';
+import { CLIENT_MESSAGE, ClientMessageMap } from '../shared/client.messages';
+import { createPlayer } from '../resources/player.entity';
 
 type MasterEpic<OutputAction extends MasterAction> = Epic<MasterAction, OutputAction, MasterState>
 
@@ -30,153 +34,108 @@ function getDisconnection$(socket: SocketIO.Socket) {
 }
 
 
-function playerRegistrationEpic() {
-  //
+/**
+ * @description
+ * Is the player registration token valid?
+ * 
+ * @param token 
+ */
+function isValidPlayerToken(token: any) { return token === 'I\'m a valid token' }
+
+
+
+/**
+ * @description
+ * Register a trusted player
+ *
+ * Connection -> Registration
+ * 
+ * @param socketServer 
+ * @param store 
+ */
+function playerRegistrationEpic(socketServer: SocketIO.Server, store: MasterStore) {
+  const epic: MasterEpic<
+    | MasterActionMap[MASTER_ACTION_TYPE['REGISTER_PLAYER']
+    | MASTER_ACTION_TYPE['REGISTRATION_FAILED']]
+  > = (
+    action$,
+    state$,
+  ) => action$
+    .pipe(
+      op.filter(onlyAction(MASTER_ACTION_TYPE.CONNECT_SOCKET)),
+      op.filter(action => action.payload.socket.type === SOCKET_TYPE.PLAYER),
+      // request token
+      op.tap(action => action.payload.socket.emit(MASTER_MESSAGE.REQUEST_TYPE_TOKEN)),
+      // listen for response
+      op.switchMap(action => fromEvent<ClientMessageMap[CLIENT_MESSAGE['TYPE_TOKEN']]>(
+        action.payload.socket,
+        CLIENT_MESSAGE.TYPE_TOKEN
+      ).pipe(
+        op.map((auth): MasterActionMap[
+          | MASTER_ACTION_TYPE['REGISTER_PLAYER']
+          | MASTER_ACTION_TYPE['REGISTRATION_FAILED']
+        ] =>
+          isValidPlayerToken(auth.payload.token)
+            ? { type: MASTER_ACTION_TYPE.REGISTER_PLAYER, payload: { player: createPlayer({ name: 'unknown' }) } }
+            : { type: MASTER_ACTION_TYPE.REGISTRATION_FAILED, payload: { socket: action.payload.socket } }
+        ),
+      )),
+    );
+
+  return epic;
 }
 
 
 
-// function workerRegistrationAction(
-//   store: MasterStore,
-//   socket: SocketIO.Socket,
-//   preferredProcessId?: number
-// ): (MasterActionMap[MASTER_ACTION_TYPE['RECONNECT_WORKER']] | MasterActionMap[MASTER_ACTION_TYPE['REGISTER_WORKER']]) {
-//   console.log('[workerRegistrationAction]', preferredProcessId);
-//   const reconnectingWorker = preferredProcessId && store
-//     .getState()
-//     .disconnectedWorkers
-//     .find(({ processId }) => processId === preferredProcessId);
+/**
+ * @description
+ * Disconnect an untrusted player
+ *
+ * Failed registration -> Disconnection
+ *
+ * @param socketServer 
+ * @param store 
+ */
+function playerRegistrationFailedEpic(socketServer: SocketIO.Server, store: MasterStore) {
+  const epic: MasterEpic<NOOP> = (
+    action$,
+    state$,
+  ) => action$
+    .pipe(
+      op.filter(onlyAction(MASTER_ACTION_TYPE.REGISTRATION_FAILED)),
+      op.tap(action => action.payload.socket.disconnect()),
+      op.mapTo(NOOP),
+    );
 
-//   // reconnect or new
-//   if (reconnectingWorker) {
-//     // reconnect
-//     clearTimeout(reconnectingWorker.pruneTimer);
-//     console.log('[workerRegistrationAction] reconnecting worker', reconnectingWorker.processId);
-//     const worker: RegisteredWorker = {
-//       socket,
-//       status: WORKER_STATUS.IDLE,
-//       processId: reconnectingWorker.processId,
-//       connectedAt: reconnectingWorker.connectedAt,
-//       reconnectedAt: new Date(),
-//     };
-//     return { type: MASTER_ACTION_TYPE.RECONNECT_WORKER, payload: { worker } };
-//   } else {
-//     // new
-//     console.log('[workerRegistrationAction] connecting new worker', NEXT_PROCESS_ID + 1);
-//     const worker: RegisteredWorker = {
-//       socket,
-//       status: WORKER_STATUS.IDLE,
-//       connectedAt: new Date(),
-//       processId: NEXT_PROCESS_ID += 1,
-//     };
-//     return { type: MASTER_ACTION_TYPE.REGISTER_WORKER, payload: { worker } };
-//   }
-// }
+  return epic;
+}
 
-
-// /**
-//  * @description
-//  * Epic for worker registrations
-//  * 
-//  * @param socketServer 
-//  */
-// function createWorkerLifeCycleEpics(store: MasterStore, socketServer: SocketIO.Server) {
-
-//   // process a connected socket of type worker
-//   const workerConnection$: MasterEpic<
-//   MasterActionMap[MASTER_ACTION_TYPE['FAILED_WORKER_AUTH']]
-//   | MasterActionMap[MASTER_ACTION_TYPE['RECONNECT_WORKER']]
-//   | MasterActionMap[MASTER_ACTION_TYPE['REGISTER_WORKER']]
-//   > = (action$, state$) => action$
-//     .pipe(
-//       op.filter(onlyAction(MASTER_ACTION_TYPE.CONNECTION)),
-//       op.filter(action => action.payload.socket.socketType === SOCKET_CLIENT_TYPE.WORKER),
-//       // emit challenge
-//       op.tap(action => action.payload.socket.emit(MASTER_MESSAGE.CHALLENGE)),
-//       // receive challenge
-//       op.switchMap(({ payload: { socket } }) => getChallengeResponse$(socket).pipe(
-//         op.takeUntil(getDisconnection$(socket)),
-//         op.take(1),
-//         op.map(challengeResponse => authWorker(challengeResponse.authToken)
-//           // trusted
-//           ? workerRegistrationAction(store, socket, challengeResponse.preferredProcessId)
-//           // untrusted
-//           : { type: MASTER_ACTION_TYPE.FAILED_WORKER_AUTH, payload: { socket } } as MasterActionMap[MASTER_ACTION_TYPE['FAILED_WORKER_AUTH']],
-//         )
-//       )),
-//     );
-
-//   const workerDisconnection$: MasterEpic<MasterActionMap[MASTER_ACTION_TYPE['DISCONNECT_WORKER']]> = (action$, state$) => action$
-//     .pipe(
-//       op.filter(onlyAction(MASTER_ACTION_TYPE.DISCONNECTION)),
-//       op.map(action => state$.value.workers.find(worker => worker.socket === action.payload.socket)),
-//       op.filter(isNotNullOrUndefined),
-//       op.map((worker): MasterActionMap[MASTER_ACTION_TYPE['DISCONNECT_WORKER']] => ({
-//         type: MASTER_ACTION_TYPE.DISCONNECT_WORKER,
-//         payload: {
-//           worker,
-//           pruneTimer: setTimeout(() => store.dispatch({
-//             type: MASTER_ACTION_TYPE.PRUNE_WORKER,
-//             payload: { processId: worker.processId }
-//           }), 15000)
-//         }
-//       })),
-//     );
-
-//   // handle a registered worker
-//   const registeredWorker$: MasterEpic<NOOP> = (action$, state$) => action$
-//     .pipe(
-//       op.filter(onlyAction(MASTER_ACTION_TYPE.REGISTER_WORKER)),
-//       // notify client of registration
-//       op.tap(action => action.payload.worker.socket.emit(MASTER_MESSAGE.REGISTERED, { processId: action.payload.worker.processId })),
-//       op.mapTo(NOOP),
-//     );
-
-//   return combineEpics(registeredWorker$, workerDisconnection$, workerConnection$);
-// }
-
-
-
-// /**
-//  * @description
-//  * Epic for connection actions
-//  * 
-//  * @param socketServer 
-//  */
-// function createConnectionEpic(socketServer: SocketIO.Server) {
-//   const socketConnectedEpic: MasterEpic<NOOP> = (action$, state$) => action$
-//     .pipe(
-//       op.filter(onlyAction(MASTER_ACTION_TYPE.CONNECTION)),
-//       op.mapTo(NOOP),
-//     );
-
-//   return socketConnectedEpic;
-// }
 
 
 
 /**
  * @description
  * Epic for disconnect actions
- * 
+ *
+ * Connection -> Disconnection
+ *
  * @param socketServer 
  */
-function disconnectionEpic(socketServer: SocketIO.Server) {
-  const socketDisconnectedSteam: MasterEpic<MasterActionMap[MASTER_ACTION_TYPE['DISCONNECT_SOCKET']]> = (action$, state$) => {
-    const epic$ = action$
-      .pipe(
-        op.filter(onlyAction(MASTER_ACTION_TYPE.CONNECT_SOCKET)),
-        op.switchMap((action) => getDisconnection$(action.payload.socket).pipe(op.mapTo(action))),
-        op.map((action): MasterActionMap[MASTER_ACTION_TYPE['DISCONNECT_SOCKET']] => ({
-          type: MASTER_ACTION_TYPE.DISCONNECT_SOCKET,
-          payload: { socket: action.payload.socket },
-        })),
-      );
+function disconnectionEpic(socketServer: SocketIO.Server, store: MasterStore) {
+  const epic: MasterEpic<MasterActionMap[MASTER_ACTION_TYPE['DISCONNECT_SOCKET']]> = (
+    action$,
+    state$,
+  ) => action$
+    .pipe(
+      op.filter(onlyAction(MASTER_ACTION_TYPE.CONNECT_SOCKET)),
+      op.switchMap((action) => getDisconnection$(action.payload.socket).pipe(op.mapTo(action))),
+      op.map((action): MasterActionMap[MASTER_ACTION_TYPE['DISCONNECT_SOCKET']] => ({
+        type: MASTER_ACTION_TYPE.DISCONNECT_SOCKET,
+        payload: { socket: action.payload.socket },
+      })),
+    );
 
-    return epic$;
-  }
-
-  return socketDisconnectedSteam;
+  return epic;
 }
 
 
@@ -187,14 +146,16 @@ function disconnectionEpic(socketServer: SocketIO.Server) {
  *
  * @param socketServer
  */
-export function createMasterStoreEpic(store: MasterStore, socketServer: SocketIO.Server) {
+export function createMasterStoreEpic(socketServer: SocketIO.Server, store: MasterStore) {
   /**
    * @description
    * Root epic for the store
    * Combines all sub-epics
    */
   const rootEpic: MasterEpic<MasterAction> = combineEpics(
-    disconnectionEpic(socketServer),
+    playerRegistrationEpic(socketServer, store),
+    playerRegistrationFailedEpic(socketServer, store),
+    disconnectionEpic(socketServer, store),
   );
 
   return rootEpic;
