@@ -1,8 +1,8 @@
 {
   "AWSEBDockerrunVersion": "1",
-  "Name": "ci-flux-app",
+  "Name": "TODO",
   "Image": {
-    "Name": "160294630680.dkr.ecr.ap-southeast-2.amazonaws.com/ci-flux",
+    "Name": "TODO",
     "Update": "true"
   },
   "Essential": "true",
@@ -15,7 +15,7 @@
     }
   ],
   "Volumes": {
-    "Name": "ci-flux-logs",
+    "Name": "TODO",
     "Host": {
       "SourcePath": "/app/logs"
     }
