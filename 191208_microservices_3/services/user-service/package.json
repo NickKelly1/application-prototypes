@@ -1,0 +1,28 @@
+{
+  "name": "191208_microservices_3",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "reset-env": "ts-node reset-root-env.ts"
+  },
+  "dependencies": {
+    "@syntaxfanatics/peon": "^0.0.47",
+    "@types/compression": "^1.0.1",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express": "^4.17.2",
+    "@types/http-errors": "^1.6.3",
+    "@types/node": "^12.12.17",
+    "@types/socket.io": "^2.1.4",
+    "apollo-server-express": "^2.9.13",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.4",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.7.3",
+    "mongodb": "^3.4.0",
+    "socket.io": "^2.3.0",
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.3"
+  }
+}

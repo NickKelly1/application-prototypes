@@ -1,16 +1,16 @@
+import express from 'express';
 import { retryEvery } from '@syntaxfanatics/peon';
-import mongoose from 'mongoose'
-import { app } from './app';
-import http from 'http';
+import http, { createServer } from 'http';
 import { env } from './env';
-import { AppExpressRequest } from '../types/AppExpressRequest';
+import { expressMiddleware } from './middleware/express.middleware';
+import { AppExpressRequest } from './types/AppExpressRequest';
 
 
 
 /**
  * Normalize a port into a number, string, or false.
  */
-function normalizePort(val: any) {
+function normalizePort(val: any): number {
   const port = parseInt(val, 10);
 
   // named pipe
@@ -19,7 +19,7 @@ function normalizePort(val: any) {
   // port number
   if (port >= 0) return port;
 
-  return false;
+  throw new TypeError(`Unable to normalise port "${val}"`);
 }
 
 
@@ -72,61 +72,65 @@ function handleListening(server: http.Server) {
 
 
 
-/**
- * Get port from environment and store in Express.
- */
-const port = normalizePort(env.USER_SERVICE_INTERNAL_PORT);
-app.set('port', port);
-
-
-
-/**
- * @description
- * Create APIs for the application
- */
-function createApis(): AppExpressRequest['apis'] {
-  const apis = {};
-  return apis;
-}
 
 
 
 
+// start the application
 async function start() {
-  /** Listen on provided port, on all network interfaces. */
-  try {
+  /**
+   * Get port from environment and store in Express.
+   */
+  const PORT = normalizePort(env.USER_SERVICE_INTERNAL_PORT);
 
-    let apis: AppExpressRequest['apis'];
+  const expressApp = express();
 
-    if (!env.SLEEP) {
-      await retryEvery({ millisBetween: 5000, maxAttempts: Number.POSITIVE_INFINITY })(
-        function connectToMongo() {
-          return mongoose.connect(env.USER_SERVICE_MONGODB_URI, {
-            useNewUrlParser: true,
-            user: env.USER_SERVICE_MONGODB_USER,
-            pass: env.USER_SERVICE_MONGODB_PASSWORD
-          })}
-      )();
+  const httpServer = createServer((req, res) => {
+    expressApp(req, res);
+  });
 
-      console.log(`[www] Connected to mongoDB on ${env.USER_SERVICE_MONGODB_URI}`);
-      apis = createApis();
-    }
+  expressMiddleware(expressApp);
 
-    /** Create HTTP server */
-    const server = http.createServer((incomingMessage, serverResponse) => {
-      // add our apis onto the incoming request
-      (incomingMessage as typeof incomingMessage & Pick<AppExpressRequest, 'apis'>).apis = apis;
-      app(incomingMessage, serverResponse);
-    });
+  httpServer.on('error', handleError({ port: PORT }));
+  httpServer.on('listening', handleListening(httpServer));
 
-    server.on('error', handleError({ port }));
-    server.on('listening', handleListening(server));
+  httpServer.listen(PORT);
 
-    await new Promise(res => server.listen(port, res));
-    console.log(`[www] Server listening on port ${port}`);
-  } catch (error) {
-    console.log('[www] Failed to start server...', error);
-  }
+
+  // /** Listen on provided port, on all network interfaces. */
+  // try {
+
+  //   let apis: AppExpressRequest['apis'];
+
+  //   if (!env.SLEEP) {
+  //     // await retryEvery({ millisBetween: 5000, maxAttempts: Number.POSITIVE_INFINITY })(
+  //     //   function connectToMongo() {
+  //     //     return mongoose.connect(env.USER_SERVICE_MONGODB_URI, {
+  //     //       useNewUrlParser: true,
+  //     //       user: env.USER_SERVICE_MONGODB_USER,
+  //     //       pass: env.USER_SERVICE_MONGODB_PASSWORD
+  //     //     })}
+  //     // )();
+
+  //     console.log(`[www] Connected to mongoDB on ${env.USER_SERVICE_MONGODB_URI}`);
+  //     apis = createApis();
+  //   }
+
+  //   /** Create HTTP server */
+  //   const server = http.createServer((incomingMessage, serverResponse) => {
+  //     // add our apis onto the incoming request
+  //     (incomingMessage as typeof incomingMessage & Pick<AppExpressRequest, 'apis'>).apis = apis;
+  //     app(incomingMessage, serverResponse);
+  //   });
+
+  //   server.on('error', handleError({ port }));
+  //   server.on('listening', handleListening(server));
+
+  //   await new Promise(res => server.listen(port, res));
+  //   console.log(`[www] Server listening on port ${port}`);
+  // } catch (error) {
+  //   console.log('[www] Failed to start server...', error);
+  // }
 }
 
 
