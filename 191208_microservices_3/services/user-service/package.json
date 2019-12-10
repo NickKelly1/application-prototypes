@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "reset-env": "ts-node reset-root-env.ts"
+    "start": "ts-node src/www.ts"
   },
   "dependencies": {
     "@syntaxfanatics/peon": "^0.0.47",
