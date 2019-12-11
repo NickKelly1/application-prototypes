@@ -4,6 +4,9 @@ import http, { createServer } from 'http';
 import { env } from './env';
 import { expressMiddleware } from './middleware/express.middleware';
 import { AppExpressRequest } from './types/AppExpressRequest';
+import redis, { RedisClient } from 'redis';
+import { promisify } from 'util';
+import { AsyncRedisClient } from './helpers/async-redis-client.helper';
 
 
 
@@ -74,8 +77,6 @@ function handleListening(server: http.Server) {
 
 
 
-
-
 // start the application
 async function start() {
   /**
@@ -84,10 +85,35 @@ async function start() {
   const PORT = normalizePort(env.USER_SERVICE_INTERNAL_PORT);
 
   const expressApp = express();
+  const redisClient = new AsyncRedisClient({
+    host: env.REDIS_HOST,
+    port: env.REDIS_PORT,
+    password: env.REDIS_PASSWORD,
+  });
+
+  redisClient.on('message', (channel, message) => console.log('[REDIS] message', channel, message));
+  redisClient.on('message_buffer', (channel, message) => console.log('[REDIS] message_buffer', channel, message));
+  redisClient.on('pmessage', (channel, message) => console.log('[REDIS] pmessage', channel, message));
+  redisClient.on('pmessage_buffer', (channel, message) => console.log('[REDIS] pmessage_buffer', channel, message));
+  redisClient.on('psubscribe', (channel, message) => console.log('[REDIS] psubscribe', channel, message));
+  redisClient.on('punsubscribe', (channel, message) => console.log('[REDIS] punsubscribe', channel, message));
+  redisClient.on('subscribe', (channel, message) => console.log('[REDIS] subscribe', channel, message));
+  redisClient.on('unsubscribe', (channel, message) => console.log('[REDIS] unsubscribe', channel, message));
+  redisClient.asyncPING().then(result => console.log('[REDIS] PING ->', result));
+
+  redisClient.subscribe('SUB_CHANNEL', (arg1, arg2) => {
+    console.log('subscribed....?', arg1, arg2);
+  });
+
+  redisClient.xadd("MY_STREAM", "first value", (err, value) => {
+    console.log("--MY STREM--", value);
+  });
+
 
   const httpServer = createServer((req, res) => {
     expressApp(req, res);
   });
+
 
   expressMiddleware(expressApp);
 
@@ -95,42 +121,6 @@ async function start() {
   httpServer.on('listening', handleListening(httpServer));
 
   httpServer.listen(PORT);
-
-
-  // /** Listen on provided port, on all network interfaces. */
-  // try {
-
-  //   let apis: AppExpressRequest['apis'];
-
-  //   if (!env.SLEEP) {
-  //     // await retryEvery({ millisBetween: 5000, maxAttempts: Number.POSITIVE_INFINITY })(
-  //     //   function connectToMongo() {
-  //     //     return mongoose.connect(env.USER_SERVICE_MONGODB_URI, {
-  //     //       useNewUrlParser: true,
-  //     //       user: env.USER_SERVICE_MONGODB_USER,
-  //     //       pass: env.USER_SERVICE_MONGODB_PASSWORD
-  //     //     })}
-  //     // )();
-
-  //     console.log(`[www] Connected to mongoDB on ${env.USER_SERVICE_MONGODB_URI}`);
-  //     apis = createApis();
-  //   }
-
-  //   /** Create HTTP server */
-  //   const server = http.createServer((incomingMessage, serverResponse) => {
-  //     // add our apis onto the incoming request
-  //     (incomingMessage as typeof incomingMessage & Pick<AppExpressRequest, 'apis'>).apis = apis;
-  //     app(incomingMessage, serverResponse);
-  //   });
-
-  //   server.on('error', handleError({ port }));
-  //   server.on('listening', handleListening(server));
-
-  //   await new Promise(res => server.listen(port, res));
-  //   console.log(`[www] Server listening on port ${port}`);
-  // } catch (error) {
-  //   console.log('[www] Failed to start server...', error);
-  // }
 }
 
 

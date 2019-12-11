@@ -10,6 +10,10 @@ dotenv.config();
 const readEnv = () => ({
   NODE_ENV: process.env.NODE_ENV,
 
+  REDIS_HOST: process.env.REDIS_HOST,
+  REDIS_PORT: process.env.REDIS_PORT,
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+
   USER_SERVICE_ADMIN_USERNAME: process.env.USER_SERVICE_ADMIN_USERNAME,
   USER_SERVICE_ADMIN_PASSWORD: process.env.USER_SERVICE_ADMIN_PASSWORD,
 

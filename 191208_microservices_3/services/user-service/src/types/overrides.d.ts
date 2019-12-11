@@ -1,11 +1,23 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as ts from 'typescript';
 import { AppExpressRequest } from './AppExpressRequest';
+import { Callback } from 'redis';
 // https://stackoverflow.com/questions/45194598/using-process-env-in-typescript
+
+declare module "redis" {
+  interface Commands<R> {
+    xadd(streamName: string, value1: string, cb?: Callback<unknown>): R;
+  }
+}
 
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
+
+      REDIS_HOST: string,
+      REDIS_PORT: number,
+      REDIS_PASSWORD: string,
+
       USER_SERVICE_ADMIN_USERNAME: string;
       USER_SERVICE_ADMIN_PASSWORD: string;
 

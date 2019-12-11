@@ -28,7 +28,7 @@ echo "
 # ***** SHARED *****
 # ******************
 
-REDIS_HOST=localhost
+REDIS_HOST=ms3_redis
 REDIS_PORT=6379
 REDIS_PASSWORD=password123
 

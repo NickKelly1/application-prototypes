@@ -1,7 +1,7 @@
 # https://hub.docker.com/_/node/
 FROM node:10.17.0-alpine
 
-WORKDIR /ms2/services/user-service
+WORKDIR /ms3/services/user-service
 
 # Initially only copy package.json. The intermediate image at
 # this point will be cached and used UNTIL package.json changes
