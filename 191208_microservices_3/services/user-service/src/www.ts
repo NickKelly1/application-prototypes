@@ -105,9 +105,18 @@ async function start() {
     console.log('subscribed....?', arg1, arg2);
   });
 
-  redisClient.xadd("MY_STREAM", "first value", (err, value) => {
-    console.log("--MY STREM--", value);
-  });
+  redisClient.xadd(
+    "STREAM_NAME",
+    "STREAM_KEY",
+    "*",
+    "STREAM_FIELD",
+    "--- ^^ && stream value && ^^ ---",
+    (err, value) => {
+      console.log("--MY STREAM--", { err, value });
+    },
+  );
+
+  // redisClient.xread("MY")
 
 
   const httpServer = createServer((req, res) => {

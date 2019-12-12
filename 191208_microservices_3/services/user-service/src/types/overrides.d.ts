@@ -6,7 +6,16 @@ import { Callback } from 'redis';
 
 declare module "redis" {
   interface Commands<R> {
-    xadd(streamName: string, value1: string, cb?: Callback<unknown>): R;
+    /**
+     * 
+     * @param streamName 
+     * @param key 
+     * @param ID            `*` for auto generated ID
+     * @param field
+     * @param value 
+     * @param cb 
+     */
+    xadd(streamName: string, key: string, ID: '*' | string, field: string, value: string, cb?: Callback<unknown>): R;
   }
 }
 
