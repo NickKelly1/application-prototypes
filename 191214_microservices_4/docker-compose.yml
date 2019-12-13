@@ -1,0 +1,58 @@
+version: "3.6"
+services:
+  # [Redis](https://hub.docker.com/r/bitnami/redis/)
+  ms4_redis:
+    image: bitnami/redis:5.0-ol-7
+    container_name: ms4_redis
+    restart: "no"
+    # tty: true
+    ports: 
+      - ${REDIS_PORT}:6379
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+
+  # User Service
+  # Mongo
+  ms4_user_service_mongodb:
+    image: mongo:3.6.15-xenial
+    container_name: ms4_user_service_mongodb
+    restart: "no"
+    ports:
+      - "${USER_SERVICE_MONGODB_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${USER_SERVICE_MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${USER_SERVICE_MONGODB_PASSWORD}
+
+  # API
+  ms4_user_service_api:
+    image: ms4_user_service_api
+    container_name: ms4_user_service_api
+    restart: "no"
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile.dev
+    ports:
+      - ${USER_SERVICE_INTERNAL_PORT}:${USER_SERVICE_INTERNAL_PORT}
+    volumes:
+      # mode modules (not shared)
+      - /ms4/services/user-service/node_modules
+      # app code (shared)
+      - ./services/user-service:/ms4/services/user-service
+      # code shared between services
+      # shared links use relative paths, so relative path must be conserved by mapping
+      - ./shared:/ms4/shared
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      ROOT_DIR: ${ROOT_DIR}
+      EXT_NAME: ${EXT_NAME}
+      USER_SERVICE_ADMIN_USERNAME: ${USER_SERVICE_ADMIN_USERNAME}
+      USER_SERVICE_ADMIN_PASSWORD: ${USER_SERVICE_ADMIN_PASSWORD}
+      USER_SERVICE_INTERNAL_PORT: ${USER_SERVICE_INTERNAL_PORT}
+      USER_SERVICE_MONGODB_PORT: ${USER_SERVICE_MONGODB_PORT}
+      USER_SERVICE_MONGODB_USER: ${USER_SERVICE_MONGODB_USER}
+      USER_SERVICE_MONGODB_PASSWORD: ${USER_SERVICE_MONGODB_PASSWORD}
+    depends_on:
+      - ms4_user_service_mongodb
+      - ms4_redis
