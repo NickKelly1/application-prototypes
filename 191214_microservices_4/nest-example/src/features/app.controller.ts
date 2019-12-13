@@ -7,7 +7,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    throw new Error('failed');
     return this.appService.getHello();
   }
 }
