@@ -2,13 +2,14 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { HomeModule } from './features/home/home.module';
 import { UserModule } from './features/users/user.module';
-import { classLogger } from './helpers/logger';
+import { classLogger } from './shared/ts/helpers/logger';
 import { WebSocketServer } from './gateway/web-socket.gateway';
 
 @Module({
   imports: [
     HomeModule,
     UserModule,
+    WebSocketServer,
   ],
   controllers: [],
   providers: [

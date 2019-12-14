@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { HomeService } from './home.service';
-import { classLogger } from '../../helpers/logger';
+import { classLogger } from '../../shared/ts/helpers/logger';
 
 @Controller('/')
 export class HomeController {

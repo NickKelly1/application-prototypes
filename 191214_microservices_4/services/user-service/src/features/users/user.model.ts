@@ -1,6 +1,6 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { WithId, ModelWithId } from '../../@types/with-id';
-import { classLogger } from '../../helpers/logger';
+import { classLogger } from '../../shared/ts/helpers/logger';
 
 export type UserId = string;
 

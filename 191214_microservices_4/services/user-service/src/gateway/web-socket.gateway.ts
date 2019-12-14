@@ -2,11 +2,12 @@ import {
   WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket,
 } from '@nestjs/websockets';
 import { env } from '../env';
-import { classLogger } from '../helpers/logger';
+import { classLogger } from '../shared/ts/helpers/logger';
 import { AN_AUTH_SRV_CLIENT_MSG } from '../shared/ts/auth-service/messages/auth-srv-client.msg';
 import { AUTH_SRV_SERVER_MSG } from '../shared/ts/auth-service/messages/auth-srv-server.msg';
 import { AUTH_SRV_SERVER_MSG_TYPE } from '../shared/ts/auth-service/messages/auth-srv-server.msg-type';
 import { AUTH_SRV_CLIENT_MSG_TYPE } from '../shared/ts/auth-service/messages/auth-srv-client.msg-type';
+
 
 @WebSocketGateway(env.SOCKET_PORT)
 export class WebSocketServer {

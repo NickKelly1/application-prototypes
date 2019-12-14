@@ -1,4 +1,4 @@
-import { classLogger } from '../../../../helpers/logger';
+import { classLogger } from '../../../../shared/ts/helpers/logger';
 import { UserId } from '../../user.model';
 
 export class GetUserQuery {

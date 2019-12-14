@@ -1,6 +1,6 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { UserCreatedEvent } from './user-created.event.impl';
-import { classLogger } from '../../../helpers/logger';
+import { classLogger } from '../../../shared/ts/helpers/logger';
 
 
 @EventsHandler(UserCreatedEvent)

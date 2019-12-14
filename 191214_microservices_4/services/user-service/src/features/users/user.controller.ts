@@ -5,7 +5,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetUsersQuery } from './queries/get-users/get-users.query.impl';
 import { CreateUserCommandDto } from './commands/create-user/create-user.command.dto';
 import { CreateUserCommand } from './commands/create-user/create-user.command.impl';
-import { classLogger } from '../../helpers/logger';
+import { classLogger } from '../../shared/ts/helpers/logger';
 
 @Controller('users')
 export class UserController {

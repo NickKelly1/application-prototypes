@@ -1,7 +1,7 @@
 import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
 import { GetUsersQuery } from './get-users.query.impl';
 import { UserRepository } from '../../user.repository';
-import { classLogger } from '../../../../helpers/logger';
+import { classLogger } from '../../../../shared/ts/helpers/logger';
 
 @QueryHandler(GetUsersQuery)
 export class GetUsersQueryHandler implements IQueryHandler<GetUsersQuery> {

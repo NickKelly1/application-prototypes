@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { classLogger } from '../../helpers/logger';
+import { classLogger } from '../../shared/ts/helpers/logger';
 
 @Injectable()
 export class HomeService {

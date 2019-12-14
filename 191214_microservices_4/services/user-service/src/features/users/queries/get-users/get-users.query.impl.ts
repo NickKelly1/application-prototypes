@@ -1,5 +1,5 @@
 import { IQuery } from '@nestjs/cqrs';
-import { classLogger } from '../../../../helpers/logger';
+import { classLogger } from '../../../../shared/ts/helpers/logger';
 import { UserModel } from '../../user.model';
 
 export class GetUsersQuery {

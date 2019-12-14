@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs';
 import { UserRepository } from '../../user.repository';
 import { UserModel } from '../../user.model';
-import { classLogger } from '../../../../helpers/logger';
+import { classLogger } from '../../../../shared/ts/helpers/logger';
 import { UserCreatedEvent } from '../../events/user-created.event.impl';
 import { ActivateUserCommand } from './activate-user.command.impl';
 

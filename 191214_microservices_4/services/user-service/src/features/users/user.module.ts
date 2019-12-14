@@ -5,7 +5,7 @@ import { UserCreatedEventHandler } from './events/user-created.event.handler';
 import { GetUsersQueryHandler } from './queries/get-users/get-users.query.handler';
 import { UserController } from './user.controller';
 import { CreateUserCommandHandler } from './commands/create-user/create-user.command.handler';
-import { classLogger } from '../../helpers/logger';
+import { classLogger } from '../../shared/ts/helpers/logger';
 import { GetUserQueryHandler } from './queries/get-user/get-user.query.handler';
 
 

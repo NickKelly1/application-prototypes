@@ -6,7 +6,7 @@ import { MessageList } from '../../components/message-list/message-list.componen
 import { AuthSrvClientMsgPing } from '../../shared/ts/auth-service/messages/client/auth-srv-client.msg.ping';
 
 export const WelcomePage: React.FC = () => {
-  const authSrv = useContext(authServiceContext);
+  const { send: sendMessage, connected } = useContext(authServiceContext);
 
   return (
     <div className="welcome">
@@ -16,11 +16,18 @@ export const WelcomePage: React.FC = () => {
       </header>
       <div>Message list:</div>
       <div>
-        <button onClick={() => {
-          const uuid = (Math.random() * 1000000).toFixed(0).toString();
-          console.log('sending', uuid);
-          authSrv.sendMessage(new AuthSrvClientMsgPing(uuid, uuid))
-        }}>Click me</button>
+        <button
+          style={{
+            opacity: connected ? 1.0 : 0.5,
+            pointerEvents: connected ? 'all' : 'none',
+          }}
+          onClick={() => {
+            console.log('sending message...');
+            const uuid = (Math.random() * 1000000).toFixed(0).toString();
+            console.log('sending', uuid);
+            sendMessage(new AuthSrvClientMsgPing(uuid, uuid))
+          }}
+        ><label>Click me</label></button>
       </div>
       <MessageList />
     </div>

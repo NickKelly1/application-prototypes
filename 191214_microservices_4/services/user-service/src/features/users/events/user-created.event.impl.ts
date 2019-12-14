@@ -1,5 +1,5 @@
 import { UserId } from '../user.model';
-import { classLogger } from '../../../helpers/logger';
+import { classLogger } from '../../../shared/ts/helpers/logger';
 
 export class UserCreatedEvent {
   private readonly logger = classLogger(this);

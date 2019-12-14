@@ -5,11 +5,13 @@ import { authServiceContext } from '../../providers/auth-service/auth-service.pr
 
 
 export const MessageList: React.FC = () => {
-  const authSrv = useContext(authServiceContext);
+  const { received, sent, exceptions } = useContext(authServiceContext);
+
+  console.log({ received, sent, exceptions });
 
   return (
     <ul>
-      {authSrv.receivedMessages.map(msg => <li key={msg.uuid}>msg.type</li>)}
+      {received.map(msg => <li key={msg.val.uuid}>msg.type</li>)}
     </ul>
   );
 }

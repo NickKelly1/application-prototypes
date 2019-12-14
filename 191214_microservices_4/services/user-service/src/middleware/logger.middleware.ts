@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { tty } from '../helpers/tty.helper';
-import { hDate } from '../helpers/h-date.helper';
-import { classLogger } from '../helpers/logger';
+import { tty } from '../shared/ts/helpers/tty.helper';
+import { hDate } from '../shared/ts/helpers/h-date.helper';
+import { classLogger } from '../shared/ts/helpers/logger';
 
 interface Info {
   req: Request,
