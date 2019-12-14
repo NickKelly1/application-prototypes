@@ -26,6 +26,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    '@typescript-eslint/no-empty-interface': 'off',
+    '@typescript-eslint/adjacent-overload-signatures': 'off',
     'max-classes-per-file': 'off',
     'lines-between-class-members': 'off',
     'class-methods-use-this': 'off',

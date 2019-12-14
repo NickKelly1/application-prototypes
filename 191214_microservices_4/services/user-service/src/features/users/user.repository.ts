@@ -38,8 +38,19 @@ export class UserRepository {
     return item;
   }
 
-  async findAndUpdateById(id: UserId, attr: Partial<UserAttributes>) {
+  async findAndUpdateById(id: UserId, attr: Partial<UserAttributes>): Promise<undefined | UserModel> {
     this.logger.dInfo('findAndUpdateById', id);
+    const staleItem = await this.findOneById(id);
+    if (!staleItem) return staleItem;
+    const freshItem = new UserModel(staleItem.id, { ...staleItem.attr, ...attr });
+    this.items.set(freshItem.id, freshItem);
+    return freshItem;
+  }
+
+  async findOrFailAndUpdateById(id: UserId, attr: Partial<UserAttributes>): Promise<UserModel> {
+    const item = await this.findAndUpdateById(id, attr);
+    if (!item) throw new ReferenceError(`Unable to find item "${id}"`);
+    return item;
   }
 
   // async find

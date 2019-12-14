@@ -1,0 +1,15 @@
+export const HTTP_STATUS = {
+  // get & index
+  GET: 200,
+  CREATED: 201,
+  UPDATED: 203,
+  DELETED: 204,
+  BAD_REQUEST: 400,
+  NOT_AUTHORIZED: 404,
+  NOT_FOUND: 404,
+  REQUEST_TIMEOUT: 408,
+  INVALID: 422,
+  SERVER_ERROR: 500,
+} as const;
+export type HTTP_STATUS = typeof HTTP_STATUS;
+export type A_HTTP_STATUS = HTTP_STATUS[keyof HTTP_STATUS]

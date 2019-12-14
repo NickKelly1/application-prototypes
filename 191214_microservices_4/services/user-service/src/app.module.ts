@@ -3,6 +3,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { HomeModule } from './features/home/home.module';
 import { UserModule } from './features/users/user.module';
 import { classLogger } from './helpers/logger';
+import { WebSocketServer } from './gateway/web-socket.gateway';
 
 @Module({
   imports: [
@@ -10,7 +11,9 @@ import { classLogger } from './helpers/logger';
     UserModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    WebSocketServer,
+  ],
 })
 export class AppModule implements NestModule {
   private logger = classLogger(this);

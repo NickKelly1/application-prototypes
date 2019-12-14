@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import { AUTH_SRV_CLIENT_MSGS } from '../../shared/ts/auth-service/messages/auth-srv-client.msg';
-import { AUTH_SRV_SERVER_MSGS } from '../../shared/ts/auth-service/messages/auth-srv-server.msg';
 import { authServiceContext } from '../../providers/auth-service/auth-service.provider';
 
 

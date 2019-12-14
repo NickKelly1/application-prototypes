@@ -16,7 +16,7 @@ export class ActivateUserCommandHandler implements ICommandHandler<ActivateUserC
 
   async execute(cmd: ActivateUserCommand) {
     this.logger.dInfo('execute', cmd);
-    const newUser = await this.repo.create(cmd.id);
+    const newUser = await this.repo.findOrFailAndUpdateById(cmd.id, { activated: true });
     this.pub.mergeObjectContext<UserModel>(newUser);
     newUser.apply(new UserCreatedEvent(newUser.id));
     newUser.commit();

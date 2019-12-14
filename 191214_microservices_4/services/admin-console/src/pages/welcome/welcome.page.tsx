@@ -15,10 +15,13 @@ export const WelcomePage: React.FC = () => {
         <h1>Welcome</h1>
       </header>
       <div>Message list:</div>
-      <div><button onClick={() => {
-        const uuid = Math.random().toString();
-        authSrv.sendMessage(new AuthSrvClientMsgPing(uuid, uuid))
-      }}></button></div>
+      <div>
+        <button onClick={() => {
+          const uuid = (Math.random() * 1000000).toFixed(0).toString();
+          console.log('sending', uuid);
+          authSrv.sendMessage(new AuthSrvClientMsgPing(uuid, uuid))
+        }}>Click me</button>
+      </div>
       <MessageList />
     </div>
   );
