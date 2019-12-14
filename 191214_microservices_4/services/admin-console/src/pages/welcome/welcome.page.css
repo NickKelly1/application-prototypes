@@ -1,0 +1,26 @@
+.welcome-page {
+  /* text-align: center; */
+}
+
+.welcome-header {
+  display: flex;
+}
+
+.welcome-logo {
+  max-height: 10vmin;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .welcome-logo {
+    animation: welcome-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes welcome-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
