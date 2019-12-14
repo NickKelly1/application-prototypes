@@ -1,0 +1,43 @@
+import {
+  PipeTransform, Injectable, ArgumentMetadata, BadRequestException,
+} from '@nestjs/common';
+import {
+  validate, IsEmail, IsNotEmpty, IsString,
+} from 'class-validator';
+import { plainToClass } from 'class-transformer';
+
+/**
+ * @see https://docs.nestjs.com/pipes
+ */
+@Injectable()
+export class ValidationPipe implements PipeTransform<any> {
+  async transform(value: any, meta: ArgumentMetadata) {
+    // ? no type to validate
+    // ? type is primitive JS object and therefore cannot contain a schema
+    if (!meta.metatype || !this.toValidate(meta.metatype)) {
+      return value;
+    }
+
+    // transform value into a validateable value
+    const obj = plainToClass(meta.metatype, value);
+
+    // attempt validation
+    const errors = await validate(obj);
+
+    // fail
+    if (errors.length > 0) throw new BadRequestException('Validation failed');
+
+    // success
+    return value;
+  }
+
+  /**
+   * Determine if the metatype is primitive and therefore cannot have a validation scehema
+   *
+   * @param metatype
+   */
+  private toValidate(metatype: Function): boolean {
+    const types: Function[] = [String, Boolean, Number, Array, Object];
+    return !types.includes(metatype);
+  }
+}
