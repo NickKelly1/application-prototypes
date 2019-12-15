@@ -11,7 +11,7 @@ let prev: Date;
  *
  * @param date
  */
-export function hDate(date?: Date, color: keyof tty = 'FgBlue') {
+export function hDate(date?: Date, color: null | keyof tty = 'FgBlue') {
   const next = date ?? new Date();
 
   // should NEVER return negative numbers, but somehow does
@@ -33,6 +33,8 @@ export function hDate(date?: Date, color: keyof tty = 'FgBlue') {
     ' ',
     next.getHours() >= 12 ? 'PM' : 'AM',
   ].join('');
+
+  if (color === null) return humanReadableDate;
 
   return tty[color](humanReadableDate);
 }

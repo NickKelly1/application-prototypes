@@ -4,9 +4,10 @@ import './welcome.page.css';
 import { authServiceContext } from '../../providers/auth-service/auth-service.provider';
 import { MessageList } from '../../components/message-list/message-list.component';
 import { AuthSrvClientMsgPing } from '../../shared/ts/auth-service/messages/client/auth-srv-client.msg.ping';
+import { hDate } from '../../shared/ts/helpers/h-date.helper';
 
 export const WelcomePage: React.FC = () => {
-  const { send: sendMessage, connected } = useContext(authServiceContext);
+  const authSrv = useContext(authServiceContext);
 
   return (
     <div className="welcome">
@@ -18,16 +19,30 @@ export const WelcomePage: React.FC = () => {
       <div>
         <button
           style={{
-            opacity: connected ? 1.0 : 0.5,
-            pointerEvents: connected ? 'all' : 'none',
+            opacity: authSrv.connected ? 1.0 : 0.5,
+            pointerEvents: authSrv.connected ? 'all' : 'none',
           }}
           onClick={() => {
             console.log('sending message...');
             const uuid = (Math.random() * 1000000).toFixed(0).toString();
             console.log('sending', uuid);
-            sendMessage(new AuthSrvClientMsgPing(uuid, uuid))
+            authSrv.send(new AuthSrvClientMsgPing(uuid, uuid))
           }}
         ><label>Click me</label></button>
+        <div>
+          <div>
+            <h2>Received messages</h2>
+            <ol>{authSrv.received.map(msg => <li>{`[${hDate(msg.receivedAt, null)}] ${msg.val.type}`}</li>)}</ol>
+          </div>
+          <div>
+            <h2>Exceptions</h2>
+            <ol>{authSrv.exceptions.map(msg => <li>{`[${hDate(msg.receivedAt, null)}] ${JSON.stringify(msg.val)}`}</li>)}</ol>
+          </div>
+          <div>
+            <h2>Sent messages</h2>
+            <ol>{authSrv.sent.map(msg => <li>{`[${hDate(msg.sentAt, null)} (${!!msg.confirmedAt})] ${msg.val.type}`}</li>)}</ol>
+          </div>
+        </div>
       </div>
       <MessageList />
     </div>
