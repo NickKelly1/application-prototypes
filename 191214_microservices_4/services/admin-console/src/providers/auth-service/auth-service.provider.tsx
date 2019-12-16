@@ -1,25 +1,26 @@
 import React, { createContext, useState, useEffect } from 'react';
 import io, { connect } from 'socket.io-client';
 import { env } from '../../env';
-import { IAuthSrvMsg } from '../../shared/ts/auth-service/messages/auth-srv.msg.interface';
-import { AN_AUTH_SRV_CLIENT_MSG } from '../../shared/ts/auth-service/messages/auth-srv-client.msg';
-import { AN_AUTH_SRV_SERVER_MSG } from '../../shared/ts/auth-service/messages/auth-srv-server.msg';
+import { IAuthSVCMsg } from '../../shared/ts/auth-service/messages/auth-svc.msg.interface';
+import { AN_AUTH_SVC_CLIENT_MSG } from '../../shared/ts/auth-service/messages/auth-svc-client.msg';
+import { AN_AUTH_SVC_SERVER_MSG } from '../../shared/ts/auth-service/messages/auth-svc-server.msg';
 import { logger } from '../../shared/ts/helpers/logger';
+import { AuthSVCException } from '../../shared/ts/auth-service/messages/overrides/auth-svc-socket.io-client.socket';
 
 
 
 type AuthServiceContext = {
-  send: (msg: AN_AUTH_SRV_CLIENT_MSG) => any,
-  sent: { sentAt: Date, confirmedAt: null | Date; val: AN_AUTH_SRV_CLIENT_MSG }[],
+  send: (msg: AN_AUTH_SVC_CLIENT_MSG) => any,
+  sent: { sentAt: Date, confirmedAt: null | Date; val: AN_AUTH_SVC_CLIENT_MSG }[],
   exceptions: { receivedAt: Date, val: unknown}[],
-  received: { receivedAt: Date, val: AN_AUTH_SRV_SERVER_MSG}[],
+  received: { receivedAt: Date, val: AN_AUTH_SVC_SERVER_MSG}[],
   connected: boolean,
   ws: SocketIOClient.Socket;
 };
 
 export const authServiceContext = createContext<AuthServiceContext>(null as any);
 
-const ws = io(`${env.AUTH_SRV_HOST}:${env.AUTH_SRV_WEB_SOCKET_PORT}`, { autoConnect: false });
+const ws = io(`${env.AUTH_SVC_HOST}:${env.AUTH_SVC_WEB_SOCKET_PORT}`, { autoConnect: false });
 const cLog = (...args: any[]) => logger.dInfo('[AuthServiceProvider]', ...args);
 
 
@@ -37,7 +38,7 @@ export const AuthServiceProvider: React.FC = ({ children }) => {
   const [ connected, setConnected ] = useState<AuthServiceContext['connected']>(false);
 
 
-  function send(msg: AN_AUTH_SRV_CLIENT_MSG) {
+  function send(msg: AN_AUTH_SVC_CLIENT_MSG) {
     cLog('[send]', msg);
     if (connected) {
       ws.emit('message', msg);
@@ -52,42 +53,38 @@ export const AuthServiceProvider: React.FC = ({ children }) => {
    * Connect listeners on boot
    */
   useEffect(() => {
-
-    // listener
-    function onMessage(msg: AN_AUTH_SRV_SERVER_MSG) {
-      cLog('[onMessage]', msg);
-      setReceived((prev) => prev.concat([{ receivedAt: new Date(), val: msg }]));
-    };
-
-    function onMessageConfirmed(uuid: IAuthSrvMsg['uuid']) {
-      cLog('[onMessageConfirmed]', uuid);
-      setSent((prev) => prev.map(msg => msg.val.uuid === uuid ? ({ ...msg, confirmedAt: new Date() }) : msg));
-    };
-
-    function onException(err: unknown) {
-      cLog('[onException]', err);
-      setExceptions(prev => prev.concat([{ receivedAt: new Date(), val: err }]));
-    }
-
-
     // bindings
     function onConnection() {
       cLog('[onConnect]');
-      ws.on('message', onMessage);
-      ws.on('message-confirmed', onMessageConfirmed);
       setConnected(true);
     };
 
     function onDisconnection() {
       cLog('[onDisconnect]');
-      ws.off('message', onMessage);
-      ws.off('message-confirmed', onMessageConfirmed);
       setConnected(false);
+    };
+
+    function onException(err: AuthSVCException) {
+      cLog('[onException]', err);
+      setExceptions(prev => prev.concat([{ receivedAt: new Date(), val: err }]));
+    }
+
+    // listener
+    function onMessage(msg: AN_AUTH_SVC_SERVER_MSG) {
+      cLog('[onMessage]', msg);
+      setReceived((prev) => prev.concat([{ receivedAt: new Date(), val: msg }]));
+    };
+
+    function onMessageConfirmed(uuid: IAuthSVCMsg['uuid']) {
+      cLog('[onMessageConfirmed]', uuid);
+      setSent((prev) => prev.map(msg => msg.val.uuid === uuid ? ({ ...msg, confirmedAt: new Date() }) : msg));
     };
 
     ws.on('connect', onConnection);
     ws.on('disconnect', onDisconnection);
     ws.on('exception', onException);
+    ws.on('message', onMessage);
+    ws.on('message-confirmed', onMessageConfirmed);
 
     // begin connection
     ws.connect();

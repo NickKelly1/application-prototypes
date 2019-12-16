@@ -1,7 +1,7 @@
-import { AuthSrvSocketIOServerSocket } from '../shared/ts/auth-service/messages/overrides/auth-srv-socket.io.socket';
+import { AuthSVCSocketIOServerSocket } from '../shared/ts/auth-service/messages/overrides/auth-svc-socket.io.socket';
 
 declare global {
   namespace SocketIO {
-    interface Socket extends AuthSrvSocketIOServerSocket {}
+    interface Socket extends AuthSVCSocketIOServerSocket {}
   }
 }

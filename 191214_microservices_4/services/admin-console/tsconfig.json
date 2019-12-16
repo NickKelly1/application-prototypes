@@ -7,9 +7,6 @@
       "DOM.Iterable",
       "ESNext"
     ],
-    // "types": [
-    //   "./src/shared/ts/@types/socket-io.client.d.ts"
-    // ],
     "allowJs": true,
     "skipLibCheck": true,
     "jsx": "react",

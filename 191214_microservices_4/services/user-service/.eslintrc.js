@@ -26,6 +26,7 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
     '@typescript-eslint/adjacent-overload-signatures': 'off',
     'max-classes-per-file': 'off',

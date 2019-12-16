@@ -31,6 +31,7 @@
     "@nestjs/websockets": "^6.10.11",
     "@syntaxfanatics/peon": "^0.0.48",
     "@types/express": "^4.17.2",
+    "@types/socket.io": "^2.1.4",
     "@typescript-eslint/eslint-plugin": "^2.11.0",
     "@typescript-eslint/parser": "^2.11.0",
     "class-transformer": "^0.2.3",
@@ -46,7 +47,8 @@
     "express": "^4.17.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
-    "rxjs": "^6.5.3"
+    "rxjs": "^6.5.3",
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^6.9.1",

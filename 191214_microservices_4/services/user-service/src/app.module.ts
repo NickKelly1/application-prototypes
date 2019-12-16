@@ -3,17 +3,17 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { HomeModule } from './features/home/home.module';
 import { UserModule } from './features/users/user.module';
 import { classLogger } from './shared/ts/helpers/logger';
-import { WebSocketServer } from './gateway/web-socket.gateway';
+import { WSS } from './gateway/web-socket.gateway';
 
 @Module({
   imports: [
     HomeModule,
     UserModule,
-    WebSocketServer,
+    WSS,
   ],
   controllers: [],
   providers: [
-    WebSocketServer,
+    WSS,
   ],
 })
 export class AppModule implements NestModule {

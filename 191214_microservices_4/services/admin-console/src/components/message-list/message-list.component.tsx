@@ -11,12 +11,12 @@ export const MessageList: React.FC = () => {
 
   return (
     <ul>
-      {received.map(msg => <li key={msg.val.uuid}>msg.type</li>)}
+      {received.map(msg => <li key={msg.val.uuid}>{msg.val.type}</li>)}
     </ul>
   );
 }
 
 // MessageList.propTypes = {
-//   sentMessages: PropTypes.arrayOf(AUTH_SRV_CLIENT_MSGS),
+//   sentMessages: PropTypes.arrayOf(AUTH_SVC_CLIENT_MSGS),
 //   // receivedMessages: PropTypes.arrayOf(AUTH_)
 // }
