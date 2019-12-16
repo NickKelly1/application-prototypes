@@ -1,7 +1,7 @@
-import { AN_AUTH_SVC_SERVER_MSG } from "../auth-svc-server.msg";
-import { IAuthSVCMsg } from "../auth-svc.msg.interface";
-import { AN_AUTH_SVC_CLIENT_MSG } from "../auth-svc-client.msg";
-import { SVC_MSG } from "../../../constants/svc-msg.constant";
+import { AN_AUTH_SVC_SERVER_MSG } from '../auth-svc-server.msg';
+import { IAuthSVCMsg } from '../auth-svc.msg.interface';
+import { AN_AUTH_SVC_CLIENT_MSG } from '../auth-svc-client.msg';
+import { SVC_MSG } from '../../../constants/svc-msg.constant';
 
 export interface AuthSVCException {
   status: 'error' | string,
@@ -35,7 +35,7 @@ export interface AuthSVCException {
 //   off(event: SVC_MSG['CONFIRMED'], listener: (payload: IAuthSVCMsg['uuid']) => any): any
 // }
 
-declare module global {
+declare namespace global {
   namespace SocketIOClient {
     interface Socket {
       // client -> server
@@ -63,4 +63,4 @@ declare module global {
   }
 }
 
-export {};
+// export {};

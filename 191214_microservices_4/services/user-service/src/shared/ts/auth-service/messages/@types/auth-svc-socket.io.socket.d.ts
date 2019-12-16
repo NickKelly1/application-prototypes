@@ -1,8 +1,8 @@
-import { AN_AUTH_SVC_SERVER_MSG } from "../auth-svc-server.msg";
-import { IAuthSVCMsg } from "../auth-svc.msg.interface";
-import { SVC_MSG } from "../../../constants/svc-msg.constant";
+import { AN_AUTH_SVC_SERVER_MSG } from '../auth-svc-server.msg';
+import { IAuthSVCMsg } from '../auth-svc.msg.interface';
+import { SVC_MSG } from '../../../constants/svc-msg.constant';
 
-// export interface AuthSVCSocketIOServerSocket {
+// interface AuthSVCSocketIOServerSocket {
 //   // server -> client
 //   emit(event: SVC_MSG['AUTH'], payload: AN_AUTH_SVC_SERVER_MSG): any
 //   emit(event: SVC_MSG['CONFIRMED'], payload: IAuthSVCMsg['uuid']): any
@@ -14,9 +14,9 @@ import { SVC_MSG } from "../../../constants/svc-msg.constant";
 //   off(event: SVC_MSG['AUTH'], listener: (payload: AN_AUTH_SVC_SERVER_MSG) => any): any
 // }
 
-declare module global {
-  export namespace SocketIO {
-    export interface Socket {
+declare namespace global {
+  namespace SocketIO {
+    interface Socket {
       sup(): {};
       // server -> client
       emit(event: SVC_MSG['AUTH'], payload: AN_AUTH_SVC_SERVER_MSG): any
@@ -31,8 +31,8 @@ declare module global {
   }
 }
 
-declare module SocketIO {
-  export interface Socket {
+declare namespace SocketIO {
+  interface Socket {
     sup(): {};
     // server -> client
     emit(event: SVC_MSG['AUTH'], payload: AN_AUTH_SVC_SERVER_MSG): any
@@ -46,4 +46,4 @@ declare module SocketIO {
   }
 }
 
-export {}
+// export {}

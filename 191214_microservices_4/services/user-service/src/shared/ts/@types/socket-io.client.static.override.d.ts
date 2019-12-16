@@ -35,7 +35,7 @@
 //   off(event: 'reconnect_failed', listener: () => any): any
 // }
 
-declare module global {
+declare namespace global {
   interface SocketIOClientStatic {
     on(event: 'connect', listener: () => any): any
     on(event: 'connect_error', listener: () => any): any
@@ -66,4 +66,4 @@ declare module global {
   }
 }
 
-export {};
+// export {};

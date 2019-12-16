@@ -34,7 +34,7 @@
 //   off(event: 'reconnect_failed', listener: () => any): any,
 // }
 
-declare module global {
+declare namespace global {
   namespace SocketIOClient {
     interface Socket {
       on(event: 'connect', listener: () => any): any,
@@ -67,4 +67,4 @@ declare module global {
   }
 }
 
-export {};
+// export {};

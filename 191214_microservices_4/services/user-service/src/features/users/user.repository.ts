@@ -1,7 +1,7 @@
 import { uuidv4 } from '@syntaxfanatics/peon';
 import { Injectable } from '@nestjs/common';
 import { UserModel, UserId, UserAttributes } from './user.model';
-import { WithId } from '../../@types/with-id';
+import { WithId } from '../../@wot-types/with-id';
 import { classLogger } from '../../shared/ts/helpers/logger';
 
 
