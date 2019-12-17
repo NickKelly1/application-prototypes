@@ -47,26 +47,20 @@ export class WSS {
     this.logger.dInfo('constructor');
   }
 
-  @SubscribeMessage(SVC_MSG.AUTH)
+  @SubscribeMessage(SVC_MSG.AUTH_CLIENT)
   handleMessage(
     @ConnectedSocket() socket: SocketIO.Socket,
     @MessageBody() data: AN_AUTH_SVC_CLIENT_MSG,
   ) {
     // socket.;
-    // socket.sup;
-    socket.gay();
     this.logger.dInfo('handleMessage', { data });
 
     switch (data.type) {
       case AUTH_SVC_CLIENT_MSG_TYPE.PING: {
-        const pongUuid = uuidv4();
         console.log('sending...');
         const pong = new AUTH_SVC_SERVER_MSG.PONG(uuidv4(), data.uuid);
-        socket.emit(SVC_MSG.AUTH, pong);
+        socket.emit(SVC_MSG.AUTH_SERVER, pong);
         socket.emit(SVC_MSG.CONFIRMED, data.uuid);
-        socket.emit(SVC_MSG.CONFIRMED);
-        // socket.on('auth-msg', )
-        // return pong;
         break;
       }
 

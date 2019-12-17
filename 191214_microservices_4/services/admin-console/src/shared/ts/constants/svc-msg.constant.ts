@@ -1,6 +1,7 @@
 export const SVC_MSG = {
-  AUTH: 'message-svc',
-  CONFIRMED: 'message-confirmed',
+  AUTH_CLIENT: 'au_svc_msg_client',
+  AUTH_SERVER: 'au_svc_msg_server',
+  CONFIRMED: 'msg_conf',
   EXCEPTION: 'exception',
 } as const;
 export type SVC_MSG = typeof SVC_MSG;

@@ -1,5 +1,5 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { WithId, ModelWithId } from '../../@wot-types/with-id';
+import { WithId, ModelWithId } from '../../@types/with-id';
 import { classLogger } from '../../shared/ts/helpers/logger';
 
 export type UserId = string;

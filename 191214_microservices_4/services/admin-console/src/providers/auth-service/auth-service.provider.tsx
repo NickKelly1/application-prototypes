@@ -5,7 +5,8 @@ import { IAuthSVCMsg } from '../../shared/ts/auth-service/messages/auth-svc.msg.
 import { AN_AUTH_SVC_CLIENT_MSG } from '../../shared/ts/auth-service/messages/auth-svc-client.msg';
 import { AN_AUTH_SVC_SERVER_MSG } from '../../shared/ts/auth-service/messages/auth-svc-server.msg';
 import { logger } from '../../shared/ts/helpers/logger';
-import { AuthSVCException } from '../../shared/ts/auth-service/messages/overrides/auth-svc-socket.io-client.socket';
+import { AuthSVCException } from '../../shared/ts/auth-service/messages/@types/auth-svc-socket.io-client.socket';
+import { SVC_MSG } from '../../shared/ts/constants/svc-msg.constant';
 
 
 
@@ -41,7 +42,7 @@ export const AuthServiceProvider: React.FC = ({ children }) => {
   function send(msg: AN_AUTH_SVC_CLIENT_MSG) {
     cLog('[send]', msg);
     if (connected) {
-      ws.emit('message', msg);
+      ws.emit(SVC_MSG.AUTH_CLIENT, msg);
       setSent((prev) => prev.concat([{ sentAt: new Date(), confirmedAt: null, val: msg }]));
     } else {
       cLog('[send]', 'Unable to send message: not connected', msg)
@@ -82,9 +83,9 @@ export const AuthServiceProvider: React.FC = ({ children }) => {
 
     ws.on('connect', onConnection);
     ws.on('disconnect', onDisconnection);
-    ws.on('exception', onException);
-    ws.on('message', onMessage);
-    ws.on('message-confirmed', onMessageConfirmed);
+    ws.on(SVC_MSG.EXCEPTION, onException);
+    ws.on(SVC_MSG.AUTH_SERVER, onMessage);
+    ws.on(SVC_MSG.CONFIRMED, onMessageConfirmed);
 
     // begin connection
     ws.connect();
@@ -95,9 +96,9 @@ export const AuthServiceProvider: React.FC = ({ children }) => {
       console.log('unsubscribing from events...');
       ws.off('connect', onConnection);
       ws.off('disconnect', onDisconnection);
-      ws.off('message', onMessage);
-      ws.off('message-confirmed', onMessageConfirmed);
-      ws.off('exception', onException);
+      ws.off(SVC_MSG.AUTH_SERVER, onMessage);
+      ws.off(SVC_MSG.CONFIRMED, onMessageConfirmed);
+      ws.off(SVC_MSG.EXCEPTION, onException);
     }
   }, []);
 

@@ -13,7 +13,6 @@ import { WSS } from './gateway/web-socket.gateway';
   ],
   controllers: [],
   providers: [
-    WSS,
   ],
 })
 export class AppModule implements NestModule {
