@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import io, { connect } from 'socket.io-client';
+import io from 'socket.io-client';
 import { env } from '../../env';
 import { IAuthSVCMsg } from '../../shared/ts/auth-service/messages/auth-svc.msg.interface';
 import { AN_AUTH_SVC_CLIENT_MSG } from '../../shared/ts/auth-service/messages/auth-svc-client.msg';

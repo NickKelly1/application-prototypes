@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Body,
+  Controller, Get, Post, Body, Param,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetUsersQuery } from './queries/get-users/get-users.query.impl';
@@ -11,10 +11,12 @@ import { classLogger } from '../../shared/ts/helpers/logger';
 export class UserController {
   private readonly logger = classLogger(this);
 
+
   constructor(
     private readonly cBus: CommandBus,
     private readonly qBus: QueryBus,
   ) { this.logger.dInfo('constructor'); }
+
 
   @Get()
   async index() {
@@ -23,12 +25,14 @@ export class UserController {
     return z;
   }
 
+
   @Get('/:id')
-  async get() {
-    this.logger.dInfo('index');
-    const z = await this.qBus.execute(new GetUsersQuery());
-    return z;
+  async get(@Param('id') id: string) {
+    this.logger.dInfo('get', id);
+    const userQuery = await this.qBus.execute(new GetUsersQuery());
+    return userQuery;
   }
+
 
   @Post()
   async create(@Body() dto: CreateUserCommandDto) {

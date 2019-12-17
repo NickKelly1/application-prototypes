@@ -1,15 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { uuidv4 } from '@syntaxfanatics/peon';
 import logo from './logo.svg';
 import './welcome.page.css';
 import { authServiceContext } from '../../providers/auth-service/auth-service.provider';
-import { MessageList } from '../../components/message-list/message-list.component';
 import { AuthSVCClientMsgPing } from '../../shared/ts/auth-service/messages/client/auth-svc-client.msg.ping';
 import { hDate } from '../../shared/ts/helpers/h-date.helper';
+import { CreateUserForm } from '../../components/forms/create-user-form/create-user.form';
+
+
 
 export const WelcomePage: React.FC = () => {
   const authSVC = useContext(authServiceContext);
-
   return (
     <div className="welcome">
       <header className="welcome-header">
@@ -30,6 +31,7 @@ export const WelcomePage: React.FC = () => {
             authSVC.send(new AuthSVCClientMsgPing(uuid, uuid))
           }}
         ><label>Click me</label></button>
+        <CreateUserForm />
         <div>
           <div>
             <h2>Received messages</h2>

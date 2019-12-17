@@ -3,6 +3,7 @@ import {
 } from '@nestjs/websockets';
 import { UseFilters } from '@nestjs/common';
 import { uuidv4 } from '@syntaxfanatics/peon';
+import { Socket } from 'socket.io';
 import { env } from '../env';
 import { classLogger } from '../shared/ts/helpers/logger';
 import { AN_AUTH_SVC_CLIENT_MSG } from '../shared/ts/auth-service/messages/auth-svc-client.msg';
@@ -30,7 +31,7 @@ export class WSS {
    */
   @SubscribeMessage(SVC_MSG.AUTH_CLIENT)
   handleMessage(
-    @ConnectedSocket() socket: SocketIO.Socket,
+    @ConnectedSocket() socket: Socket,
     @MessageBody() data: AN_AUTH_SVC_CLIENT_MSG,
   ) {
     this.logger.dInfo('handleMessage', { data });
