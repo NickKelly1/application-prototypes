@@ -1,24 +1,19 @@
-import { uuidv4 } from '@syntaxfanatics/peon';
 import { Catch, WsExceptionFilter, ArgumentsHost } from '@nestjs/common';
 import { BaseWsExceptionFilter } from '@nestjs/websockets';
-import { AUTH_SVC_CLIENT_MSG } from '../shared/ts/auth-service/messages/auth-svc-client.msg';
+import { classLogger } from '../shared/ts/helpers/logger';
+
 
 @Catch(Error)
 export class WsFilter extends BaseWsExceptionFilter implements WsExceptionFilter {
-  // catch(exception: Error, host: ArgumentsHost) {
-  //   const ctx = host.switchToWs();
-  //   const client = ctx.getClient<SocketIO.Socket>();
-  //   const data = ctx.getData();
-  //   // const status = exception.
+  private readonly logger = classLogger(this);
 
-  //   console.log('[wsFilter::catch]', { exception, host });
+  constructor() {
+    super();
+    this.logger.dInfo('constructor');
+  }
 
-  //   const uuid = uuidv4();
-  //   client.emit('message', {
-  //     uuid,
-  //     sent_utc: Date.now(),
-  //     source_uuid: uuid,
-  //     type: 'ping',
-  //   });
-  // }
+  catch(exception: any, host: ArgumentsHost) {
+    this.logger.dInfo('catch', exception);
+    return super.catch(exception, host);
+  }
 }

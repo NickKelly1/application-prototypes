@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { uuidv4 } from '@syntaxfanatics/peon';
 import logo from './logo.svg';
 import './welcome.page.css';
 import { authServiceContext } from '../../providers/auth-service/auth-service.provider';
@@ -24,7 +25,7 @@ export const WelcomePage: React.FC = () => {
           }}
           onClick={() => {
             console.log('sending message...');
-            const uuid = (Math.random() * 1000000).toFixed(0).toString();
+            const uuid = uuidv4();
             console.log('sending', uuid);
             authSVC.send(new AuthSVCClientMsgPing(uuid, uuid))
           }}
