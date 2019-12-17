@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Reducer, useReducer, useEffect, useCallback } from "react";
 import { dispatchToKey } from "../../../helpers/dispatch-to-key.helper";
 
 export interface ICreateUserForm {
@@ -9,7 +9,7 @@ export interface ICreateUserForm {
   password: string;
 }
 
-const initialCreateUserForm = {
+export const initialCreateUserForm: ICreateUserForm = {
   email: '',
   first: '',
   middle: '',
@@ -17,14 +17,21 @@ const initialCreateUserForm = {
   password: ''
 };
 
+interface CreateUserFormProps {
+  user: ICreateUserForm
+  onSubmit(payload: ICreateUserForm): any 
+}
+
 /**
  * @description
  * A Create User form
  * 
  */
-export const CreateUserForm: React.FC = () => {
-  const [ cleanUserForm, setCleanUserForm ] = useState<ICreateUserForm>(initialCreateUserForm);
-  const [ dirtyUserForm, setDirtyUserForm ] = useState<ICreateUserForm>(initialCreateUserForm);
+export const CreateUserForm: React.FC<CreateUserFormProps> = ({ onSubmit, user = initialCreateUserForm }) => {
+  const [ dirtyUserForm, setDirtyUserForm ] = useState<ICreateUserForm>(user);
+
+  useEffect(() => { setDirtyUserForm(user) }, [user]);
+
 
   return (
     <div>
@@ -70,7 +77,7 @@ export const CreateUserForm: React.FC = () => {
       </div>
       <div>
         <button
-          onClick={() => console.log('TODO submitting...')}
+          onClick={() => onSubmit(dirtyUserForm)}
         >Submit</button>
       </div>
     </div>
