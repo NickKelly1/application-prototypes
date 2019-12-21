@@ -1,12 +1,12 @@
 import React, { createContext, useState, useEffect } from 'react';
 import io from 'socket.io-client';
-import { env } from '../../env';
-import { IAuthSVCMsg } from '../../shared/ts/auth-service/messages/auth-svc.msg.interface';
-import { AN_AUTH_SVC_CLIENT_MSG } from '../../shared/ts/auth-service/messages/auth-svc-client.msg';
-import { AN_AUTH_SVC_SERVER_MSG } from '../../shared/ts/auth-service/messages/auth-svc-server.msg';
-import { logger } from '../../shared/ts/helpers/logger';
-import { AuthSVCException } from '../../shared/ts/auth-service/messages/@types/auth-svc-socket.io-client.socket';
-import { SVC_MSG } from '../../shared/ts/constants/svc-msg.constant';
+import { env } from '../../../../env';
+import { IAuthSVCMsg } from '../../../../shared/ts/auth-service/messages/auth-svc.msg.interface';
+import { AN_AUTH_SVC_CLIENT_MSG } from '../../../../shared/ts/auth-service/messages/auth-svc-client.msg';
+import { AN_AUTH_SVC_SERVER_MSG } from '../../../../shared/ts/auth-service/messages/auth-svc-server.msg';
+import { logger } from '../../../../shared/ts/helpers/logger';
+import { AuthSVCException } from '../../../../shared/ts/auth-service/messages/@types/auth-svc-socket.io-client.socket';
+import { SVC_MSG } from '../../../../shared/ts/constants/svc-msg.constant';
 
 
 
@@ -19,10 +19,16 @@ type AuthServiceContext = {
   ws: SocketIOClient.Socket;
 };
 
-export const authServiceContext = createContext<AuthServiceContext>(null as any);
+export const AuthServiceContext = createContext<AuthServiceContext>(null as any);
 
 const ws = io(`${env.AUTH_SVC_HOST}:${env.AUTH_SVC_WEB_SOCKET_PORT}`, { autoConnect: false });
 const cLog = (...args: any[]) => logger.dInfo('[AuthServiceProvider]', ...args);
+
+
+
+export interface AuthServiceProviderProps {
+  connect?: boolean;
+}
 
 
 
@@ -32,7 +38,10 @@ const cLog = (...args: any[]) => logger.dInfo('[AuthServiceProvider]', ...args);
  * 
  * @param param0 
  */
-export const AuthServiceProvider: React.FC = ({ children }) => {
+export const AuthServiceProvider: React.FC<AuthServiceProviderProps> = ({
+  children,
+  connect = true
+}) => {
   const [ sent, setSent ] = useState<AuthServiceContext['sent']>([]);
   const [ exceptions, setExceptions ] = useState<AuthServiceContext['exceptions']>([]);
   const [ received, setReceived ] = useState<AuthServiceContext['received']>([]);
@@ -88,7 +97,7 @@ export const AuthServiceProvider: React.FC = ({ children }) => {
     ws.on(SVC_MSG.CONFIRMED, onMessageConfirmed);
 
     // begin connection
-    ws.connect();
+    if (connect) ws.connect();
 
     // destroy listeners on unmount
     return () => {
@@ -103,7 +112,7 @@ export const AuthServiceProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <authServiceContext.Provider value={{
+    <AuthServiceContext.Provider value={{
       received: received,
       exceptions: exceptions,
       sent: sent,
@@ -112,6 +121,6 @@ export const AuthServiceProvider: React.FC = ({ children }) => {
       connected
     }}>
       {children}
-    </authServiceContext.Provider>
+    </AuthServiceContext.Provider>
   )
 }

@@ -1,4 +1,4 @@
-import { IAuthSVCMsg } from '../../messages/auth-svc.msg.interface';
+import { IAuthSVCMsg } from '../auth-svc.msg.interface';
 import { AUTH_SVC_CLIENT_MSG_TYPE } from '../auth-svc-client.msg-type';
 
 export class AuthSVCClientMsgPing implements IAuthSVCMsg {

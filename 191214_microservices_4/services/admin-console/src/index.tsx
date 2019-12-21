@@ -1,16 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import { WelcomePage } from './pages/welcome/welcome.page';
 import * as serviceWorker from './serviceWorker';
-import { AuthServiceProvider } from './providers/auth-service/auth-service.provider';
+import './index.css';
+import { App } from './components/ui/app';
 
 ReactDOM.render(
-  (
-    <AuthServiceProvider>
-      <WelcomePage />
-    </AuthServiceProvider>
-  ),
+  <App />,
   document.getElementById('root')
 );
 

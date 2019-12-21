@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
-import { authServiceContext } from '../../providers/auth-service/auth-service.provider';
+import { AuthServiceContext } from '../provider/auth-service-provider';
 
 
 export const MessageList: React.FC = () => {
-  const { received, sent, exceptions } = useContext(authServiceContext);
+  const { received, sent, exceptions } = useContext(AuthServiceContext);
 
   console.log({ received, sent, exceptions });
 

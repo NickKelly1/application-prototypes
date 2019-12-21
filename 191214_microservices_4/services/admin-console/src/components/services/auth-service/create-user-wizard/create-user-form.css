@@ -1,0 +1,31 @@
+form {}
+
+
+/* all labels within a form */
+/* form label {
+  font-size: 1.2em;
+} */
+
+/* form .email {
+  
+} */
+
+/* .create-user-form .email {
+  grid-area: 'create-user-form-email';
+} */
+
+
+
+/* https://techbrij.com/css-selector-adjacent-child-sibling */
+
+/* all labels that are direct decendents of forms of  */
+/* form > label {
+  font-size: 15em;
+} */
+
+/* two selectors having the same parent - one must come IMMEDIATELY after the other */
+/* form > label {
+  font-size: 15em;
+} */
+
+
