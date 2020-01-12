@@ -4,7 +4,9 @@
   "main": "dist/index",
   "types": "dist/index",
   "license": "MIT",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "yarn wipe && yarn compile",
     "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
@@ -13,5 +15,8 @@
   },
   "devDependencies": {
     "typescript": "^3.7.4"
+  },
+  "dependencies": {
+    "chalk": "^3.0.0"
   }
 }
