@@ -9,7 +9,7 @@
     "shared/*"
   ],
   "scripts": {
-    "todo": "todo"
+    "build": "lerna run build --stream --scope=back-end/*"
   },
   "dependencies": {
     "lerna": "^3.20.2"
