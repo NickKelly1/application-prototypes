@@ -4,13 +4,19 @@
   //   "back-end/src",
   //   "shared/src"
   // ],
+  "exclude": [
+    "node_modules",
+    "dist",
+  ],
   "compilerOptions": {
     "incremental": true,
-    "target": "es6",
-    "module": "CommonJS",
+    "target": "esnext",
+    "module": "esnext",
+    // "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "baseUrl": ".",
+    "rootDir": ".",
     "paths": {
       "@shared/*": ["./shared/*"],
     },
@@ -21,8 +27,8 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true
   },
-  // "references": [
-  //   { "path": "./back-end/tsconfig.json" },
-  //   { "path": "./shared/tsconfig.json" },
-  // ]
+  "references": [
+    { "path": "./back-end" },
+    { "path": "./shared" },
+  ]
 }

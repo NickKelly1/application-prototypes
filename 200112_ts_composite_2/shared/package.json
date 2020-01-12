@@ -4,8 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "tsc --build --verbose ",
-    "start:watch": "tsc --build --verbose --watch --preserveWatchOutput",
+    "start": "tsc --build --watch --preserveWatchOutput --verbose ",
     "clean": "rm -f tsconfig.tsbuildinfo && rm -rf dist"
   }
 }
