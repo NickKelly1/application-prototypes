@@ -9,5 +9,12 @@
   "name": "200115_ts_composite_5_my_test_2",
   "devDependencies": {
     "typescript": "^3.7.4"
+  },
+  "scripts": {
+    "start": "lerna run start --scope",
+    "build": "lerna run build",
+    "wipe": "lerna run wipe",
+    "compile": "lerna run compile",
+    "compile:watch": "lerna run compile:watch"
   }
 }

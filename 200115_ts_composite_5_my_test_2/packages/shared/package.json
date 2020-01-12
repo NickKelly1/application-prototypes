@@ -5,9 +5,10 @@
   "types": "dist/index",
   "license": "MIT",
   "scripts": {
-    "build": "yarn clean && yarn compile",
-    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
-    "compile": "tsc -b tsconfig.json"
+    "build": "yarn wipe && yarn compile",
+    "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "compile": "tsc -b -v tsconfig.json",
+    "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },
   "devDependencies": {
     "typescript": "^3.7.4"

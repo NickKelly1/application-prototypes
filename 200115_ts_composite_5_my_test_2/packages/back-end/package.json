@@ -5,9 +5,10 @@
   "license": "MIT",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "yarn clean && yarn compile",
-    "clean": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
-    "compile": "tsc -b tsconfig.json"
+    "build": "yarn wipe && yarn compile",
+    "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "compile": "tsc -b -v tsconfig.json",
+    "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },
   "dependencies": {
     "shared": "*"
