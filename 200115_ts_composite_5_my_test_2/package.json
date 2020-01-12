@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "lerna": "^3.20.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
+  "name": "200115_ts_composite_5_my_test_2",
+  "devDependencies": {
+    "typescript": "^3.7.4"
+  }
+}

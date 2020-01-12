@@ -1,0 +1,1 @@
+https://betterstack.dev/blog/lerna-typescript-monorepo/
