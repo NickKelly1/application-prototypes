@@ -1,0 +1,13 @@
+{
+  "include": ["src"],
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // to override config from tsconfig.base.json
+    "outDir": "lib",
+    "rootDir": "src",
+    // for references
+    "baseUrl": "src"
+  },
+  // references required for monorepo to work
+  "references": [{ "path": "../a" }]
+}

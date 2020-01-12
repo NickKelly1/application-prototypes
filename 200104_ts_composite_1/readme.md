@@ -1,0 +1,1 @@
+https://dev.to/stereobooster/typescript-monorepo-for-react-project-3cpa

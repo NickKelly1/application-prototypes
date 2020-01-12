@@ -1,0 +1,13 @@
+{
+  "name": "200112_ts_composite_2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "workspaces": [
+    "back-end/*",
+    "shared/*"
+  ],
+  "scripts": {
+    "todo": "todo"
+  }
+}

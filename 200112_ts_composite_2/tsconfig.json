@@ -1,0 +1,28 @@
+{
+  // "files": [],
+  // "include": [
+  //   "back-end/src",
+  //   "shared/src"
+  // ],
+  "compilerOptions": {
+    "incremental": true,
+    "target": "es6",
+    "module": "CommonJS",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["./shared/*"],
+    },
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  // "references": [
+  //   { "path": "./back-end/tsconfig.json" },
+  //   { "path": "./shared/tsconfig.json" },
+  // ]
+}

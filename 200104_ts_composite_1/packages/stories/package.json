@@ -1,0 +1,26 @@
+{
+  "name": "stories",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "build-storybook -p 8080",
+    "build": "build-storybook -o dist"
+  },
+  "dependencies": {
+    "@stereobooster/a": "*",
+    "@stereobooster/b": "*",
+    "@stereobooster/c": "*"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@storybook/addon-info": "^5.2.8",
+    "@storybook/addons": "^5.2.8",
+    "@storybook/core": "^5.2.8",
+    "@storybook/react": "^5.2.8",
+    "@types/storybook__addon-info": "^5.2.1",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.0.6",
+    "react-docgen-typescript-loader": "^3.6.0"
+  }
+}

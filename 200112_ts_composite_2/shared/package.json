@@ -1,0 +1,11 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc --build --verbose ",
+    "start:watch": "tsc --build --verbose --watch --preserveWatchOutput",
+    "clean": "rm -f tsconfig.tsbuildinfo && rm -rf dist"
+  }
+}
