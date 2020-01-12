@@ -15,6 +15,7 @@
     "build": "lerna run build",
     "wipe": "lerna run wipe",
     "compile": "lerna run compile",
-    "compile:watch": "lerna run compile:watch"
+    "compile:watch": "lerna run compile:watch",
+    "bootstrap": "lerna bootstrap"
   }
 }

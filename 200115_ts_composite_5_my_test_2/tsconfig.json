@@ -1,4 +1,8 @@
 {
+  // "references": [
+  //   { "path": "packages/back-end" },
+  //   { "path": "packages/shared" }
+  // ],
   "compilerOptions": {
     "composite": true,
     "outDir": "./dist",

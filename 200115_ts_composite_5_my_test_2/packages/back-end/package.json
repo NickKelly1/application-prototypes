@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "files": ["dist"],
   "scripts": {
     "start": "node dist/index.js",
     "build": "yarn wipe && yarn compile",
@@ -11,7 +12,7 @@
     "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },
   "dependencies": {
-    "shared": "*"
+    "@composite/shared": "*"
   },
   "devDependencies": {
     "typescript": "^3.7.4"
