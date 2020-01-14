@@ -16,6 +16,7 @@
     "wipe": "lerna run wipe",
     "compile": "lerna run compile",
     "compile:watch": "lerna run compile:watch",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap",
+    "bootstrap:workspaces": "lerna bootstrap --use-workspaces"
   }
 }
