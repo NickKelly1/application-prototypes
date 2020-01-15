@@ -11,12 +11,16 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "start": "lerna run start --scope",
-    "build": "lerna run build",
-    "wipe": "lerna run wipe",
-    "compile": "lerna run compile",
-    "compile:watch": "lerna run compile:watch",
-    "bootstrap": "lerna bootstrap",
-    "bootstrap:workspaces": "lerna bootstrap --use-workspaces"
+    "lerna:start": "lerna run start --scope",
+    "lerna:build": "lerna run build",
+    "lerna:wipe": "lerna run wipe",
+    "lerna:compile": "lerna run compile",
+    "lerna:compile:watch": "lerna run compile:watch",
+    "lerna:bootstrap": "lerna bootstrap",
+    "lerna:bootstrap:workspaces": "lerna bootstrap --use-workspaces",
+    "lerna:ls": "lerna ls",
+    "lerna:diff": "lerna diff",
+    "lerna:diff:back-end": "lerna diff @nick-kelly/ts_composite_5__back-end",
+    "lerna:publish": "lerna publish"
   }
 }

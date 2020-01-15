@@ -3,7 +3,7 @@
   "version": "1.0.6",
   "main": "index.js",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "files": [
     "dist"
   ],
@@ -18,6 +18,7 @@
     "@nick-kelly/ts_composite_5__shared": "^1.0.6"
   },
   "devDependencies": {
+    "@types/node": "^13.1.7",
     "typescript": "^3.7.4"
   },
   "publishConfig": {
