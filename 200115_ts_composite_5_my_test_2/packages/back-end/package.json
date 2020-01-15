@@ -1,9 +1,11 @@
 {
   "name": "back-end",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "license": "MIT",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "node dist/index.js",
     "build": "yarn wipe && yarn compile",
@@ -12,7 +14,7 @@
     "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },
   "dependencies": {
-    "@composite/shared": "*"
+    "@composite/shared": "^1.0.1"
   },
   "devDependencies": {
     "typescript": "^3.7.4"
