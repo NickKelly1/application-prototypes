@@ -1,6 +1,6 @@
 {
   "name": "@nick-kelly/ts_composite_5__back-end",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "index.js",
   "license": "MIT",
   "private": false,
@@ -15,7 +15,7 @@
     "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },
   "dependencies": {
-    "@nick-kelly/ts_composite_5__shared": "^1.0.5"
+    "@nick-kelly/ts_composite_5__shared": "^1.0.6"
   },
   "devDependencies": {
     "typescript": "^3.7.4"
