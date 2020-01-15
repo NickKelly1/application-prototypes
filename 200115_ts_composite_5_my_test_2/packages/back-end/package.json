@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "main": "index.js",
   "license": "MIT",
+  "private": true,
   "files": [
     "dist"
   ],
@@ -18,5 +19,9 @@
   },
   "devDependencies": {
     "typescript": "^3.7.4"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "1377a9a1a8ff9516cfc527ce50b3c00f8e59b398"
 }
