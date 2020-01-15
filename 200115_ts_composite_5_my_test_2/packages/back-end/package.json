@@ -1,6 +1,6 @@
 {
   "name": "@nick-kelly/ts_composite_5__back-end",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "index.js",
   "license": "MIT",
   "private": true,
@@ -15,7 +15,7 @@
     "compile:watch": "tsc-watch -b -v -w --preserveWatchOutput --onSuccess \"yarn start\""
   },
   "dependencies": {
-    "@nick-kelly/ts_composite_5__shared": "^1.0.6"
+    "@nick-kelly/ts_composite_5__shared": "^1.0.8"
   },
   "devDependencies": {
     "@types/node": "^13.1.7",
