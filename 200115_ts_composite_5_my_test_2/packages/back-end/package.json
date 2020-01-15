@@ -1,6 +1,6 @@
 {
   "name": "back-end",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "license": "MIT",
   "private": true,
@@ -15,7 +15,7 @@
     "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },
   "dependencies": {
-    "@composite/shared": "^1.0.1"
+    "@composite/shared": "^1.0.2"
   },
   "devDependencies": {
     "typescript": "^3.7.4"
