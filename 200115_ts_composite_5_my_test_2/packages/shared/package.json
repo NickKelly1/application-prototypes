@@ -3,6 +3,7 @@
   "version": "1.0.4",
   "main": "dist/index",
   "types": "dist/index",
+  "private": false,
   "license": "MIT",
   "files": [
     "dist"
@@ -19,5 +20,5 @@
   "dependencies": {
     "chalk": "^3.0.0"
   },
-  "gitHead": "73dce36f2e960e30dca1f16b019399a8f62adf9d"
+  "gitHead": "34834190f9bb9f22d93beb66b774eae50800ae10"
 }
