@@ -15,7 +15,9 @@
     "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },
   "devDependencies": {
-    "typescript": "^3.7.4"
+    "tsc-watch": "^4.0.0",
+    "typescript": "^3.7.4",
+    "yarn": "^1.21.1"
   },
   "dependencies": {
     "chalk": "^3.0.0"

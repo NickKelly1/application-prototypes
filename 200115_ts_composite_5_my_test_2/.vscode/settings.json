@@ -1,0 +1,8 @@
+{
+  "search.exclude": {
+    "packages/*/dist": true
+  },
+  // "files.exclude": {
+  //   "packages/*/dist": true
+  // }
+}

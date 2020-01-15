@@ -4,6 +4,6 @@
 # makes a directory / project self contained and deployable
 # (-L forces symlink directories to be copied into the folder)
 # TODO: this is BAD - we should get NPM / Yarn to build our node_modules!
-cp -rL lambdas/funcA/node_modules lambdas/funcA/packaged/node_modules
+# cp -rL lambdas/funcA/node_modules lambdas/funcA/packaged/node_modules
 
 # Mac: ?

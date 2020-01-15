@@ -12,14 +12,16 @@
     "build": "yarn wipe && yarn compile",
     "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
     "compile": "tsc -b -v tsconfig.json",
-    "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
+    "compile:watch": "tsc-watch -b -v -w --preserveWatchOutput --onSuccess \"yarn start\""
   },
   "dependencies": {
     "@nick-kelly/ts_composite_5__shared": "^1.0.6"
   },
   "devDependencies": {
     "@types/node": "^13.1.7",
-    "typescript": "^3.7.4"
+    "tsc-watch": "^4.0.0",
+    "typescript": "^3.7.4",
+    "yarn": "^1.21.1"
   },
   "publishConfig": {
     "access": "public"

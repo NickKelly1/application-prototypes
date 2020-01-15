@@ -11,11 +11,12 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "lerna:start": "lerna run start --scope",
-    "lerna:build": "lerna run build",
-    "lerna:wipe": "lerna run wipe",
-    "lerna:compile": "lerna run compile",
-    "lerna:compile:watch": "lerna run compile:watch",
+    "lerna:start": "lerna run start --stream",
+    "lerna:build": "lerna run build --stream",
+    "lerna:wipe": "lerna run wipe --stream",
+    "lerna:compile": "lerna run compile --stream",
+    "lerna:compile:watch": "lerna run compile:watch --stream",
+    "lerna:compile:watch:back-end": "lerna run compile:watch --stream --scope @nick-kelly/ts_composite_5__back-end",
     "lerna:bootstrap": "lerna bootstrap",
     "lerna:bootstrap:workspaces": "lerna bootstrap --use-workspaces",
     "lerna:ls": "lerna ls",
