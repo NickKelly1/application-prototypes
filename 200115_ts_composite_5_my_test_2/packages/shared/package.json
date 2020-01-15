@@ -1,7 +1,6 @@
 {
-
   "name": "@nick-kelly/ts_composite_5__shared",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "main": "dist/index",
   "types": "dist/index",
   "license": "MIT",
