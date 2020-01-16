@@ -15,7 +15,8 @@
     "compile:watch": "tsc-watch -b -v -w --preserveWatchOutput --onSuccess \"yarn start\""
   },
   "dependencies": {
-    "@nick-kelly/ts_composite_5__shared": "^1.0.8"
+    "@nick-kelly/ts_composite_5__shared": "^1.0.8",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "@types/node": "^13.1.7",
