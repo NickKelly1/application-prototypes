@@ -8,9 +8,9 @@
     "dist"
   ],
   "scripts": {
-    "start": "pm2 dist/index.js",
-    "stop": "pm2 stop",
-    "restart": "pm2 restart",
+    "start": "pm2 start dist/index.js",
+    "stop": "pm2 stop index",
+    "restart": "pm2 restart index",
     "delete": "pm2 delete",
     "build": "yarn wipe && yarn compile",
     "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
