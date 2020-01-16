@@ -8,7 +8,10 @@
     "dist"
   ],
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "pm2 dist/index.js",
+    "stop": "pm2 stop",
+    "restart": "pm2 restart",
+    "delete": "pm2 delete",
     "build": "yarn wipe && yarn compile",
     "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
     "compile": "tsc -b -v tsconfig.json",
@@ -16,7 +19,8 @@
   },
   "dependencies": {
     "@nick-kelly/ts_composite_5__shared": "^1.0.8",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "pm2": "^4.2.1"
   },
   "devDependencies": {
     "@types/node": "^13.1.7",

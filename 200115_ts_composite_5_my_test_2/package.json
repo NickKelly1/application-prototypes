@@ -11,7 +11,6 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "lerna:start": "lerna run start --stream",
     "lerna:build": "lerna run build --stream",
     "lerna:wipe": "lerna run wipe --stream",
     "lerna:compile": "lerna run compile --stream",
