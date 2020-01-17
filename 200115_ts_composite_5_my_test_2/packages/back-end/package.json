@@ -3,27 +3,28 @@
   "version": "1.0.10",
   "main": "index.js",
   "license": "MIT",
-  "private": true,
+  "private": false,
   "files": [
     "dist"
   ],
   "scripts": {
-    "start": "pm2 start dist/index.js",
-    "stop": "pm2 stop index",
-    "restart": "pm2 restart index",
-    "delete": "pm2 delete",
-    "build": "yarn wipe && yarn compile",
+    "start": "node dist/index.js --port=4000",
+    "build:prod": "yarn wipe && yarn compile:prod",
     "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
-    "compile": "tsc -b -v tsconfig.json",
-    "compile:watch": "tsc-watch -b -v -w --preserveWatchOutput --onSuccess \"yarn start\""
+    "compile:prod": "tsc -b -v tsconfig.production.json",
+    "compile:dev": "tsc -b -v tsconfig.json",
+    "compile:dev:watch": "tsc-watch -b -v -w --preserveWatchOutput --onSuccess \"yarn start\""
+  },
+  "bin": {
+    "ts_composite_5__back-end": "./dist/index.js"
   },
   "dependencies": {
     "@nick-kelly/ts_composite_5__shared": "^1.0.8",
-    "dotenv": "^8.2.0",
-    "pm2": "^4.2.1"
+    "yargs": "^15.1.0"
   },
   "devDependencies": {
     "@types/node": "^13.1.7",
+    "@types/yargs": "^15.0.0",
     "tsc-watch": "^4.0.0",
     "typescript": "^3.7.4",
     "yarn": "^1.21.1"

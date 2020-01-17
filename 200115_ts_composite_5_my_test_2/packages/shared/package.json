@@ -9,10 +9,11 @@
     "dist"
   ],
   "scripts": {
-    "build": "yarn wipe && yarn compile",
+    "build:prod": "yarn wipe && yarn compile:prod",
     "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
-    "compile": "tsc -b -v tsconfig.json",
-    "compile:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
+    "compile:prod": "tsc -b -v -p tsconfig.production.json",
+    "compile:dev": "tsc -b -v tsconfig.json",
+    "compile:dev:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },
   "devDependencies": {
     "tsc-watch": "^4.0.0",

@@ -1,6 +1,7 @@
 {
   "search.exclude": {
-    "packages/*/dist": true
+    "packages/*/dist": true,
+    "packages/*/node_modules": true
   },
   // "files.exclude": {
   //   "packages/*/dist": true
