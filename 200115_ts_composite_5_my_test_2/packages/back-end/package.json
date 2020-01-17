@@ -1,6 +1,6 @@
 {
   "name": "@nick-kelly/ts_composite_5__back-end",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "main": "index.js",
   "license": "MIT",
   "private": false,
@@ -19,7 +19,7 @@
     "ts_composite_5__back-end": "./dist/index.js"
   },
   "dependencies": {
-    "@nick-kelly/ts_composite_5__shared": "^1.0.13",
+    "@nick-kelly/ts_composite_5__shared": "^1.0.14",
     "yargs": "^15.1.0"
   },
   "devDependencies": {
