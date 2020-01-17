@@ -11,7 +11,7 @@
   "scripts": {
     "build:prod": "yarn wipe && yarn compile:prod",
     "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
-    "compile:prod": "tsc -b -v -p tsconfig.production.json",
+    "compile:prod": "tsc -b -v tsconfig.production.json",
     "compile:dev": "tsc -b -v tsconfig.json",
     "compile:dev:watch": "tsc -b -v -w --preserveWatchOutput tsconfig.json"
   },

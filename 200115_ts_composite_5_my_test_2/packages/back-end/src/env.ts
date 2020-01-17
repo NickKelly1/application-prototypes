@@ -12,20 +12,20 @@ function gt(name: string, val: number, inp: number): number {
   return inp;
 }
 
-function gte(name: string, val: number, inp: number): number {
-  if (inp < val) throw new TypeError(`${name} must be greater than or equal to ${inp}`);
-  return inp;
-}
+// function gte(name: string, val: number, inp: number): number {
+//   if (inp < val) throw new TypeError(`${name} must be greater than or equal to ${inp}`);
+//   return inp;
+// }
 
-function lt(name: string, val: number, inp: number): number {
-  if (inp >= val) throw new TypeError(`${name} must be greater than ${inp}`);
-  return inp;
-}
+// function lt(name: string, val: number, inp: number): number {
+//   if (inp >= val) throw new TypeError(`${name} must be greater than ${inp}`);
+//   return inp;
+// }
 
-function lte(name: string, val: number, inp: number): number {
-  if (inp >= val) throw new TypeError(`${name} must be less than or equal to ${inp}`);
-  return inp;
-}
+// function lte(name: string, val: number, inp: number): number {
+//   if (inp >= val) throw new TypeError(`${name} must be less than or equal to ${inp}`);
+//   return inp;
+// }
 
 
 /**
