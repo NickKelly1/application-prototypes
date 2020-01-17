@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node dist/index.js --port=4000",
     "build:prod": "yarn wipe && yarn compile:prod",
-    "wipe": "rm -rf ./dist && rm -rf tsconfig.tsbuildinfo",
+    "wipe": "rm -rf dist tsconfig.tsbuildinfo",
     "compile:prod": "tsc -b -v tsconfig.production.json",
     "compile:dev": "tsc -b -v tsconfig.json",
     "compile:dev:watch": "tsc-watch -b -v -w --preserveWatchOutput --onSuccess \"yarn start\""
