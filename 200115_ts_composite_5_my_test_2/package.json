@@ -23,6 +23,6 @@
     "lerna:ls": "lerna ls",
     "lerna:publish": "lerna publish",
     "lerna:wipe": "lerna run wipe --stream",
-    "p_r_e1p2ublish": "yarn lerna:build:prod"
+    "prepublish": "yarn lerna:build:prod"
   }
 }
